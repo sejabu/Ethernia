@@ -1,0 +1,65 @@
+// Circuit for beneficiary identity verification
+use dep::std;
+
+struct IdentityInput {
+    beneficiary_address: Field,
+    identity_commitment: Field,
+    identity_nullifier: Field,
+    identity_trapdoor: Field
+}
+
+struct PublicInput {
+    beneficiary_hash: Field,
+    merkle_root: Field
+}
+
+fn main(
+    private: IdentityInput,
+    public: PublicInput
+) {
+    // Verify the beneficiary address matches the hash
+    let computed_hash = std::hash::poseidon([
+        private.beneficiary_address
+    ]);
+    assert(computed_hash == public.beneficiary_hash);
+
+    // Create identity commitment
+    let computed_commitment = std::hash::poseidon([
+        private.identity_nullifier,
+        private.identity_trapdoor
+    ]);
+    assert(computed_commitment == private.identity_commitment);
+
+    // Verify the commitment is part of the identity Merkle tree
+    let merkle_proof = std::merkle::verify_proof(
+        public.merkle_root,
+        private.identity_commitment
+    );
+    assert(merkle_proof);
+
+    // Additional checks for identity uniqueness
+    let nullifier_hash = std::hash::poseidon([
+        private.identity_nullifier,
+        public.beneficiary_hash
+    ]);
+    
+    // This hash can be used on-chain to prevent double registration
+    std::log::emit(nullifier_hash);
+}
+
+#[test]
+fn test_identity_verification() {
+    let private = IdentityInput {
+        beneficiary_address: 0x1234...,
+        identity_commitment: 0x5678...,
+        identity_nullifier: 0x91011...,
+        identity_trapdoor: 0x1213...
+    };
+
+    let public = PublicInput {
+        beneficiary_hash: 0x1234...,
+        merkle_root: 0x1415...
+    };
+
+    main(private, public);
+}
