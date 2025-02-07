@@ -95,6 +95,13 @@ contract DigitalWill is ReentrancyGuard, Pausable {
         //Modificar activos        
     }
 
+    function deactivateWill () {
+        //Verificar que el testamento esté activo
+        //Verificar que el que llama sea el testador
+        //Desactivar el testamento
+        //Emitir evento de eliminación del testamento
+    }
+
     function claimWill () external canClaim {
         //Verificar que el testador esté muerto
         //Verificar que el testamento esté activo
