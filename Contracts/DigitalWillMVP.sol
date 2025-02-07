@@ -1,5 +1,5 @@
-// SPDX-License-Identifier: UNLICENSED
-pragma solidity ^0.8.28;
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.26;
 
 //LIBRERIAS:
 
@@ -9,7 +9,7 @@ import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts/token/ERC721/IERC721.sol";
 import "@openzeppelin/contracts/token/ERC1155/IERC1155.sol";
 
-contract DigitalWill is ReentrancyGuard, Pausable {
+contract Will is ReentrancyGuard, Pausable {
 
 //VARIABLES:
     
@@ -18,7 +18,7 @@ contract DigitalWill is ReentrancyGuard, Pausable {
     uint256 constant LOCK_PERIOD = 180 days; // tiempo que debe pasar desde el reclamo hasta la ejecución.
     uint256 constant ALERT_PERIOD = 30 days; // 30 días de gracias para renovar prueba de vida, antes de permtir iniciar el reclamo.
 
-    struct DigitalWill {
+    struct Will {
         address testator; // Dirección del testador.
         uint256 lastRenewed; // Last time the testator confirmed being alive
         uint256 renewPeriod; // Tiempo configurable que debe pasar entre cada renovación.
@@ -27,7 +27,7 @@ contract DigitalWill is ReentrancyGuard, Pausable {
         mapping(address => string) AssetsList; // Lista con addresses de los smart contracts de los activos que desea incluir en la herencia y la denominacion de su token.
     }
 
-    mapping(address => DigitalWill) public DigitalWill; // Lista de testamentos creados.
+    mapping(address => Will) private Wills; // Lista de testamentos creados.
     
 //EVENTOS:
 
@@ -43,11 +43,16 @@ contract DigitalWill is ReentrancyGuard, Pausable {
         _;
     }
 
-    modifier canClaim() {
-        require(isBeneficiary[msg.sender], "Not a beneficiary"); // Verifica que el que llama a la función sea un beneficiario.
-        require(isActive, "Will not active"); // Verifica que el testamento esté activo.
-        require(block.timestamp >= lastRenewed + renewPeriod + ALERT_PERIOD, "Lock period not over"); // Verifica que haya pasado el tiempo desdela última prueba de vida + el periodo de gracia.
+    modifier onlyTestator() {
+        require(wills[msg.sender].isActive, "No active will");
+        require(wills[msg.sender].testator == msg.sender, "Not the testator");
+        _;
+    }
 
+    modifier canClaim(address memory _testatorAddress) {
+        require(wills[_testatorAddress].isActive, "Will not active"); // Verifica que el testamento esté activo.
+    //    require(wills[_testatorAddress].beneficiaries[msg.sender] > 0, "Not a beneficiary");
+        require(block.timestamp >= wills[_testatorAddress].lastRenewed + wills[_testatorAddress].renewPeriod + ALERT_PERIOD, "Lock period not over"); // Verifica que haya pasado el tiempo desdela última prueba de vida + el periodo de gracia.
         _;
     }
 
@@ -61,14 +66,14 @@ contract DigitalWill is ReentrancyGuard, Pausable {
 
 //FUNCIONES:
 
-    function createWill (uint256 _renewPeriod, address[] memory _beneficiaries, uint256[] memory _percentages, address[] memory _assetAddress, string[] memory _tokenName,  ) external nonReentrant payable {
+    function createWill (uint256 _renewPeriod, address[] memory _beneficiaries, uint256[] memory _percentages, address[] memory _assetAddress, string[] memory _tokenName) external payable nonReentrant {
         require(_beneficiaries.length == _percentages.length, "Beneficiaries and percentages length mismatch"); // Verifica que la cantidad de beneficiarios sea igual a la cantidad de porcentajes.
         require(_beneficiaries.length > 0, "No beneficiaries"); // Verifica que haya al menos un beneficiario.
         require(_assetAddress.length == _tokenName.length, "Each asset address must have a denomination"); // Verifica que la cantidad de activos sea igual a la cantidad de denominaciones.
         require(_assetAddress.length > 0, "No assets"); // Verifica que haya al menos un activo.
         require(msg.value > 0, "No value sent"); // Verifica que se pague la tarifa por realizar el testamento, valor a definir.
 
-        DigitalWill[msg.sender] = DigitalWill({ // Crea un nuevo testamento.
+        Will[msg.sender] = Will({ // Crea un nuevo testamento.
             testator: msg.sender, // Asigna la dirección del testador.
             lastRenewed: block.timestamp, // Asigna la fecha de creación del testamento.
             renewPeriod: _renewPeriod, // Asigna el tiempo de renovación de la prueba de vida.
@@ -76,33 +81,39 @@ contract DigitalWill is ReentrancyGuard, Pausable {
         });
 
         for (uint256 i = 0; i < _beneficiaries.length; i++) {
-            DigitalWill[msg.sender].beneficiaries[_beneficiaries[i]] = _percentages[i]; // Asigna el porcentaje de la herencia a cada beneficiario.
-            DigitalWill[msg.sender].AssetsList[_assetAddress[i]] = _tokenName[i]; // Asigna la dirección del activo y su denominación. 
+            Will[msg.sender].beneficiaries[_beneficiaries[i]] = _percentages[i]; // Asigna el porcentaje de la herencia a cada beneficiario.
+        }
+        for (uint256 i = 0; i < _assetAddress.length; i++) {
+            Will[msg.sender].AssetsList[_assetAddress[i]] = _tokenName[i]; // Asigna la dirección del activo y su denominación. 
         }
 
         emit WillCreated(msg.sender); // Emite el evento de creación del testamento.
     } 
 
-    function renewLifeProof () external {
-        require(DigitalWill[msg.sender].isActive, "No active will"); // Verifica que el testamento esté activo.
-        DigitalWill[msg.sender].lastRenewed = block.timestamp; // Actualiza la fecha de la última prueba de vida.
+    function renewLifeProof () external onlyTestator() {
+        require(Will[msg.sender].isActive, "No active will"); // Verifica que el testamento esté activo.
+        Will[msg.sender].lastRenewed = block.timestamp; // Actualiza la fecha de la última prueba de vida.
         emit LifeProofRenewed(msg.sender, block.timestamp); // Emite el evento de renovación de la prueba de vida.
     }  
 
-    function modifyWill (){
+    function modifyWill () external onlyTestator(){
+        require(Will[msg.sender].isActive, "No active will"); // Verifica que el testamento esté activo.
         //Modificar beneficiarios
+
         //Modificar porcentajes
         //Modificar activos        
     }
 
-    function deactivateWill () {
+    function deactivateWill () external onlyTestator(){ {
+        require(Will[msg.sender].isActive, "No active will"); // Verifica que el testamento esté activo.
+        wills[msg.sender].isActive = false; // Desactiva el testamento.
         //Verificar que el testamento esté activo
         //Verificar que el que llama sea el testador
         //Desactivar el testamento
         //Emitir evento de eliminación del testamento
     }
 
-    function claimWill () external canClaim {
+    function claimWill () external canClaim (address _testatorAddress) {
         //Verificar que el testador esté muerto
         //Verificar que el testamento esté activo
         //Verificar que haya pasado el tiempo de gracia
