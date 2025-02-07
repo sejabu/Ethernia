@@ -14,55 +14,27 @@ contract DigitalWill is ReentrancyGuard, Pausable {
 //VARIABLES:
     
     address public owner;
-    uint256 public lastRenewed; // Last time the testator confirmed being alive
-    uint256 constant LOCK_PERIOD = 180 days; // 6 months lock period
+    
+    uint256 constant LOCK_PERIOD = 180 days; // tiempo que debe pasar desde el reclamo hasta la ejecución.
+    uint256 constant ALERT_PERIOD = 30 days; // 30 días de gracias para renovar prueba de vida, antes de permtir iniciar el reclamo.
 
-    struct Beneficiary {
-        address beneficiary;
-        uint256 percentage;
-    }
+    mapping(address => string) public Assets; // Lista de addresses de los smart contracts de los activos.
 
-    Beneficiary[] public beneficiaries;
-    mapping(address => bool) public isBeneficiary;
+    struct DigitalWill {
+        address testator; // Dirección del testador.
+        uint256 lastRenewed; // Last time the testator confirmed being alive
+        uint256 renewPeriod; // Tiempo que debe pasar entre cada renovación.
+        bool isActive; // Indica si el testamento está activo.
+        mapping(address => uint256) beneficiaries; // Porcentaje de la herencia que le corresponde a cada beneficiario.
 
-    struct ERC20Asset {
-        address tokenAddress;
-        uint256 amount;
-    }
-
-    struct ERC721Asset {
-        address tokenAddress;
-        uint256 tokenId;
-    }
-
-    struct ERC1155Asset {
-        address tokenAddress;
-        uint256 tokenId;
-        uint256 amount;
-    }
-
-    ERC20Asset[] public erc20Assets;
-    ERC721Asset[] public erc721Assets;
-    ERC1155Asset[] public erc1155Assets;
-
-
-/*    struct Will {
-        bytes32 encryptedBeneficiaries; // ZK-encrypted beneficiary data
-        uint256 lastHeartbeat;
-        uint256 timelockPeriod;
-        bool isActive;
-        bytes32 zkProof;
     }
     
-    mapping(address => Will) public wills;
-*/
-
-
 //EVENTOS:
 
-    event WillCreated(address indexed creator);
-    event LifeProofUpdated(address indexed creator, uint256 timestamp);
-    event WillExecuted(address indexed creator);
+    event WillCreated(address indexed creator); // Evento que se emite al crear un testamento.
+    event LifeProofRenewed(address indexed creator, uint256 timestamp); // Evento que se emite al renovar la prueba de vida.
+    event ClaimExecuted(address indexed creator); // Evento que se emite al reclamar un testamento.
+    event WillExecuted(address indexed creator); // Evento que se emite al ejecutar un testamento.
 
 //MODIFICADORES:
 
@@ -72,8 +44,9 @@ contract DigitalWill is ReentrancyGuard, Pausable {
     }
 
     modifier canClaim() {
-        require(block.timestamp >= lastRenewed + LOCK_PERIOD, "Lock period not over");
         require(isBeneficiary[msg.sender], "Not a beneficiary");
+        require(isActive, "Will not active");
+        require(block.timestamp >= lastRenewed + renewPeriod + ALERT_PERIOD, "Lock period not over");
         _;
     }
 
@@ -81,20 +54,32 @@ contract DigitalWill is ReentrancyGuard, Pausable {
 
     constructor() {
         owner = msg.sender;
-        lastRenewed = block.timestamp;
     }
-
 
 
 
 //FUNCIONES:
 
-// Verify ZK proof (implement with your Noir circuit)
-//function verifyProof(bytes32 _zkProof) internal pure returns (bool) {
-    // Implement Noir proof verification
-    //  return true;
-}
+    function createWill (uint256 _renewPeriod, address[] memory _beneficiaries, uint256[] memory _percentages) external nonReentrant payable {
+        require(_beneficiaries.length == _percentages.length, "Beneficiaries and percentages length mismatch"); // Verifica que la cantidad de beneficiarios sea igual a la cantidad de porcentajes.
+        require(_beneficiaries.length > 0, "No beneficiaries"); // Verifica que haya al menos un beneficiario.
+        require(msg.value > 0, "No value sent"); // Verifica que se pague la tarifa por realizar el testamento, valor a definir.
 
+        DigitalWill[msg.sender] = DigitalWill({
+            testator: msg.sender,
+            lastRenewed: block.timestamp,
+            renewPeriod: _renewPeriod,
+            isActive: true
+    });
+
+    for (uint256 i = 0; i < _beneficiaries.length; i++) {
+        DigitalWill[msg.sender].beneficiaries[_beneficiaries[i]] = _percentages[i];
+    }
+
+    emit WillCreated(msg.sender);
+} 
+    
+/*
 
 function createWill (bytes32 _encryptedBeneficiaries, uint256 _timelockPeriod, bytes32 _zkProof) external nonReentrant payable {
     // Verify ZK proof
@@ -169,5 +154,6 @@ function executeWill () external nonReentrant {
     emit WillExecuted(willCreator);
 }
 
+*/
 
 }
