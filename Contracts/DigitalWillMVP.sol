@@ -39,6 +39,8 @@ contract Will is ReentrancyGuard, Pausable {
     event WillExecuted(address indexed creator); // Evento que se emite al ejecutar un testamento.
     event WillDeactivated (address indexed creator, uint256 timestamp); // Evento que se emite al desactivar un testamento.
     event WillModified(address indexed testator, uint256 timestamp); // Evento que se emite al modificar un testamento.
+    event BeneficiaryRevoked(address indexed testator, address indexed beneficiary, uint256 percentage); // Evento que se emite al revocar un beneficiario.
+    event PercentagesRedistributed(address indexed testator); // Evento que se emite al redistribuir los porcentajes de la herencia.
 
 //MODIFICADORES:
 
@@ -76,6 +78,7 @@ contract Will is ReentrancyGuard, Pausable {
         require(_assetAddress.length == _tokenName.length, "Each asset address must have a denomination"); // Verifica que la cantidad de activos sea igual a la cantidad de denominaciones.
         require(_assetAddress.length > 0, "No assets"); // Verifica que haya al menos un activo.
         require(msg.value > 0, "No value sent"); // Verifica que se pague la tarifa por realizar el testamento, valor a definir.
+        require(validatePercentages(_percentages), "Percentages must sum to 100");
 
         Will storage newWill = Wills[msg.sender]; // Crea un nuevo testamento.
 
@@ -96,7 +99,15 @@ contract Will is ReentrancyGuard, Pausable {
         }
 
         emit WillCreated(msg.sender); // Emite el evento de creación del testamento.
-    } 
+    }
+
+    function validatePercentages(uint256[] memory _percentages) internal pure returns (bool) {
+    uint256 total = 0;
+    for (uint256 i = 0; i < _percentages.length; i++) {
+        total += _percentages[i];
+    }
+    return total == 100;
+}
 
     function renewLifeProof () external onlyTestator() {
         require(Wills[msg.sender].isActive, "No active will"); // Verifica que el testamento esté activo.
@@ -108,6 +119,8 @@ contract Will is ReentrancyGuard, Pausable {
         require(Wills[msg.sender].isActive, "No active will"); // Verifica que el testamento esté activo.
         require(_beneficiaries.length == _percentages.length, "Beneficiaries and percentages mismatch");
         require(_assetAddress.length == _tokenName.length, "Assets and names mismatch");
+        require(validatePercentages(_percentages), "Percentages must sum to 100");
+
     
         Will storage will = Wills[msg.sender];
     
@@ -146,6 +159,40 @@ contract Will is ReentrancyGuard, Pausable {
         }
     
         emit WillModified(msg.sender, block.timestamp);
+    }
+
+    function revokeBeneficiary(address _beneficiary) external onlyTestator {
+        require(Wills[msg.sender].isActive, "No active will");
+        require(Wills[msg.sender].beneficiaries[_beneficiary] > 0, "Not a beneficiary");
+    
+        Will storage will = Wills[msg.sender];
+        uint256 removedPercentage = will.beneficiaries[_beneficiary];
+        will.beneficiaries[_beneficiary] = 0;
+    
+        // Remove from beneficiaryList array
+        for (uint256 i = 0; i < will.beneficiaryList.length; i++) {
+            if (will.beneficiaryList[i] == _beneficiary) {
+                will.beneficiaryList[i] = will.beneficiaryList[will.beneficiaryList.length - 1];
+                will.beneficiaryList.pop();
+                break;
+            }
+        }
+        // FALTA IMPLEMENTAR QUE SE REDISTRIBUYA AUTOMATICAMENTE EL PORCENTAJE DE LA HERENCIA DEL BENEFICIARIO ELIMINADO.
+        emit BeneficiaryRevoked(msg.sender, _beneficiary, removedPercentage);
+    }
+
+    function redistributePercentages(address[] memory _beneficiaries, uint256[] memory _newPercentages) external onlyTestator {
+        require(_beneficiaries.length == _newPercentages.length, "Array length mismatch");
+        require(validatePercentages(_newPercentages), "Percentages must sum to 100");
+    
+        Will storage will = Wills[msg.sender];
+    
+        for (uint256 i = 0; i < _beneficiaries.length; i++) {
+            require(will.beneficiaries[_beneficiaries[i]] > 0, "Invalid beneficiary");
+            will.beneficiaries[_beneficiaries[i]] = _newPercentages[i];
+        }
+    
+        emit PercentagesRedistributed(msg.sender);
     }
 
     function deactivateWill () external onlyTestator(){ 
