@@ -20,9 +20,12 @@ contract Will is ReentrancyGuard, Pausable {
 
     struct Will {
         address testator; // Dirección del testador.
+        address claimer; // Dirección del reclamante.
         uint256 lastRenewed; // Last time the testator confirmed being alive
         uint256 renewPeriod; // Tiempo configurable que debe pasar entre cada renovación.
+        uint256 claimTime; // Almacena la fecha de reclamo del testamento.
         bool isActive; // Indica si el testamento está activo.
+        bool isClaimed; // Indica si el testamento ha sido reclamado.
         address[] beneficiaryList;
         address[] assetList;
         mapping(address => uint256) beneficiaries; // Porcentaje de la herencia que le corresponde a cada beneficiario.
@@ -58,7 +61,7 @@ contract Will is ReentrancyGuard, Pausable {
     modifier canClaim(address _testatorAddress) {
         require(Wills[_testatorAddress].isActive, "Will not active"); // Verifica que el testamento esté activo.
     //    require(wills[_testatorAddress].beneficiaries[msg.sender] > 0, "Not a beneficiary");
-        require(block.timestamp >= Wills[_testatorAddress].lastRenewed + Wills[_testatorAddress].renewPeriod + ALERT_PERIOD, "Lock period not over"); // Verifica que haya pasado el tiempo desdela última prueba de vida + el periodo de gracia.
+    //    require(block.timestamp >= Wills[_testatorAddress].lastRenewed + Wills[_testatorAddress].renewPeriod + ALERT_PERIOD, "Lock period not over"); // Verifica que haya pasado el tiempo desdela última prueba de vida + el periodo de gracia.
         _;
     }
 
@@ -202,15 +205,19 @@ contract Will is ReentrancyGuard, Pausable {
         emit WillDeactivated (msg.sender, block.timestamp); //Emitir evento de eliminación del testamento
     }
 
-    function claimWill (address _testatorAddress) external canClaim (_testatorAddress) {
-        //Verificar que el testador esté muerto
+    function claimWill (address _testatorAddress) external nonReentrant canClaim(_testatorAddress) {
+        // poner verificaciones en modificador canClaim (_testatorAddress)
         //Verificar que el testamento esté activo
         //Verificar que haya pasado el tiempo de gracia
-        //Verificar que el que llama sea un beneficiario
-        //Verificar que el testamento no haya sido reclamado
-        //Verificar que el testamento no haya sido ejecutado
-        //Verificar que el testamento no haya sido reclamado por otro beneficiario
         //Set timelock para ejecución del testamento
+
+        Will storage will = Wills[_testatorAddress]; // Obtener el testamento del testador.
+        require(!will.isClaimed, "Will already claimed"); // Verificar que el testamento no haya sido reclamado.
+        require(will.beneficiaries[msg.sender] > 0, "Not a beneficiary"); // Verificar que el reclamante sea un beneficiario.
+        require(block.timestamp >= will.lastRenewed + will.renewPeriod + LOCK_PERIOD, "Lock period not over"); // Verificar que haya pasado el tiempo de espera.
+        will.isClaimed = true; // Marcar el testamento como reclamado.
+        will.claimTime = block.timestamp; // Almacenar la fecha de reclamo.
+        will.claimer = msg.sender; // Almacenar la dirección del reclamante.
         
         emit ClaimExecuted(_testatorAddress, msg.sender, block.timestamp); //Emitir evento de reclamo del testamento
     }
