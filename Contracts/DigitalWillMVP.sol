@@ -23,6 +23,8 @@ contract Will is ReentrancyGuard, Pausable {
         uint256 lastRenewed; // Last time the testator confirmed being alive
         uint256 renewPeriod; // Tiempo configurable que debe pasar entre cada renovación.
         bool isActive; // Indica si el testamento está activo.
+        address[] beneficiaryList;
+        address[] assetList;
         mapping(address => uint256) beneficiaries; // Porcentaje de la herencia que le corresponde a cada beneficiario.
         mapping(address => string) AssetsList; // Lista con addresses de los smart contracts de los activos que desea incluir en la herencia y la denominacion de su token.
     }
@@ -36,6 +38,7 @@ contract Will is ReentrancyGuard, Pausable {
     event ClaimExecuted(address indexed testator, address indexed claimer, uint256 timestamp); // Evento que se emite al reclamar un testamento.
     event WillExecuted(address indexed creator); // Evento que se emite al ejecutar un testamento.
     event WillDeactivated (address indexed creator, uint256 timestamp); // Evento que se emite al desactivar un testamento.
+    event WillModified(address indexed testator, uint256 timestamp); // Evento que se emite al modificar un testamento.
 
 //MODIFICADORES:
 
@@ -82,10 +85,14 @@ contract Will is ReentrancyGuard, Pausable {
         newWill.isActive = true; // Indica que el testamento está activo.
 
         for (uint256 i = 0; i < _beneficiaries.length; i++) {
+            require(_beneficiaries[i] != address(0), "Invalid beneficiary address");
             newWill.beneficiaries[_beneficiaries[i]] = _percentages[i]; // Asigna el porcentaje de la herencia a cada beneficiario.
+            newWill.beneficiaryList.push(_beneficiaries[i]);
         }
         for (uint256 i = 0; i < _assetAddress.length; i++) {
+            require(_assetAddress[i] != address(0), "Invalid asset address");
             newWill.AssetsList[_assetAddress[i]] = _tokenName[i]; // Asigna la dirección del activo y su denominación. 
+            newWill.assetList.push(_assetAddress[i]);
         }
 
         emit WillCreated(msg.sender); // Emite el evento de creación del testamento.
@@ -97,12 +104,48 @@ contract Will is ReentrancyGuard, Pausable {
         emit LifeProofRenewed(msg.sender, block.timestamp); // Emite el evento de renovación de la prueba de vida.
     }  
 
-    function modifyWill () external onlyTestator(){
+    function modifyWill(uint256 _renewPeriod, address[] memory _beneficiaries, uint256[] memory _percentages, address[] memory _assetAddress, string[] memory _tokenName) external onlyTestator {
         require(Wills[msg.sender].isActive, "No active will"); // Verifica que el testamento esté activo.
-        //Modificar beneficiarios
+        require(_beneficiaries.length == _percentages.length, "Beneficiaries and percentages mismatch");
+        require(_assetAddress.length == _tokenName.length, "Assets and names mismatch");
+    
+        Will storage will = Wills[msg.sender];
+    
+        // Update renewal period if provided
+        if (_renewPeriod > 0) {
+            will.renewPeriod = _renewPeriod;
+        }
+    
+        // Update beneficiaries and percentages
+        if (_beneficiaries.length > 0) {
+            // FALTA CHEQUEAR QUE TODAS LAS DIRECCIONES SEAN VALIDAS ANTES DE PROCEDER A LIMPIAR LA LISTA ANTERIOR.
+            for (uint256 i = 0; i < will.beneficiaryList.length; i++) {
+                will.beneficiaries[will.beneficiaryList[i]] = 0;
+            }
+            delete will.beneficiaryList;
 
-        //Modificar porcentajes
-        //Modificar activos        
+            for (uint256 i = 0; i < _beneficiaries.length; i++) {
+                require(_beneficiaries[i] != address(0), "Invalid beneficiary address");
+                will.beneficiaries[_beneficiaries[i]] = _percentages[i];
+                will.beneficiaryList.push(_beneficiaries[i]);
+            }
+        }
+    
+        // Update assets list
+        if (_assetAddress.length > 0) {
+            for (uint256 i = 0; i < will.assetList.length; i++) {
+                delete will.AssetsList[will.assetList[i]];
+            }
+            delete will.assetList;
+            
+            for (uint256 i = 0; i < _assetAddress.length; i++) {
+                require(_assetAddress[i] != address(0), "Invalid asset address");
+                will.AssetsList[_assetAddress[i]] = _tokenName[i];
+                will.assetList.push(_assetAddress[i]);
+            }
+        }
+    
+        emit WillModified(msg.sender, block.timestamp);
     }
 
     function deactivateWill () external onlyTestator(){ 
