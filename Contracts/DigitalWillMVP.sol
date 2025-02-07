@@ -94,16 +94,31 @@ contract DigitalWill is ReentrancyGuard, Pausable {
         //Modificar porcentajes
         //Modificar activos        
     }
+
+    function claimWill () external canClaim {
+        //Verificar que el testador esté muerto
+        //Verificar que el testamento esté activo
+        //Verificar que haya pasado el tiempo de gracia
+        //Verificar que el que llama sea un beneficiario
+        //Verificar que el testamento no haya sido reclamado
+        //Verificar que el testamento no haya sido ejecutado
+        //Verificar que el testamento no haya sido reclamado por otro beneficiario
+        //Set timelock para ejecución del testamento
+        //Emitir evento de reclamo del testamento
+    }
+
+    function executeWill () external nonReentrant {
+        //Verificar que el testamento esté activo
+        //Verificar que haya pasado el tiempo de espera
+        //Ejecutar transferencia de activos
+        //Desactivar el testamento
+        //Emitir evento de ejecución del testamento
+    }
+        
 /*
 
 function acceptBeneficiary () external {
 //Debe ser obligatorio que acepten, o configurable segun el que crea el testamento?
-
-
-}
-
-function initClaim () external {
-
 }
 
 function executeWill () external nonReentrant {
