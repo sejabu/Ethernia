@@ -1,6 +1,13 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.26;
 
+/*
+ * @title Digital Will MVP
+ * @authors Bugallo Sergio; Tissera Lujan; Sans Cristian
+ * @notice Scroll Open Hackaton - Digital Will MVP
+ * 
+ */
+
 //LIBRERIAS:
 
 import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
@@ -88,6 +95,8 @@ contract DigitalWill is ReentrancyGuard, Pausable {
         // Agregar la dirección de la wallet a la lista de wallets registradas
         // REVISAR CONFLICTO CON ARRAY DE WALLETS REGISTRADAS AL LLAMAR A LA FUNCION DE CREAR TESTAMENTO
         // registeredWallets.push(msg.sender);
+
+        //FALTA IMPLEMENTAR LA ACEPTACION DE LA INVITACION POR PARTE DEL BENEFICIARIO
 
         // Emitir el evento de registro de wallet
         emit BeneficiaryRegistered(msg.sender, _beneficiaryAddress, _name);
