@@ -2,8 +2,8 @@
 pragma solidity ^0.8.26;
 
 /*
- * @title Digital Will MVP
- * @authors Bugallo Sergio; Tissera Lujan; Sans Cristian
+ * @title Ethernia MVP
+ * @authors Bugallo Sergio (@elgallodev); Tissera Lujan (@lulutiETH); Sans Cristian (@MatenseGiles)
  * @notice Scroll Open Hackaton - Digital Will MVP
  * 
  */
