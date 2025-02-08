@@ -39,7 +39,7 @@ contract DigitalWill is ReentrancyGuard, Pausable {
     event WillCreated(address indexed creator); // Evento que se emite al crear un testamento.
     event LifeProofRenewed(address indexed creator, uint256 timestamp); // Evento que se emite al renovar la prueba de vida.
     event ClaimExecuted(address indexed testator, address indexed claimer, uint256 timestamp); // Evento que se emite al reclamar un testamento.
-    event WillExecuted(address indexed creator); // Evento que se emite al ejecutar un testamento.
+    event WillExecuted(address indexed creator, uint256 timestamp); // Evento que se emite al ejecutar un testamento.
     event WillDeactivated (address indexed creator, uint256 timestamp); // Evento que se emite al desactivar un testamento.
     event WillModified(address indexed testator, uint256 timestamp); // Evento que se emite al modificar un testamento.
     event BeneficiaryRevoked(address indexed testator, address indexed beneficiary, uint256 percentage); // Evento que se emite al revocar un beneficiario.
@@ -271,7 +271,7 @@ contract DigitalWill is ReentrancyGuard, Pausable {
         }
         */
         will.isActive = false;
-        emit WillExecuted(testator);
+        emit WillExecuted(msg.sender, block.timestamp);
     }
     // Función para que el owner retire fondos
     function withdraw(uint256 _amount) external onlyOwner {
