@@ -6,10 +6,10 @@ pragma solidity ^0.8.26;
 import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
 import "@openzeppelin/contracts/security/Pausable.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
-import "@openzeppelin/contracts/token/ERC721/IERC721.sol";
+// import "@openzeppelin/contracts/token/ERC721/extensions/IERC721Enumerable.sol";
 import "@openzeppelin/contracts/token/ERC1155/IERC1155.sol";
 
-contract Will is ReentrancyGuard, Pausable {
+contract DigitalWill is ReentrancyGuard, Pausable {
 
 //VARIABLES:
     
@@ -100,7 +100,7 @@ contract Will is ReentrancyGuard, Pausable {
             newWill.AssetsList[_assetAddress[i]] = _tokenName[i]; // Asigna la dirección del activo y su denominación. 
             newWill.assetList.push(_assetAddress[i]);
         }
-
+        // FALTA SOLICITAR LOS PERMISOS PARA QUE EL CONTRATO PUEDA MOVER LOS ASSETS LLEGADO EL MOMENTO
         emit WillCreated(msg.sender); // Emite el evento de creación del testamento.
     }
 
@@ -214,7 +214,7 @@ contract Will is ReentrancyGuard, Pausable {
         Will storage will = Wills[_testatorAddress]; // Obtener el testamento del testador.
         require(!will.isClaimed, "Will already claimed"); // Verificar que el testamento no haya sido reclamado.
         require(will.beneficiaries[msg.sender] > 0, "Not a beneficiary"); // Verificar que el reclamante sea un beneficiario.
-        require(block.timestamp >= will.lastRenewed + will.renewPeriod + LOCK_PERIOD, "Lock period not over"); // Verificar que haya pasado el tiempo de espera.
+        require(block.timestamp >= will.lastRenewed + will.renewPeriod + ALERT_PERIOD, "Lock period not over"); // Verificar que haya pasado el tiempo de espera.
         will.isClaimed = true; // Marcar el testamento como reclamado.
         will.claimTime = block.timestamp; // Almacenar la fecha de reclamo.
         will.claimer = msg.sender; // Almacenar la dirección del reclamante.
@@ -222,11 +222,65 @@ contract Will is ReentrancyGuard, Pausable {
         emit ClaimExecuted(_testatorAddress, msg.sender, block.timestamp); //Emitir evento de reclamo del testamento
     }
 
-    function executeWill () external nonReentrant {
+    function executeWill (address _testatorAddress) external nonReentrant {
         //Verificar que el testamento esté activo
         //Verificar que haya pasado el tiempo de espera
         //Ejecutar transferencia de activos
         //Desactivar el testamento
         //Emitir evento de ejecución del testamento
+
+        address testator = _testatorAddress;
+    
+        Will storage will = Wills[testator];
+        require(will.isActive, "Will not active");
+        require(will.isClaimed, "Will not claimed");
+        require(block.timestamp >= will.claimTime + LOCK_PERIOD, "Lock period not over");
+
+        // Transfer ERC20 tokens
+        for (uint256 i = 0; i < will.assetList.length; i++) {
+            address asset = will.assetList[i];
+            if (IERC20(asset).totalSupply() > 0) {
+                uint256 balance = IERC20(asset).balanceOf(testator);
+                for (uint256 j = 0; j < will.beneficiaryList.length; j++) {
+                    address beneficiary = will.beneficiaryList[j];
+                    uint256 amount = (balance * will.beneficiaries[beneficiary]) / 100;
+                    require(IERC20(asset).transferFrom(testator, beneficiary, amount), "ERC20 transfer failed");
+                }
+            }
+        }
+
+        /* Transfer ERC721 tokens
+        for (uint256 i = 0; i < will.assetList.length; i++) {
+            address asset = will.assetList[i];
+            if (address(IERC721(asset)).code.length > 0) {
+                IERC721 nft = IERC721(asset);
+                uint256 balance = nft.balanceOf(testator);
+                require(balance > 0, "No NFTs to transfer");
+            
+                uint256 tokensPerBeneficiary = balance / will.beneficiaryList.length;
+                uint256 tokenIndex = 0;
+            
+                for (uint256 j = 0; j < will.beneficiaryList.length && tokenIndex < balance; j++) {
+                    for (uint256 k = 0; k < tokensPerBeneficiary; k++) {
+                        uint256 tokenId = nft.tokenOfOwnerByIndex(testator, tokenIndex);
+                        nft.transferFrom(testator, will.beneficiaryList[j], tokenId);
+                        tokenIndex++;
+                    }
+                }
+            }
+        }
+        */
+        will.isActive = false;
+        emit WillExecuted(testator);
+    }
+    // Función para que el owner retire fondos
+    function withdraw(uint256 _amount) external onlyOwner {
+        require(address(this).balance >= _amount, "Insufficient balance in contract");
+        payable(owner).transfer(_amount);
+    }
+
+    // Función para obtener el balance del contrato
+    function getBalance() external view returns (uint256) {
+        return address(this).balance;
     }
 }    
