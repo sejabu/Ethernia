@@ -1,4 +1,4 @@
-# Digital Will Smart Contract Documentation
+# ETHERNIA Smart Contract Documentation
 
 ## Overview
 The Digital Will smart contract enables users to create and manage digital wills for cryptocurrency assets. It allows testators to specify beneficiaries, distribute assets, and requires periodic proof-of-life confirmations.
