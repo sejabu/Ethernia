@@ -29,6 +29,7 @@ contract DigitalWill is ReentrancyGuard, Pausable {
         address[] beneficiaryList;
         address[] assetList;
         mapping(address => uint256) beneficiaries; // Porcentaje de la herencia que le corresponde a cada beneficiario.
+        mapping(address => string) beneficiariesNames; // Nombre de cada beneficiario.
         mapping(address => string) AssetsList; // Lista con addresses de los smart contracts de los activos que desea incluir en la herencia y la denominacion de su token.
     }
 
@@ -44,6 +45,7 @@ contract DigitalWill is ReentrancyGuard, Pausable {
     event WillModified(address indexed testator, uint256 timestamp); // Evento que se emite al modificar un testamento.
     event BeneficiaryRevoked(address indexed testator, address indexed beneficiary, uint256 percentage); // Evento que se emite al revocar un beneficiario.
     event PercentagesRedistributed(address indexed testator); // Evento que se emite al redistribuir los porcentajes de la herencia.
+    event BeneficiaryRegistered(address indexed creator, address indexed beneficiaryAddress, string benficiaryName); // Evento que se emite al registrar un beneficiario.
 
 //MODIFICADORES:
 
@@ -74,6 +76,34 @@ contract DigitalWill is ReentrancyGuard, Pausable {
 
 
 //FUNCIONES:
+
+    function registerBeneficiary(address _beneficiaryAddress, string memory _name) public onlyTestator {
+        Will storage will = Wills[msg.sender];
+        // Verificar que la wallet no haya sido registrada previamente
+        require(bytes(will.beneficiariesNames[_beneficiaryAddress]).length == 0, "Wallet already registered");
+
+        // Registrar la nueva wallet con su nombre
+        will.beneficiariesNames[_beneficiaryAddress] = _name;
+
+        // Agregar la dirección de la wallet a la lista de wallets registradas
+        // REVISAR CONFLICTO CON ARRAY DE WALLETS REGISTRADAS AL LLAMAR A LA FUNCION DE CREAR TESTAMENTO
+        // registeredWallets.push(msg.sender);
+
+        // Emitir el evento de registro de wallet
+        emit BeneficiaryRegistered(msg.sender, _beneficiaryAddress, _name);
+    }
+
+    // Función para obtener el nombre de un beneficiario por su dirección
+    function getBeneficiaryName(address _walletAddress) public view onlyTestator returns (string memory) {
+        Will storage will = Wills[msg.sender];
+        return will.beneficiariesNames[_walletAddress];
+    }
+
+    // Función para obtener todas las direcciones de los beneficiarios registradas
+    function getAllRegisteredBeneficiares() public view onlyTestator returns (address[] memory) {
+        Will storage will = Wills[msg.sender];
+        return will.beneficiaryList;
+    }
 
     function createWill (uint256 _renewPeriod, address[] memory _beneficiaries, uint256[] memory _percentages, address[] memory _assetAddress, string[] memory _tokenName) external payable nonReentrant {
         require(_beneficiaries.length == _percentages.length, "Beneficiaries and percentages length mismatch"); // Verifica que la cantidad de beneficiarios sea igual a la cantidad de porcentajes.
