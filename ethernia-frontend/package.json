@@ -3,14 +3,14 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@ethersproject/providers": "^5.7.2",
     "cra-template": "1.2.0",
+    "ethers": "^6.13.5",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
-    "react-scripts": "5.0.1",
-    "ethers": "^6.13.5",
+    "react-scripts": "^5.0.1",
     "web-vitals": "^4.2.4"
   },
-  
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
@@ -34,6 +34,9 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "@pmmmwh/react-refresh-webpack-plugin": "^0.5.15",
+    "source-map-loader": "^5.0.0"
   }
-  
 }
