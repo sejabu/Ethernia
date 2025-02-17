@@ -5,7 +5,7 @@ import type { NextPage } from "next";
 import { useAccount } from "wagmi";
 import { ArrowRightIcon, BugAntIcon, MagnifyingGlassIcon } from "@heroicons/react/24/outline";
 import { Address } from "~~/components/scaffold-eth";
-import { lusitana } from '~~/app/v2/ui/fonts';
+import { lusitana } from '~~/components/fonts';
 import Image from 'next/image';
 
 const Home: NextPage = () => {
