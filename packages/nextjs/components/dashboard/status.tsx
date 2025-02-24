@@ -7,7 +7,7 @@ import { Clock, Ban, FileText, AlertTriangle, Check } from 'lucide-react';
 import { Address } from "~~/components/scaffold-eth";
 import { useAccount } from "wagmi";
 import { Balance } from "~~/components/scaffold-eth";
-import { useScaffoldReadContract } from '~~/hooks/scaffold-eth';
+import { useScaffoldReadContract, useScaffoldWriteContract } from '~~/hooks/scaffold-eth';
 
 
 export default function Status () {

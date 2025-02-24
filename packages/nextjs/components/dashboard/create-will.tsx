@@ -3,14 +3,19 @@
 import React, { useState } from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '~~/components/ui/tabs';
 import { Card, CardContent, CardHeader, CardTitle } from '~~/components/ui/card';
-import { Clock, Users, FileText, AlertTriangle, Check } from 'lucide-react';
+import { Clock, Users, FileText, AlertTriangle, Check, ScrollText } from 'lucide-react';
 import { Address } from "~~/components/scaffold-eth";
 import { useAccount } from "wagmi";
+import { useScaffoldReadContract, useScaffoldWriteContract } from '~~/hooks/scaffold-eth';
 
 
 export default function CreateWill() {
   const [activeTab, setActiveTab] = useState('create');
   const { address: connectedAddress } = useAccount();
+
+  const { writeContractAsync: writeEtherniaAsync } = useScaffoldWriteContract({
+    contractName: "Ethernia",
+   });
 
   return (
     <div className="w-full max-w-6xl mx-auto p-6 space-y-6 ">
@@ -21,25 +26,26 @@ export default function CreateWill() {
           <CardTitle>
             <div className="sticky lg:static top-0 navbar bg-base-100 min-h-0 flex-shrink-0 z-20 justify-around shadow-md shadow-secondary px-0 sm:px-2">
               <p>Create Digital Will - Testator address:</p>
-              <Address address={connectedAddress} />
+              <Address address={connectedAddress} format="long" />
             </div>
           </CardTitle>  
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
-                <label className="block font-medium">Renewal Period</label>
+                <label className="block font-medium">Will Name</label>
                 <div className="flex items-center space-x-2">
-                  <Clock className="h-5 w-5 text-gray-500" />
-                  <input type="number" placeholder="Days" className="w-full p-2 border rounded" />
+                  <ScrollText className="h-5 w-5 text-gray-500" />
+                  <input id="willName" type="text" placeholder="Put your will a name" className="w-full p-2 border rounded" />
+                  
                 </div>
               </div>
                 
               <div className="space-y-2">
-                <label className="block font-medium">Add Beneficiaries</label>
+                <label className="block font-medium">Renewal Period</label>
                 <div className="flex items-center space-x-2">
-                  <Users className="h-5 w-5 text-gray-500" />
-                  <input type="text" placeholder="Wallet Address" className="w-full p-2 border rounded" />
+                  <Clock className="h-5 w-5 text-gray-500" />
+                  <input id="renewalPeriod" type="number" placeholder="Time in days (minutes for test)" className="w-full p-2 border rounded" />
                 </div>
               </div>
             </div>
@@ -65,8 +71,23 @@ export default function CreateWill() {
                 </div>
               </div>
             </div>
-
-            <button className="w-full bg-blue-600 text-white p-3 rounded hover:bg-blue-700">
+            <button
+              className="w-full bg-blue-600 text-white p-3 rounded hover:bg-blue-700"
+              onClick={async () => {
+                try {
+                  const renewalPeriodInput = document.getElementById('renewalPeriod') as HTMLInputElement;
+                  const renewalPeriod = BigInt(renewalPeriodInput.value);
+                  const willNameInput = document.getElementById('willName') as HTMLInputElement;
+                  const willName = willNameInput.value;
+                  await writeEtherniaAsync({
+                    functionName: "createWill",
+                    args: [willName, renewalPeriod],
+                  });
+                }
+                catch (e) {
+                  console.error("Error creating will:", e);
+                }
+              }}>
               Create Will
             </button>
           </CardContent>
