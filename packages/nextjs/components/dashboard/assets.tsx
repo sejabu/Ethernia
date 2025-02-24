@@ -6,11 +6,13 @@ import { Card, CardContent, CardHeader, CardTitle } from '~~/components/ui/card'
 import { Clock, Users, FileText, AlertTriangle, Check } from 'lucide-react';
 import { Address } from "~~/components/scaffold-eth";
 import { useAccount } from "wagmi";
+import { AddressInput } from "~~/components/scaffold-eth";
 
 
 export default function Assets () {
   const [activeTab, setActiveTab] = useState('create');
   const { address: connectedAddress } = useAccount();
+  const [address, setAddress] = useState("");
 
   return (
     <div className="w-full max-w-6xl mx-auto p-6 space-y-6 ">
@@ -21,7 +23,7 @@ export default function Assets () {
           <CardTitle>
             <div className="sticky lg:static top-0 navbar bg-base-100 min-h-0 flex-shrink-0 z-20 justify-around shadow-md shadow-secondary px-0 sm:px-2">
               <p>Assets List - Testator address:</p>
-              <Address address={connectedAddress} />
+              <Address address={connectedAddress} format="long" />
             </div>
           </CardTitle>  
           </CardHeader>
@@ -41,7 +43,7 @@ export default function Assets () {
                       <option>ERC721</option>
                       <option>ERC1155</option>
                     </select>
-                    <input type="text" placeholder="0x..." className="flex-1 p-2 border rounded" />
+                    <AddressInput onChange={setAddress} value={address} placeholder="Input your address" name="Token Address" />
                     <input type="text" placeholder="Token Name" className="w-32 p-2 border rounded" />
                   </div>
                 </div>

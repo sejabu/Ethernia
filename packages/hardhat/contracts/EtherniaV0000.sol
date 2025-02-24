@@ -186,4 +186,11 @@ contract Ethernia {
         }
     }
 
+    function listBeneficiaries (address _testatorAddress) external view returns (Beneficiaries[] memory){
+        return willData[_testatorAddress].beneficiaryList;
+    }
+
+    function listERC20Tokens (address _testatorAddress) external view returns (Erc20Data[] memory){
+        return willData[_testatorAddress].erc20Tokens;
+    }
 }    
