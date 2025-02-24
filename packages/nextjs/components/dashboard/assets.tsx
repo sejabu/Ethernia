@@ -17,6 +17,7 @@ export default function Assets () {
     contractAddress: string;
     tokenBalance: string;
   }
+  
 
   
   const [tokenBalances, setTokenBalances] = useState<TokenBalance[]>([]);

@@ -1,4 +1,4 @@
-// services/alchemyService.js
+// services/alchemyServiceScript
 
 const url = `https://scroll-sepolia.g.alchemy.com/v2/${process.env.NEXT_PUBLIC_ALCHEMY_API_KEY}`;
 const headers = {
