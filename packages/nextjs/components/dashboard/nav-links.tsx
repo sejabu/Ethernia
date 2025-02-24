@@ -11,7 +11,8 @@ import {
   UserCircleIcon,
   TableCellsIcon,
   ArrowDownOnSquareIcon,
-  WindowIcon
+  WindowIcon,
+  CheckBadgeIcon
 } from '@heroicons/react/24/outline';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
@@ -27,14 +28,14 @@ const links = [
     href: '/dashboard',
     icon: WindowIcon,
   },
+  { name: 'I´m Alive!',
+    href: '/dashboard/lifeproof',
+    icon: HandRaisedIcon,
+  },
   {
     name: 'Create Will',
     href: '/dashboard/createwill',
     icon: DocumentTextIcon,
-  },
-  { name: 'I´m Alive!',
-    href: '/dashboard/lifeproof',
-    icon: HandRaisedIcon,
   },
   { name: 'Succesors',
     href: '/dashboard/successors',
@@ -52,7 +53,11 @@ const links = [
     href: '/dashboard/claimwill',
     icon: ArrowDownOnSquareIcon
   },
-  { name: 'User info',
+  { name: 'Execute Will',
+    href: '/dashboard/executewill',
+    icon: CheckBadgeIcon
+  },
+  { name: 'User Profile',
     href: '/dashboard/useraccount',
     icon: UserCircleIcon
   },

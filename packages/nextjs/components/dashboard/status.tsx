@@ -44,8 +44,8 @@ export default function Status () {
     args: [connectedAddress],
   });
   
-  const erc20TokenAddress = listERC20Tokens ? listERC20Tokens[0].tokenAddress : null; 
-  const erc20TokenName = listERC20Tokens ? listERC20Tokens[0].tokenName : null; 
+  const erc20TokenAddress = listERC20Tokens && listERC20Tokens.length > 0 ? listERC20Tokens[0].tokenAddress : null; 
+  const erc20TokenName = listERC20Tokens && listERC20Tokens.length > 0 ? listERC20Tokens[0].tokenName : null; 
 
   const { data: ERC20Balance } = useScaffoldReadContract({
     contractName: "FakeTetherA",
@@ -59,19 +59,17 @@ export default function Status () {
     args: [connectedAddress],
   });
   
-  const beneficiaryAddress = listBeneficiaries ? listBeneficiaries[0].beneficiary : null; 
-  const beneficiaryPercentage = listBeneficiaries ? listBeneficiaries[0].percentage : null; 
+  const beneficiaryAddress = listBeneficiaries && listBeneficiaries.length > 0 ? listBeneficiaries[0].beneficiary : null;
+  const beneficiaryPercentage = listBeneficiaries && listBeneficiaries.length > 0 ? listBeneficiaries[0].percentage : null; 
 
 
   return (
     <div className="w-full max-w-6xl mx-auto p-0 space-y-0">
-      <p className="text-center text-bold space-y-0">
+      <span className="text-center text-bold space-y-0">
         Testator address: 
         <Address address={connectedAddress} format="long" />  
         <Balance address={connectedAddress} />
-
-
-      </p>
+      </span>
       
 
       <Tabs defaultValue="status" className="w-full">

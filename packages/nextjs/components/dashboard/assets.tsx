@@ -43,7 +43,7 @@ export default function Assets () {
                       <option>ERC721</option>
                       <option>ERC1155</option>
                     </select>
-                    <AddressInput onChange={setAddress} value={address} placeholder="Input your address" name="Token Address" />
+                    <AddressInput onChange={setAddress} value={address} placeholder="Input token address" name="Token Address" />
                     <input type="text" placeholder="Token Name" className="w-32 p-2 border rounded" />
                   </div>
                 </div>
