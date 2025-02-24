@@ -30,3 +30,13 @@ p {
 .btn.btn-ghost {
   @apply shadow-none;
 }
+/* Ocultar barras de desplazamiento sin afectar la funcionalidad del scroll del mouse */
+.custom-scrollbar {
+  overflow: auto;
+  scrollbar-width: none; /* Para Firefox */
+  -ms-overflow-style: none;  /* Para Internet Explorer y Edge */
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+  display: none; /* Para Chrome, Safari y Opera */
+}

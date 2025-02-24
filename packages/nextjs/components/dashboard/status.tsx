@@ -6,20 +6,63 @@ import { Card, CardContent, CardHeader, CardTitle } from '~~/components/ui/card'
 import { Clock, Ban, FileText, AlertTriangle, Check } from 'lucide-react';
 import { Address } from "~~/components/scaffold-eth";
 import { useAccount } from "wagmi";
-import { Balance } from "~~/components/scaffold-eth";
 import { useScaffoldReadContract, useScaffoldWriteContract } from '~~/hooks/scaffold-eth';
 
 
 export default function Status () {
+  
   const [activeTab, setActiveTab] = useState('create');
   const { address: connectedAddress } = useAccount();
 
-  const { data: claimperiod } = useScaffoldReadContract({
+  const { data: willData } = useScaffoldReadContract({
+    contractName: "Ethernia",
+    functionName: "willData",    
+    args: [connectedAddress],
+  });
+
+  const isActive = willData ? willData[5] : false; // Assuming the 6th element is the isActive boolean
+  const isClaimed = willData ? willData[6] : false; // Assuming the 7th element is the isClaimes boolean
+
+  
+  const { data: userInfo } = useScaffoldReadContract({
+    contractName: "Ethernia",
+    functionName: "userInfo",    
+    args: [connectedAddress],
+  });
+
+  //
+
+  const lastLifeProof = userInfo ? userInfo[1] : null;
+  const lastlifeproof = lastLifeProof && Number(lastLifeProof) !== 0 ?new Date(Number(lastLifeProof) * 1000) : null;
+  const formattedLastLifeProof = lastlifeproof ? lastlifeproof.toLocaleDateString("es-ES", {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+    second: "2-digit"
+  }) : null;
+
+  const renewPeriod = willData ? willData[2] : null; // Assuming the 6th element is the isActive boolean
+  const renewDate = renewPeriod&& Number(renewPeriod) !== 0 && lastLifeProof && Number(lastLifeProof) !== 0 ? new Date(Number(renewPeriod+lastLifeProof) * 1000) : null;
+  const formattedRenewDate = renewDate ? renewDate.toLocaleDateString("es-ES", {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+    second: "2-digit"
+  }) : null;
+
+
+  const { data: claimPeriod } = useScaffoldReadContract({
     contractName: "Ethernia",
     functionName: "claimPeriod",    
   });
 
-  const date = new Date(Number(claimperiod) * 1000);
+
+
+  const date = new Date(Number(claimPeriod) * 1000);
   const dateInMinutes = Number(date) / 60000;
   const formattedDate = date.toLocaleDateString("es-ES", {
     year: "numeric",
@@ -30,13 +73,7 @@ export default function Status () {
     second: "2-digit"
   });
 
-  const { data: willData } = useScaffoldReadContract({
-    contractName: "Ethernia",
-    functionName: "willData",    
-    args: [connectedAddress],
-  });
 
-  const isActive = willData ? willData[5] : false; // Assuming the 6th element is the isActive boolean
   
   const { data: listERC20Tokens } = useScaffoldReadContract({
     contractName: "Ethernia",
@@ -65,11 +102,10 @@ export default function Status () {
 
   return (
     <div className="w-full max-w-6xl mx-auto p-0 space-y-0">
-      <span className="text-center text-bold space-y-0">
-        Testator address: 
+      <div className="text-bold space-y-0 flex">
+        Testator address:&nbsp;&nbsp;
         <Address address={connectedAddress} format="long" />  
-        <Balance address={connectedAddress} />
-      </span>
+      </div>
       
 
       <Tabs defaultValue="status" className="w-full">
@@ -85,36 +121,42 @@ export default function Status () {
                     <div>
                       <p className="font-medium">Will Status</p>
                       <div className="flex items-center">
-                      <span>{isActive ? <Check className="h-5 w-5 text-green-500" /> : <Ban className="h-5 w-5 text-red-500"/>}</span>
-                      <span className="text-sm text-green-600">{isActive ? 'Active' : 'Inactive'}</span>
+                      {isActive ? <Check className="h-5 w-5 text-green-500" /> : <Ban className="h-5 w-5 text-red-500"/>}
+                      {isActive ? <span className="text-sm text-green-600">&nbsp;Active</span>: <span className="text-sm text-red-600">&nbsp;Inactive</span>}
                     </div>
                     </div>
                   </div>
                 </div>
                 <div className="p-4 border rounded">
                   <div className="flex items-center space-x-2">
-                    <Check className="h-5 w-5 text-green-500" />
                     <div>
                       <p className="font-medium">Is Claimed?</p>
-                      <p className="text-sm text-green-600">{isActive ? 'Activo' : 'Inactivo'}</p>
+                      <div className="flex items-center">
+                      {isClaimed ? <Check className="h-5 w-5 text-red-500" /> : <Ban className="h-5 w-5 text-green-500"/>}
+                      {isClaimed ? <span className="text-sm text-red-600">&nbsp;Claimed</span> : <span className="text-sm text-green-600">&nbsp;Not Claimed</span >}
+                      </div>
                     </div>
                   </div>
                 </div>
                 <div className="p-4 border rounded">
                   <div className="flex items-center space-x-2">
-                    <Check className="h-5 w-5 text-green-500" />
                     <div>
                       <p className="font-medium">Last life proof</p>
-                      <p className="text-sm text-green-600">{isActive ? 'Activo' : 'Inactivo'}</p>
+                      <div className="flex items-center">
+                      {formattedLastLifeProof ? <Check className="h-5 w-5 text-green-500" /> : <Ban className="h-5 w-5 text-red-500"/>}
+                      {formattedLastLifeProof ? <span className="text-sm text-green-600">&nbsp;{formattedLastLifeProof}</span> : <span className="text-sm text-red-600">&nbsp;No life proof</span>}
+                    </div>
                     </div>
                   </div>
                 </div>
                 <div className="p-4 border rounded">
                   <div className="flex items-center space-x-2">
-                    <Clock className="h-5 w-5 text-blue-500" />
                     <div>
                       <p className="font-medium">Next Renewal</p>
-                      <p className="text-sm text-blue-600">Segundos: {claimperiod} - Fecha:{formattedDate} - Minutos: {dateInMinutes}</p>
+                      <div className="flex items-center">
+                      {formattedRenewDate ? <Clock className="h-5 w-5 text-green-500" /> : <Clock className="h-5 w-5 text-red-500"/>}
+                      {formattedRenewDate ? <span className="text-sm text-blue-600">&nbsp;{formattedRenewDate}</span> : <span className="text-sm text-red-600">&nbsp;No renewal date set yet.</span>}
+                    </div>
                     </div>
                   </div>
                 </div>

@@ -42,10 +42,12 @@ import Status from "~~/components/dashboard/status";
 
 export default function StatusPage() {
     return (
-        <Suspense fallback={<div>Loading...</div>}>
-            <div className="min-h-screen">
+        
+            <main className="min-h-screen">
+                <Suspense fallback={<div>Loading...</div>}>
                 <Status />
-            </div>
-        </Suspense>
+                </Suspense>
+            </main>
+        
     );
 }

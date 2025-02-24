@@ -6,11 +6,17 @@ import { Card, CardContent, CardHeader, CardTitle } from '~~/components/ui/card'
 import { Mail, Users, FileText, AlertTriangle, Check } from 'lucide-react';
 import { Address } from "~~/components/scaffold-eth";
 import { useAccount } from "wagmi";
+import { useScaffoldReadContract, useScaffoldWriteContract } from '~~/hooks/scaffold-eth';
+
 
 
 export default function UserAccount () {
   const [activeTab, setActiveTab] = useState('create');
   const { address: connectedAddress } = useAccount();
+
+  const { writeContractAsync: writeEtherniaAsync } = useScaffoldWriteContract({
+    contractName: "Ethernia",
+  });
 
   return (
     <div className="w-full max-w-6xl mx-auto p-6 space-y-6">
@@ -34,6 +40,17 @@ export default function UserAccount () {
                   <Users className="h-5 w-5 text-gray-500" />
                   <input type="text" placeholder="Input your name" className="w-full p-2 border rounded" />
                 </div>
+                <button className="bg-green-600 text-white px-4 py-2 rounded" onClick={async () => {
+                  try {
+                    await writeEtherniaAsync({
+                      functionName: "registerUser",
+                    });
+                  } catch (error) {
+                    console.error("Error renewing life proof:", error);
+                  }
+                }}>
+                  Register User
+                </button>
               </div>
             </CardContent>
           </Card>

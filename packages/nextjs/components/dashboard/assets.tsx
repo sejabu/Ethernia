@@ -1,18 +1,41 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '~~/components/ui/tabs';
 import { Card, CardContent, CardHeader, CardTitle } from '~~/components/ui/card';
 import { Clock, Users, FileText, AlertTriangle, Check } from 'lucide-react';
-import { Address } from "~~/components/scaffold-eth";
+import { Address, AddressInput } from "~~/components/scaffold-eth";
 import { useAccount } from "wagmi";
-import { AddressInput } from "~~/components/scaffold-eth";
-
+import { getTokenBalances } from '~~/services/web3/getTokenBalances';
 
 export default function Assets () {
   const [activeTab, setActiveTab] = useState('create');
   const { address: connectedAddress } = useAccount();
   const [address, setAddress] = useState("");
+
+  interface TokenBalance {
+    contractAddress: string;
+    tokenBalance: string;
+  }
+
+  
+  const [tokenBalances, setTokenBalances] = useState<TokenBalance[]>([]);
+  const [error, setError] = useState<Error | null>(null);
+  
+  useEffect(() => {
+    const fetchTokenBalances = async () => {
+      try {
+        if (!connectedAddress) return;
+        const data = await getTokenBalances(connectedAddress);
+        setTokenBalances(data.result.tokenBalances);
+      } catch (error) {
+        setError(error as Error);
+      }
+    };
+  
+    fetchTokenBalances();
+  }, [connectedAddress]);
+  
 
   return (
     <div className="w-full max-w-6xl mx-auto p-6 space-y-6 ">
@@ -61,6 +84,15 @@ export default function Assets () {
                     </div>
                   ))}
                 </div>
+              </div>
+              <div>
+                <h1>Dashboard</h1>
+                {error && <p>Error: {error.message}</p>}
+                <ul>
+                  {tokenBalances.map((token, index) => (
+                    <li key={index}>{token.tokenBalance}</li>
+                  ))}
+               </ul>
               </div>
           </CardContent>
           </Card>
