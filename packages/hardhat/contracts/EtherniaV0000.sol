@@ -28,6 +28,7 @@ contract Ethernia {
     struct Erc20Data {
         address tokenAddress;
         string tokenName;
+        uint256 tokenBalance;
     }
 
     struct Beneficiaries {
@@ -118,6 +119,7 @@ contract Ethernia {
         Erc20Data memory erc20Data;
         erc20Data.tokenAddress = _tokenAddress;
         erc20Data.tokenName = _tokenName;
+        erc20Data.tokenBalance = IERC20(_tokenAddress).balanceOf(msg.sender);
         willData[msg.sender].erc20Tokens.push(erc20Data);
     }
 
@@ -193,4 +195,4 @@ contract Ethernia {
     function listERC20Tokens (address _testatorAddress) external view returns (Erc20Data[] memory){
         return willData[_testatorAddress].erc20Tokens;
     }
-}    
+}

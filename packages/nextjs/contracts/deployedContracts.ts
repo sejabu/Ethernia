@@ -173,6 +173,11 @@ const deployedContracts = {
                   name: "tokenName",
                   type: "string",
                 },
+                {
+                  internalType: "uint256",
+                  name: "tokenBalance",
+                  type: "uint256",
+                },
               ],
               internalType: "struct Ethernia.Erc20Data[]",
               name: "",

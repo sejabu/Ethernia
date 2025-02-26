@@ -42,7 +42,7 @@ const links = [
     icon: UserGroupIcon
   },
   { name: 'Assets',
-    href: '/dashboard/cryptoassets',
+    href: '/dashboard/tokenassets',
     icon: CurrencyDollarIcon
   },
   { name: 'Delete Will',

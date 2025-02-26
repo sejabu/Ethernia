@@ -3,40 +3,49 @@
 import React, { useState, useEffect } from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '~~/components/ui/tabs';
 import { Card, CardContent, CardHeader, CardTitle } from '~~/components/ui/card';
-import { Clock, Users, FileText, AlertTriangle, Check } from 'lucide-react';
+import { Clock, Users, FileText, AlertTriangle, Check, CircleDollarSign, Wallet } from 'lucide-react';
 import { Address, AddressInput } from "~~/components/scaffold-eth";
 import { useAccount } from "wagmi";
-import { getTokenBalances } from '~~/services/web3/getTokenBalances';
+import { useScaffoldReadContract, useScaffoldWriteContract } from '~~/hooks/scaffold-eth';
+
 
 export default function Assets () {
   const [activeTab, setActiveTab] = useState('create');
   const { address: connectedAddress } = useAccount();
   const [address, setAddress] = useState("");
+  const [tokensList, setTokensList] = useState<TokenData[]>([]);
 
-  interface TokenBalance {
-    contractAddress: string;
-    tokenBalance: string;
-  }
-  
+  const { writeContractAsync: writeEtherniaAsync } = useScaffoldWriteContract({
+    contractName: "Ethernia",
+  });
 
-  
-  const [tokenBalances, setTokenBalances] = useState<TokenBalance[]>([]);
-  const [error, setError] = useState<Error | null>(null);
-  
+  const { data: listERC20Tokens } = useScaffoldReadContract({
+    contractName: "Ethernia",
+    functionName: "listERC20Tokens",    
+    args: [connectedAddress],
+  });
+    
+  interface TokenData {
+  tokenAddress: string;
+  tokenName: string;
+  tokenBalance: bigint;
+  index: number;
+}
+
+  // Update tokens list when data changes
+
   useEffect(() => {
-    const fetchTokenBalances = async () => {
-      try {
-        if (!connectedAddress) return;
-        const data = await getTokenBalances(connectedAddress);
-        setTokenBalances(data.result.tokenBalances);
-      } catch (error) {
-        setError(error as Error);
-      }
-    };
-  
-    fetchTokenBalances();
-  }, [connectedAddress]);
-  
+    if (listERC20Tokens && listERC20Tokens.length > 0) {
+      const tokensData: TokenData[] = listERC20Tokens.map((token, index) => ({
+        tokenAddress: token.tokenAddress,
+        tokenName: token.tokenName,
+        tokenBalance: token.tokenBalance,
+        index
+      }));
+      
+      setTokensList(tokensData);
+    }
+  }, [listERC20Tokens]);
 
   return (
     <div className="w-full max-w-6xl mx-auto p-6 space-y-6 ">
@@ -54,51 +63,69 @@ export default function Assets () {
           <CardContent className="space-y-4">
             <div className="space-y-2">
               <label className="block font-medium">Digital Assets</label>
-              <div className="border rounded p-4">
-                <div className="flex items-center justify-between mb-2">
-                  <span>Asset Type</span>
-                  <span>Contract Address</span>
-                  <span>Token Name</span>
+              {/* Token Balances Display */}
+              <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <label className="block font-medium">Token smart contract address:</label>
+                <div className="flex items-center space-x-2">
+                  <Wallet className="h-5 w-5 text-gray-500" />
+                  <input id="tokenAddress" type="text" placeholder="Put token address" className="w-full p-2 border rounded" />
+                  
                 </div>
-                <div className="space-y-2">
-                  <div className="flex items-center space-x-2">
-                    <select className="p-2 border rounded">
-                      <option>ERC20</option>
-                      <option>ERC721</option>
-                      <option>ERC1155</option>
-                    </select>
-                    <AddressInput onChange={setAddress} value={address} placeholder="Input token address" name="Token Address" />
-                    <input type="text" placeholder="Token Name" className="w-32 p-2 border rounded" />
-                  </div>
+              </div>
+                
+              <div className="space-y-2">
+                <label className="block font-medium">Token Name</label>
+                <div className="flex items-center space-x-2">
+                  <CircleDollarSign className="h-5 w-5 text-gray-500" />
+                  <input id="tokenName" type="text" placeholder="USDT for example" className="w-full p-2 border rounded" />
                 </div>
               </div>
             </div>
+            <button
+              className="w-full bg-blue-600 text-white p-3 rounded hover:bg-blue-700"
+              onClick={async () => {
+                try {
+                  const tokenAddressInput = document.getElementById('tokenAddress') as HTMLInputElement;
+                  const tokenAddress = String(tokenAddressInput.value);
+                  const tokenNameInput = document.getElementById('tokenName') as HTMLInputElement;
+                  const tokenName = String(tokenNameInput.value);
+                  await writeEtherniaAsync({
+                    functionName: "addERC20Assets",
+                    args: [tokenAddress, tokenName],
+                  });
+                }
+                catch (e) {
+                  console.error("Error adding asset to will:", e);
+                }
+              }}>
+              Add asset to will.
+            </button>            
+            </div>
             <div className="space-y-2">
-                <h3 className="font-medium">Asset Distribution</h3>
-                <div className="space-y-2">
-                  {[1, 2].map((i) => (
-                    <div key={i} className="p-3 border rounded">
-                      <div className="flex justify-between">
-                        <span>Token {i}</span>
-                        <span>100 USDC</span>
+              <h3 className="font-medium">Asset Distribution</h3>
+              <div className="space-y-2">
+              {tokensList.length > 0 ? (
+                    tokensList.map((token, i) => (
+                      <div key={i} className="p-3 border rounded">
+                        <div className="flex justify-between">
+                          <span>Token {i + 1}: {token.tokenAddress}</span>
+                          <span>{token.tokenName}</span>
+                          <span>{token.tokenBalance}</span>
+                        </div>
                       </div>
+                    ))
+                  ) : (
+                    <div className="p-3 border rounded text-center text-gray-500">
+                      No ERC20 tokens added yet
                     </div>
-                  ))}
+                  )}
                 </div>
-              </div>
-              <div>
-                <h1>Dashboard</h1>
-                {error && <p>Error: {error.message}</p>}
-                <ul>
-                  {tokenBalances.map((token, index) => (
-                    <li key={index}>{token.tokenBalance}</li>
-                  ))}
-               </ul>
-              </div>
+            </div>         
           </CardContent>
-          </Card>
-        </TabsContent>
-      </Tabs>
-    </div>
+        </Card>
+      </TabsContent>
+    </Tabs>
+  </div>
   );
 }

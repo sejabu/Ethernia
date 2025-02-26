@@ -1,11 +1,11 @@
 import { Suspense } from 'react';
-import ClaimWill from "~~/components/dashboard/claim-will";
+import ExecuteWill from "~~/components/dashboard/execute-will";
 
 export default function ClaimPage () {
     return (
         <Suspense fallback={<div>Loading...</div>}>
             <div className="min-h-screen">
-                <ClaimWill />
+                <ExecuteWill />
             </div>
         </Suspense>
     );

@@ -50,7 +50,7 @@ export default function CreateWill() {
               </div>
             </div>
 
-            <div className="space-y-2">
+            {/* <div className="space-y-2">
               <label className="block font-medium">Digital Assets</label>
               <div className="border rounded p-4">
                 <div className="flex items-center justify-between mb-2">
@@ -70,7 +70,7 @@ export default function CreateWill() {
                   </div>
                 </div>
               </div>
-            </div>
+            </div> */}
             <button
               className="w-full bg-blue-600 text-white p-3 rounded hover:bg-blue-700"
               onClick={async () => {
