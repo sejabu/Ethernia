@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { getCA } from "~~/utils/getCA";
-import { Modal } from './Modal'; // Assuming you have a React Modal component
+import { Modal } from '~~/components/arcana-ca/Modal'; 
 import type { CA, Intent, ProgressStep } from '@arcana/ca-sdk';
 import type { AllowanceHookInput } from '@arcana/ca-sdk';
 import { getTextFromStep } from "~~/utils/getTextFromSteps";
