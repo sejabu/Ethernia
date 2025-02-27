@@ -1,18 +1,33 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '~~/components/ui/tabs';
 import { Card, CardContent, CardHeader, CardTitle } from '~~/components/ui/card';
 import { Clock, Ban, FileText, AlertTriangle, Check } from 'lucide-react';
 import { Address } from "~~/components/scaffold-eth";
 import { useAccount } from "wagmi";
-import { useScaffoldReadContract, useScaffoldWriteContract } from '~~/hooks/scaffold-eth';
+import { useScaffoldReadContract } from '~~/hooks/scaffold-eth';
 
 
 export default function Status () {
   
   const [activeTab, setActiveTab] = useState('create');
   const { address: connectedAddress } = useAccount();
+  const [beneficiaryList, setBeneficiaryList] = useState<BeneficiaryData[]>([]);
+  const [tokensList, setTokensList] = useState<TokenData[]>([]);
+
+  interface BeneficiaryData {
+    beneficiary: string;
+    percentage: bigint;
+    index: number;
+  }
+  
+  interface TokenData {
+    tokenAddress: string;
+    tokenName: string;
+    tokenBalance: bigint;
+    index: number;
+  }
 
   const { data: willData } = useScaffoldReadContract({
     contractName: "Ethernia",
@@ -81,14 +96,18 @@ export default function Status () {
     args: [connectedAddress],
   });
   
-  const erc20TokenAddress = listERC20Tokens && listERC20Tokens.length > 0 ? listERC20Tokens[0].tokenAddress : null; 
-  const erc20TokenName = listERC20Tokens && listERC20Tokens.length > 0 ? listERC20Tokens[0].tokenName : null; 
-
-  const { data: ERC20Balance } = useScaffoldReadContract({
-    contractName: "FakeTetherA",
-    functionName: "balanceOf",    
-    args: [connectedAddress],
-  });
+  useEffect(() => {
+    if (listERC20Tokens && listERC20Tokens.length > 0) {
+      const tokensData: TokenData[] = listERC20Tokens.map((token, index) => ({
+        tokenAddress: token.tokenAddress,
+        tokenName: token.tokenName,
+        tokenBalance: token.tokenBalance,
+        index
+      }));
+      
+      setTokensList(tokensData);
+    }
+  }, [listERC20Tokens]);
 
   const { data: listBeneficiaries } = useScaffoldReadContract({
     contractName: "Ethernia",
@@ -96,8 +115,17 @@ export default function Status () {
     args: [connectedAddress],
   });
   
-  const beneficiaryAddress = listBeneficiaries && listBeneficiaries.length > 0 ? listBeneficiaries[0].beneficiary : null;
-  const beneficiaryPercentage = listBeneficiaries && listBeneficiaries.length > 0 ? listBeneficiaries[0].percentage : null; 
+  useEffect(() => {
+    if (listBeneficiaries && listBeneficiaries.length > 0) {
+      const beneficiariesData: BeneficiaryData[] = listBeneficiaries.map((beneficiary, index) => ({
+        beneficiary: beneficiary.beneficiary,     // Changed from beneficiaryAddress
+        percentage: beneficiary.percentage,       // Changed from beneficiaryPercentage
+        index
+      }));
+      
+      setBeneficiaryList(beneficiariesData);
+    }
+  }, [listBeneficiaries]);
 
 
   return (
@@ -132,7 +160,7 @@ export default function Status () {
                     <div>
                       <p className="font-medium">Is Claimed?</p>
                       <div className="flex items-center">
-                      {isClaimed ? <Check className="h-5 w-5 text-red-500" /> : <Ban className="h-5 w-5 text-green-500"/>}
+                      {isClaimed ? <AlertTriangle className="h-5 w-5 text-red-500" /> : <Ban className="h-5 w-5 text-green-500"/>}
                       {isClaimed ? <span className="text-sm text-red-600">&nbsp;Claimed</span> : <span className="text-sm text-green-600">&nbsp;Not Claimed</span >}
                       </div>
                     </div>
@@ -165,32 +193,40 @@ export default function Status () {
               <div className="space-y-2">
                 <h3 className="font-medium">Asset Distribution</h3>
                 <div className="space-y-2">
-                  {[1, 2].map((i) => (
-                    <div key={i} className="p-3 border rounded">
-                      <div className="flex justify-between">
-                        <span>Token {i} {erc20TokenAddress}</span>
-                        <span>{erc20TokenName}</span>
-                        <span>{ERC20Balance}</span>
+                {tokensList.length > 0 ? (
+                    tokensList.map((token, i) => (
+                      <div key={i} className="p-3 border rounded">
+                        <div className="flex justify-between">
+                          <span>Token {i + 1}: {token.tokenAddress}</span>
+                          <span>{token.tokenName}</span>
+                          <span>{token.tokenBalance}</span>
+                        </div>
                       </div>
+                    ))
+                  ) : (
+                    <div className="p-3 border rounded text-center text-gray-500">
+                      No ERC20 tokens added yet
                     </div>
-                  ))}
+                  )}
                 </div>
               </div>
               <div className="space-y-2">
                 <h3 className="font-medium">Current Beneficiaries</h3>
                 <div className="space-y-2">
-                  {[1, 2].map((i) => (
-                    <div key={i} className="flex items-center justify-between p-3 border rounded">
-                      <div>
-                        <p className="font-medium">Beneficiary {i}</p>
-                        <p className="text-sm text-gray-600">{beneficiaryAddress}</p>
+                {beneficiaryList.length > 0 ? (
+                    beneficiaryList.map((token, i) => (
+                      <div key={i} className="p-3 border rounded">
+                        <div className="flex justify-between">
+                          <span>Beneficiary {i + 1}:&nbsp;{token.beneficiary}</span>
+                          <span>Percentage assigned:&nbsp;{token.percentage.toString()}&nbsp;%</span>
+                        </div>
                       </div>
-                      <div className="flex items-center space-x-2">
-                        <span>{beneficiaryPercentage}%</span>
-                        <button className="text-red-600">Remove</button>
-                      </div>
+                    ))
+                  ) : (
+                    <div className="p-3 border rounded text-center text-gray-500">
+                      No beneficiaries added yet.
                     </div>
-                  ))}
+                  )}
                 </div>
               </div>
             </CardContent>

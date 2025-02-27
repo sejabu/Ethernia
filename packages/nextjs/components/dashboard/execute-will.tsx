@@ -1,99 +1,214 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '~~/components/ui/tabs';
+import { Card, CardContent, CardHeader, CardTitle } from '~~/components/ui/card';
+import { Clock, Users, FileText, AlertTriangle, Check, Ban } from 'lucide-react';
+import { Address } from "~~/components/scaffold-eth";
+import { useAccount } from "wagmi";
+import { useScaffoldReadContract, useScaffoldWriteContract } from '~~/hooks/scaffold-eth';
 
-import {
-  Tabs,
-  TabsContent,
-  TabsList,
-  TabsTrigger,
-} from '~~/components/ui/tabs';
 
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from '~~/components/ui/card';
+export default function Execute () {
+  const [activeTab, setActiveTab] = useState('create');
+  const { address: connectedAddress } = useAccount();
+  const [testatorAddress, setTestatorAddress] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-import {
-  Clock,
-  Users,
-  FileText,
-  AlertTriangle,
-  Check,
-} from 'lucide-react';
+  const { writeContractAsync: writeEtherniaAsync } = useScaffoldWriteContract({
+    contractName: "Ethernia",
+  });
 
-import {
-  Address,
-  AddressInput,
-} from "~~/components/scaffold-eth";
+  const { data: willData } = useScaffoldReadContract({
+      contractName: "Ethernia",
+      functionName: "willData",    
+      args: [testatorAddress],
+    });
+  
+  const claimTime = willData ? willData[3] : null; // 4th element is the isActive boolean
+  const claimtime = claimTime && Number(claimTime) !== 0 ?new Date(Number(claimTime) * 1000) : null;
+  const formattedClaimTime = claimtime ? claimtime.toLocaleDateString("es-ES", {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+    second: "2-digit"
+  }) : null;
 
-import {
-  CA,
-} from '@arcana/ca-sdk';
+  const { data: claimPeriod } = useScaffoldReadContract({
+      contractName: "Ethernia",
+      functionName: "claimPeriod",    
+  });
 
-import {
-  QueryClient,
-  QueryClientProvider,
-} from '@tanstack/react-query';
+  const executionPeriod = Number(claimPeriod) + Number(claimTime);
+  const executionperiod = executionPeriod &&  executionPeriod !== 0 ?new Date(executionPeriod * 1000) : null;
+  const formattedExecutionPeriod = executionperiod ? executionperiod.toLocaleDateString("es-ES", {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+    second: "2-digit"
+  }) : null;  
+  
+  const isActive = willData ? willData[5] : false; // 6th element is the isActive boolean
+  const isClaimed = willData ? willData[6] : false; // 7th element is the isClaimed boolean
+  const isExecuted = willData ? willData[7] : false; // 8th element is the isExecuted boolean
 
-export default function Assets () {
 
+  const { data: userInfo, isLoading: isUserInfoLoading, refetch: refetchUserInfo } = useScaffoldReadContract({
+    contractName: "Ethernia",
+    functionName: "userInfo",    
+    args: [testatorAddress || '0x0000000000000000000000000000000000000000'],
+  });
+
+  const lastLifeProof = userInfo ? userInfo[1] : null;
+  const lastlifeproof = lastLifeProof && Number(lastLifeProof) !== 0 ?new Date(Number(lastLifeProof) * 1000) : null;
+  const formattedLastLifeProof = lastlifeproof ? lastlifeproof.toLocaleDateString("es-ES", {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+    second: "2-digit"
+  }) : null;
+
+  const enabled = Boolean(testatorAddress && testatorAddress.startsWith('0x'));
+  
+
+  const handleTestatorAddressChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    if (value && !value.startsWith('0x')) {
+      // Optionally prepend 0x
+      setTestatorAddress('0x' + value);
+    } else {
+      setTestatorAddress(value);
+    }
+  };
+
+  const handleAddressSubmit = async () => {
+    if (!testatorAddress || !testatorAddress.startsWith('0x')) {
+      alert('Please enter a valid Ethereum address');
+      return;
+  }
+
+  // Refetch user info with the new address
+  refetchUserInfo();
+};
+
+const handleExecuteSubmit = async () => {
+  if (!testatorAddress || !testatorAddress.startsWith('0x')) {
+    alert('Please enter a valid Ethereum address');
+    return;
+  }
+
+  if (!claimTime) {
+    alert('Cannot execute: No claim record found');
+    return;
+  }
+
+  try {
+    setIsSubmitting(true);
+    await writeEtherniaAsync({
+      functionName: 'executeWill',
+      args: [testatorAddress],
+    });
+    alert('Execute initiated successfully');
+  } catch (error: any) {
+    console.error('Error executing will:', error);
+    alert(`Failed to execute will: ${error?.message || 'Unknown error'}`);
+  } finally {
+    setIsSubmitting(false);
+  }
+};
 
   return (
-    <div className="w-full max-w-6xl mx-auto p-6 space-y-6 ">
-      <Tabs defaultValue="create" className="w-full">
-      <TabsContent value="create">
-      <Card>
-        <CardHeader >
-          <CardTitle>
-            <div className="sticky lg:static top-0 navbar bg-base-100 min-h-0 flex-shrink-0 z-20 justify-around shadow-md shadow-secondary px-0 sm:px-2">
-              <p>Assets List - Testator address:</p>
+    <div className="w-full max-w-6xl mx-auto p-6 space-y-6">
+      <div className="text-bold space-y-0 flex">
+              Beneficiary address:&nbsp;&nbsp;
+              <Address address={connectedAddress} format="long" />  
             </div>
-          </CardTitle>  
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="space-y-2">
-              <label className="block font-medium">Digital Assets</label>
-              <div className="border rounded p-4">
-                
-                <div className="flex items-center justify-between mb-2">
-                  <span>Asset Type</span>
-                  <span>Contract Address</span>
-                  <span>Token Name</span>
-                </div>
-                <div className="space-y-2">
+      <Tabs defaultValue="executeWill" className="w-full">
+        <TabsContent value="executeWill">
+          <Card>
+          <CardContent>
+          <div className="grid grid-cols-2 gap-4">
+                <div className="p-4 border rounded">
                   <div className="flex items-center space-x-2">
-                    <select className="p-2 border rounded">
-                      <option>ERC20</option>
-                      <option>ERC721</option>
-                      <option>ERC1155</option>
-                    </select>
-                    <input type="text" placeholder="Token Name" className="w-32 p-2 border rounded" />
+                    <div>
+                      <p className="font-medium">Will Status</p>
+                      <div className="flex items-center">
+                      {isActive ? <Check className="h-5 w-5 text-green-500" /> : <Ban className="h-5 w-5 text-red-500"/>}
+                      {isActive ? <span className="text-sm text-green-600">&nbsp;Active</span>: <span className="text-sm text-red-600">&nbsp;Inactive</span>}
+                    </div>
+                    </div>
                   </div>
                 </div>
-              </div>
-            </div>
-            <div className="space-y-2">
-                <h3 className="font-medium">Asset Distribution</h3>
-                <div className="space-y-2">
-            
-                </div>
-              
-                <div className="space-y-2">
-                  {[1, 2].map((i) => (
-                    <div key={i} className="p-3 border rounded">
-                      <div className="flex justify-between">
-                        <span>Token {i}</span>
-                        <span>100 USDC</span>
+                <div className="p-4 border rounded">
+                  <div className="flex items-center space-x-2">
+                    <div>
+                      <p className="font-medium">Is Claimed?</p>
+                      <div className="flex items-center">
+                      {isClaimed ? <AlertTriangle className="h-5 w-5 text-red-500" /> : <Ban className="h-5 w-5 text-green-500"/>}
+                      {isClaimed ? <span className="text-sm text-red-600">&nbsp;Claimed</span> : <span className="text-sm text-green-600">&nbsp;Not Claimed</span >}
+                      {formattedClaimTime ? <span className="text-sm text-red-600">&nbsp;{formattedClaimTime}</span> : <span className="text-sm text-green-600">&nbsp;Not claimed yet.</span>}
+
                       </div>
                     </div>
-                  ))}
+                  </div>
+                </div>
+                </div>
+                </CardContent>
+            <CardHeader>
+              <CardTitle>Execute Will</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="p-4 border rounded bg-yellow-50">
+                <div className="flex items-center space-x-2">
+                  <AlertTriangle className="h-5 w-5 text-yellow-600" />
+                  <p className="text-yellow-600">Will can be executed after be claimed and expired execution period of time ({formattedExecutionPeriod}).</p>
                 </div>
               </div>
-              
-          </CardContent>
+
+              <div className="space-y-2">
+                <label className="block font-medium">Testator Address</label>
+                <div className="flex gap-2">
+                  <input 
+                    type="text" 
+                    placeholder="0x..." 
+                    className="w-full p-2 border rounded" 
+                    value={testatorAddress}
+                    onChange={handleTestatorAddressChange}
+                  />
+                  <button 
+                    className="bg-blue-500 text-white px-3 rounded hover:bg-blue-600"
+                    onClick={handleAddressSubmit}
+                  >
+                    Check
+                  </button>
+                </div>
+              </div>
+
+              {isUserInfoLoading && (
+                <div className="text-gray-500">Loading testator information...</div>
+              )}
+
+              {testatorAddress && userInfo && (
+                <div className="p-4 border rounded bg-gray-50 space-y-2">
+                  <h3 className="font-medium">Testator Information</h3>
+                  <div>Last Life Proof: {formattedLastLifeProof || 'None'}</div>
+                </div>
+              )}
+
+              <button 
+                className="w-full bg-red-400 text-white p-3 rounded hover:bg-red-700 disabled:bg-gray-400"
+                onClick={handleExecuteSubmit}
+                disabled={isSubmitting || !testatorAddress || !claimTime}
+              >
+                {isSubmitting ? 'Processing...' : 'Execute Will'}
+              </button>
+            </CardContent>
           </Card>
         </TabsContent>
       </Tabs>

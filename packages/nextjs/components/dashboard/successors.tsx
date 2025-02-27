@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '~~/components/ui/tabs';
 import { Card, CardContent, CardHeader, CardTitle } from '~~/components/ui/card';
 import { Clock, Users, FileText, AlertTriangle, Check, ScrollText, Percent } from 'lucide-react';
@@ -13,6 +13,8 @@ import { useScaffoldReadContract, useScaffoldWriteContract } from '~~/hooks/scaf
 export default function Successors () {
   const [activeTab, setActiveTab] = useState('create');
   const { address: connectedAddress } = useAccount();
+  const [beneficiaryList, setBeneficiaryList] = useState<BeneficiaryData[]>([]);
+  
 
   const { writeContractAsync: writeEtherniaAsync } = useScaffoldWriteContract({
       contractName: "Ethernia",
@@ -23,9 +25,27 @@ export default function Successors () {
       functionName: "listBeneficiaries",    
       args: [connectedAddress],
     });
-  
-  const beneficiaryAddress = listBeneficiaries && listBeneficiaries.length > 0 ? listBeneficiaries[0].beneficiary : null;
-  const beneficiaryPercentage = listBeneficiaries && listBeneficiaries.length > 0 ? listBeneficiaries[0].percentage : null; 
+
+  interface BeneficiaryData {
+    beneficiary: string;
+    percentage: bigint;
+    index: number;
+  }
+
+  // Update beneficiary list when data changes
+
+  useEffect(() => {
+    if (listBeneficiaries && listBeneficiaries.length > 0) {
+      const beneficiariesData: BeneficiaryData[] = listBeneficiaries.map((beneficiary, index) => ({
+        beneficiary: beneficiary.beneficiary,     // Changed from beneficiaryAddress
+        percentage: beneficiary.percentage,       // Changed from beneficiaryPercentage
+        index
+      }));
+      
+      setBeneficiaryList(beneficiariesData);
+    }
+  }, [listBeneficiaries]);
+
 
 
   return (
@@ -77,18 +97,20 @@ export default function Successors () {
               <div className="space-y-2">
                 <h3 className="font-medium">Current Beneficiaries</h3>
                 <div className="space-y-2">
-                  {[1, 2].map((i) => (
-                    <div key={i} className="flex items-center justify-between p-3 border rounded">
-                      <div>
-                        <p className="font-medium">Beneficiary {i}</p>
-                        <p className="text-sm text-gray-600">{beneficiaryAddress}</p>
+                {beneficiaryList.length > 0 ? (
+                    beneficiaryList.map((token, i) => (
+                      <div key={i} className="p-3 border rounded">
+                        <div className="flex justify-between">
+                          <span>Beneficiary {i + 1}:&nbsp;{token.beneficiary}</span>
+                          <span>Percentage assigned:&nbsp;{token.percentage.toString()}&nbsp;%</span>
+                        </div>
                       </div>
-                      <div className="flex items-center space-x-2">
-                        <span>{beneficiaryPercentage}%</span>
-                        <button className="text-red-600">Remove</button>
-                      </div>
+                    ))
+                  ) : (
+                    <div className="p-3 border rounded text-center text-gray-500">
+                      No beneficiaries added yet.
                     </div>
-                  ))}
+                  )}
                 </div>
               </div>
             </CardContent>
