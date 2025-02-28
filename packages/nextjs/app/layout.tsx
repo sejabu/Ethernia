@@ -10,9 +10,9 @@ const ScaffoldEthApp = ({ children }: { children: React.ReactNode }) => {
   return (
     <html suppressHydrationWarning>
       <body>
-        {/* <ThemeProvider enableSystem> */}
+        <ThemeProvider enableSystem>
           <ScaffoldEthAppWithProviders>{children}</ScaffoldEthAppWithProviders>
-        {/* </ThemeProvider> */}
+        </ThemeProvider>
       </body>
     </html>
   );
