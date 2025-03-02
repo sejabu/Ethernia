@@ -3,14 +3,24 @@ import { ScaffoldEthAppWithProviders } from "~~/components/ScaffoldEthAppWithPro
 import { ThemeProvider } from "~~/components/ThemeProvider";
 import "~~/styles/globals.css";
 import { getMetadata } from "~~/utils/scaffold-eth/getMetadata";
+import { Metadata } from 'next';
 
-export const metadata = getMetadata({ title: "Ethernia", description: "Digital Inheritance made Easy" });
+// export const metadata = getMetadata({ title: "Ethernia", description: "Digital Inheritance made Easy" });
+
+export const metadata: Metadata = {
+  title: {
+    template: '%s | Ethernia',
+    default: 'ETHERNIA, Digital Inheritance made Easy',
+  },
+  description: 'Ethernia, Digital Inheritance Made Easy.',
+  metadataBase: new URL('https://ethernia-test.vercel.app/'),
+};
 
 const ScaffoldEthApp = ({ children }: { children: React.ReactNode }) => {
   return (
     <html suppressHydrationWarning>
       <body>
-        <ThemeProvider enableSystem>
+        <ThemeProvider defaultTheme="light" enableSystem={false}>
           <ScaffoldEthAppWithProviders>{children}</ScaffoldEthAppWithProviders>
         </ThemeProvider>
       </body>

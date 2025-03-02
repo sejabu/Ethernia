@@ -67,3 +67,13 @@ p {
 .modal-body {
   padding: 1.5rem; /* p-4 md:p-5 converted to rem for better consistency */
 }
+
+/* @layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply font-sans antialiased bg-background text-foreground;
+  }
+} */
