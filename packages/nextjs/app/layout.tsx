@@ -1,5 +1,6 @@
 import "@rainbow-me/rainbowkit/styles.css";
 import { ScaffoldEthAppWithProviders } from "~~/components/ScaffoldEthAppWithProviders";
+import { Providers } from "~~/components/privyProvider";
 import { ThemeProvider } from "~~/components/ThemeProvider";
 import "~~/styles/globals.css";
 import { getMetadata } from "~~/utils/scaffold-eth/getMetadata";
@@ -21,7 +22,7 @@ const ScaffoldEthApp = ({ children }: { children: React.ReactNode }) => {
     <html suppressHydrationWarning>
       <body>
         <ThemeProvider defaultTheme="light" enableSystem={false}>
-          <ScaffoldEthAppWithProviders>{children}</ScaffoldEthAppWithProviders>
+          <ScaffoldEthAppWithProviders><Providers>{children}</Providers></ScaffoldEthAppWithProviders>
         </ThemeProvider>
       </body>
     </html>
