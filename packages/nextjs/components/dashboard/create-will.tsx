@@ -24,7 +24,7 @@ export default function CreateWill() {
       <Card>
         <CardHeader >
           <CardTitle>
-            <div className="sticky lg:static top-0 navbar bg-base-100 min-h-0 flex-shrink-0 z-20 justify-around shadow-md shadow-secondary px-0 sm:px-2">
+            <div className="sticky lg:static top-0 navbar bg-base-100 min-h-0 flex-shrink-0 z-20 justify-around shadow-sm px-0 sm:px-2">
               <p>Create Digital Will - Testator address:</p>
               <Address address={connectedAddress} format="long" />
             </div>
@@ -72,7 +72,7 @@ export default function CreateWill() {
               </div>
             </div> */}
             <button
-              className="w-full bg-blue-600 text-white p-3 rounded hover:bg-blue-700"
+              className="w-full btn btn-primary"
               onClick={async () => {
                 try {
                   const renewalPeriodInput = document.getElementById('renewalPeriod') as HTMLInputElement;

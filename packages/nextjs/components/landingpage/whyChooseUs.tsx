@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { motion } from "framer-motion";
 import { Check } from "lucide-react";
 
@@ -57,8 +58,8 @@ export default function WhyChooseUs() {
             </ul>
           </motion.div>  
         </div>
-        <div className="navbar bg-base-300 mt-8 h-10 justify-center ">
-            <span className="text-xl">Questions? Read our&nbsp;&nbsp;<button className="btn text-xl">FAQs section</button>&nbsp;&nbsp;or&nbsp;&nbsp;<button className="btn text-xl">Contact us</button>&nbsp;</span>
+        <div className="container rounded-xl flex flex-col bg-base-300 justify-center mt-8 mx-auto border border-base-300 shadow gap-3">
+            <p className="text-xl md:text-1xl mb-2 text-center">Questions? Read our&nbsp;&nbsp;<Link href="faqs" className="btn text-xl">FAQs section</Link>&nbsp;&nbsp;or&nbsp;&nbsp;<Link href="mailto:" className="btn text-xl">Contact us</Link></p>
             
         </div>
       </div>

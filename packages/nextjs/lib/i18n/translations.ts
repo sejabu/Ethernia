@@ -12,7 +12,7 @@ export const translations = {
       subtitle0: "Make inheritance easy for you and your family.",
       subtitle1: "ETHERNIA provides a seamless and secure way to ensure your digital assets reach your loved ones.",
       demo: "Launch Demo",
-      learnMore: "Learn More",
+      learnmore: "Learn More",
       imagecontext: "Leave your family the gift of a lifetime, set your family up for life with a secure inheritance plan for your digital assets."
     },
     features: {

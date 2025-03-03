@@ -27,13 +27,13 @@ export default function Hero() {
           <p className="text-xl md:text-2xl text-muted-foreground mb-8">
             {t('hero.subtitle1')}
           </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button size="lg" className="text-lg">
+          <div className="flex flex-row gap-4 justify-center">
+            <Link href="dashboard" className="btn btn-primary w-36 text-base text-center">
               {t('hero.demo')}
-            </Button>
-            <Button size="lg" variant="outline" className="text-lg">
-              {t('hero.learnMore')}
-            </Button>
+            </Link>
+            <Link href="dashboard" className="btn w-36 text-base text-center">
+              {t('hero.learnmore')}
+            </Link>
           </div>
         </motion.div>
 
@@ -48,10 +48,7 @@ export default function Hero() {
           <div className="flex flex-col justify-center gap-0 rounded-lg px-6 py-10 md:w-2/5 md:px-20">
             <p className="text-xl md:text-2xl text-muted-foreground mb-8">{t('hero.imagecontext')}</p>
                            
-            <Link
-              href="dashboard"
-              className="flex items-center gap-5 self-start rounded-lg bg-blue-500 px-6 py-3 text-sm font-medium text-white transition-colors hover:bg-blue-400 md:text-base"
-            >
+            <Link href="dashboard" className="btn btn-primary text-base">
             <span>{t('hero.demo')}</span>
             <ArrowRightIcon className="w-5 md:w-6" />
             </Link>

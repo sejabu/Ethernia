@@ -54,7 +54,7 @@ export default function Assets () {
       <Card>
         <CardHeader >
           <CardTitle>
-            <div className="sticky lg:static top-0 navbar bg-base-100 min-h-0 flex-shrink-0 z-20 justify-around shadow-md shadow-secondary px-0 sm:px-2">
+            <div className="sticky lg:static top-0 navbar bg-base-100 min-h-0 flex-shrink-0 z-20 justify-around shadow px-0 sm:px-2">
               <p>Assets List - Testator address:</p>
               <Address address={connectedAddress} format="long" />
             </div>
@@ -83,7 +83,7 @@ export default function Assets () {
               </div>
             </div>
             <button
-              className="w-full bg-blue-600 text-white p-3 rounded hover:bg-blue-700"
+              className="w-full btn btn-primary"
               onClick={async () => {
                 try {
                   const tokenAddressInput = document.getElementById('tokenAddress') as HTMLInputElement;
@@ -107,7 +107,7 @@ export default function Assets () {
               <div className="space-y-2">
               {tokensList.length > 0 ? (
                     tokensList.map((token, i) => (
-                      <div key={i} className="p-3 border rounded">
+                      <div key={i} className="p-3 shadow rounded">
                         <div className="flex justify-between">
                           <span>Token {i + 1}: {token.tokenAddress}</span>
                           <span>{token.tokenName}</span>
@@ -116,7 +116,7 @@ export default function Assets () {
                       </div>
                     ))
                   ) : (
-                    <div className="p-3 border rounded text-center text-gray-500">
+                    <div className="p-3 shadow rounded text-center text-gray-500">
                       No ERC20 tokens added yet
                     </div>
                   )}

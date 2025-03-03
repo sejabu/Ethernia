@@ -12,7 +12,7 @@ const plans = [
     features: [
       "Try our Demo.",
       "Register for free.",
-      "Join us for testing & get benefits. ",
+      "Join us for testing & get early access.",
     ],
   },
   {
@@ -21,7 +21,7 @@ const plans = [
     features: [
       "Try our Demo.",
       "Register for free.",
-      "Join us for testing & get benefits. ",
+      "Join us for testing & get early access.",
     ],
   },
   {
@@ -30,7 +30,7 @@ const plans = [
     features: [
       "Try our Demo.",
       "Register for free.",
-      "Join us for testing & get benefits. ",
+      "Join us for testing & get early access.",
     ],
   },
 ];
@@ -82,10 +82,7 @@ export default function Pricing() {
                       </li>
                     ))}
                   </ul>
-                  <Link
-                    href="dashboard"
-                    className="flex items-center gap-5 self-start rounded-lg bg-blue-500 px-6 py-3 text-sm font-medium text-white transition-colors hover:bg-blue-400 md:text-base"
-                    >
+                  <Link href="dashboard" className="btn btn-primary text-base">
                     <span>{t('hero.demo')}</span>
                     <ArrowRightIcon className="w-5 md:w-6" />
                     </Link>

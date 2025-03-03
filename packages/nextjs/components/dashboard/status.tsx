@@ -144,7 +144,7 @@ export default function Status () {
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="grid grid-cols-2 gap-4">
-                <div className="p-4 border rounded">
+                <div className="p-4 shadow rounded">
                   <div className="flex items-center space-x-2">
                     <div>
                       <p className="font-medium">Will Status</p>
@@ -155,7 +155,7 @@ export default function Status () {
                     </div>
                   </div>
                 </div>
-                <div className="p-4 border rounded">
+                <div className="p-4 shadow rounded">
                   <div className="flex items-center space-x-2">
                     <div>
                       <p className="font-medium">Is Claimed?</p>
@@ -166,7 +166,7 @@ export default function Status () {
                     </div>
                   </div>
                 </div>
-                <div className="p-4 border rounded">
+                <div className="p-4 shadow rounded">
                   <div className="flex items-center space-x-2">
                     <div>
                       <p className="font-medium">Last life proof</p>
@@ -177,7 +177,7 @@ export default function Status () {
                     </div>
                   </div>
                 </div>
-                <div className="p-4 border rounded">
+                <div className="p-4 shadow rounded">
                   <div className="flex items-center space-x-2">
                     <div>
                       <p className="font-medium">Next Renewal</p>
@@ -195,7 +195,7 @@ export default function Status () {
                 <div className="space-y-2">
                 {tokensList.length > 0 ? (
                     tokensList.map((token, i) => (
-                      <div key={i} className="p-3 border rounded">
+                      <div key={i} className="p-3 shadow rounded">
                         <div className="flex justify-between">
                           <span>Token {i + 1}: {token.tokenAddress}</span>
                           <span>{token.tokenName}</span>
@@ -204,7 +204,7 @@ export default function Status () {
                       </div>
                     ))
                   ) : (
-                    <div className="p-3 border rounded text-center text-gray-500">
+                    <div className="p-3 shadow rounded text-center text-gray-500">
                       No ERC20 tokens added yet
                     </div>
                   )}
@@ -215,7 +215,7 @@ export default function Status () {
                 <div className="space-y-2">
                 {beneficiaryList.length > 0 ? (
                     beneficiaryList.map((token, i) => (
-                      <div key={i} className="p-3 border rounded">
+                      <div key={i} className="p-3 shadow rounded">
                         <div className="flex justify-between">
                           <span>Beneficiary {i + 1}:&nbsp;{token.beneficiary}</span>
                           <span>Percentage assigned:&nbsp;{token.percentage.toString()}&nbsp;%</span>
@@ -223,7 +223,7 @@ export default function Status () {
                       </div>
                     ))
                   ) : (
-                    <div className="p-3 border rounded text-center text-gray-500">
+                    <div className="p-3 shadow rounded text-center text-gray-500">
                       No beneficiaries added yet.
                     </div>
                   )}

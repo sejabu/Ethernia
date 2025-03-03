@@ -76,7 +76,7 @@ export default function Successors () {
               </div>
             </div>
             <button
-              className="w-full bg-blue-600 text-white p-3 rounded hover:bg-blue-700"
+              className="w-full btn btn-primary"
               onClick={async () => {
                 try {
                   const beneficiaryWalletInput = document.getElementById('beneficiaryWallet') as HTMLInputElement;
@@ -99,7 +99,7 @@ export default function Successors () {
                 <div className="space-y-2">
                 {beneficiaryList.length > 0 ? (
                     beneficiaryList.map((token, i) => (
-                      <div key={i} className="p-3 border rounded">
+                      <div key={i} className="p-3 shadow rounded">
                         <div className="flex justify-between">
                           <span>Beneficiary {i + 1}:&nbsp;{token.beneficiary}</span>
                           <span>Percentage assigned:&nbsp;{token.percentage.toString()}&nbsp;%</span>

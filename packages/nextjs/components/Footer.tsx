@@ -4,7 +4,8 @@ import { FaTwitter, FaDiscord, FaGithub } from "react-icons/fa";
 
 export const Footer = () => {
   return (
-    <footer className="border-t bg-muted/50">
+    <footer>
+      <div className="border-t">
       <div className="container mx-auto px-4 py-6 md:py-8">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           <div className="flex flex-col justify-between">
@@ -17,7 +18,7 @@ export const Footer = () => {
                 <span className="text-xs">Digital Inheritance</span>
               </div>
             </Link>
-            <p className="font-bold text-xs ">
+            <p className="text-xs ">
               Crypto inheritance made easy!
             </p>
           </div>
@@ -53,11 +54,13 @@ export const Footer = () => {
             </div>
           </div>
         </div>
-
-        <div className="mt-8 pt-8 border-t text-center text-sm text-muted-foreground">
-          <p>&copy; {new Date().getFullYear()} ETHERNIA. All rights reserved.</p>
         </div>
-      </div>
+        </div>
+
+        <div className="container mx-auto mt-2 text-left text-sm">
+          <p>&copy; {new Date().getFullYear()} ETHERNIA. Made with ❤ for the Scroll Open Hackaton.</p>
+        </div>
+      
     </footer>
   );
 }

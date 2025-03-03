@@ -8,169 +8,96 @@ module.exports = {
     themes: [
       {
        light: {
-         primary: "#93BBFB",
-         "primary-content": "#212638",
-         secondary: "#DAE8FF",
-         "secondary-content": "#212638",
-         accent: "#93BBFB",
-         "accent-content": "#212638",
-         neutral: "#212638",
-         "neutral-content": "#ffffff",
-         "base-100": "#ffffff",
-         "base-200": "#f4f8ff",
-         "base-300": "#DAE8FF",
-         "base-content": "#212638",
-          info: "#93BBFB",
-          success: "#34EEB6",
-          warning: "#FFCF72",
-          error: "#FF8863",
-          "--rounded-btn": "9999rem",
-          ".tooltip": { "--tooltip-tail": "6px" },
-          ".link": { textUnderlineOffset: "2px" },
-          ".link:hover": { opacity: "80%" },
+         primary: "oklch(45% 0.24 277.023)",
+         "primary-content": "oklch(93% 0.034 272.788)",
+         secondary: "oklch(65% 0.241 354.308)",
+         "secondary-content": "oklch(94% 0.028 342.258)",
+         accent: "oklch(77% 0.152 181.912)",
+         "accent-content": "oklch(38% 0.063 188.416)",
+         neutral: "oklch(14% 0.005 285.823)",
+         "neutral-content": "oklch(92% 0.004 286.32)",
+         "base-100": "oklch(100% 0 0)",
+         "base-200": "oklch(98% 0 0)",
+         "base-300": "oklch(95% 0 0)",
+         "base-content": "oklch(21% 0.006 285.885)",
+         info: "oklch(74% 0.16 232.661)",
+         "info-content": "oklch(29% 0.066 243.157)",
+         success: "oklch(76% 0.177 163.223)",
+         "success-content": "oklch(37% 0.077 168.94)",
+         warning: "oklch(82% 0.189 84.429)",
+         "warning-content": "oklch(41% 0.112 45.904)",
+         error: "oklch(71% 0.194 13.428)",
+         "error-content": "oklch(27% 0.105 12.094)",
+         "radius-selector": "0.5rem",
+         "radius-field": "0.25rem",
+         "radius-box": "0.5rem",
+         "size-selector": "0.25rem",
+         "size-field": "0.25rem",
+         "border": "1px",
+         "depth": "1",
+         "noise": "0",
+        //  "--rounded-btn": "9999rem",
+        //  ".tooltip": { "--tooltip-tail": "6px" },
+        //  ".link": { textUnderlineOffset: "2px" },
+        //  ".link:hover": { opacity: "80%" },
         },
       },
+
       {
        dark: {
-         primary: "rgb(7, 18, 41)",
-         "primary-content": "#F9FBFF",
-         secondary: "#323f61",
-         "secondary-content": "#F9FBFF",
-         accent: "#4969A6",
-         "accent-content": "#F9FBFF",
-         neutral: "#F9FBFF",
-         "neutral-content": "#385183",
-         "base-100": "#385183",
-         "base-200": "#2A3655",
-         "base-300": "#212638",
-         "base-content": "#F9FBFF",
-         info: "#385183",
-         success: "#34EEB6",
-         warning: "#FFCF72",
-         error: "#FF8863",
-         "--rounded-btn": "9999rem",
-         ".tooltip": { "--tooltip-tail": "6px", "--tooltip-color": "oklch(var(--p))" },
-         ".link": { textUnderlineOffset: "2px" },
-         ".link:hover": { opacity: "80%" },
+         primary: "oklch(58% 0.233 277.117)",
+         "primary-content": "oklch(96% 0.018 272.314)",
+         secondary: "oklch(65% 0.241 354.308)",
+         "secondary-content": "oklch(94% 0.028 342.258)",
+         accent: "oklch(77% 0.152 181.912)",
+         "accent-content": "oklch(38% 0.063 188.416)",
+         neutral: "oklch(14% 0.005 285.823)",
+         "neutral-content": "oklch(92% 0.004 286.32)",
+         "base-100": "oklch(25.33% 0.016 252.42)",
+         "base-200": "oklch(23.26% 0.014 253.1)",
+         "base-300": "oklch(21.15% 0.012 254.09)",
+         "base-content": "oklch(97.807% 0.029 256.847)",
+         info: "oklch(74% 0.16 232.661)",
+         "info-content": "oklch(29% 0.066 243.157)",
+         success: "oklch(76% 0.177 163.223)",
+         "success-content": "oklch(37% 0.077 168.94)",
+         warning: "oklch(82% 0.189 84.429)",
+         "warning-content":"oklch(41% 0.112 45.904)",
+         error: "oklch(71% 0.194 13.428)",
+         "error-content": "oklch(27% 0.105 12.094)",
+         "--radius-selector": "0.5rem",
+         "--radius-field": "0.25rem",
+         "--radius-box": "0.5rem",
+         "--size-selector": "0.25rem",
+         "--size-field": "0.25rem",
+         "--border": "1px",
+         "--depth": "1",
+         "--noise": "0",
+        //  "--rounded-btn": "9999rem",
+        //  ".tooltip": { "--tooltip-tail": "6px", "--tooltip-color": "oklch(var(--p))" },
+        //  ".link": { textUnderlineOffset: "2px" },
+        //  ".link:hover": { opacity: "80%" },
         },
       },
-     {
-        exampleUi: {
-          primary: "#000000",
-         "primary-content": "#ffffff",
-          secondary: "#FF6644",
-          "secondary-content": "#212638",
-          accent: "#93BBFB",
-          "accent-content": "#212638",
-           neutral: "#f3f3f3",
-          "neutral-content": "#212638",
-           "base-100": "#ffffff",
-           "base-200": "#f1f1f1",
-           "base-300": "#d0d0d0",
-           "base-content": "#212638",
-           info: "#93BBFB",
-           success: "#34EEB6",
-           warning: "#FFCF72",
-           error: "#FF8863",
-           "--rounded-btn": "9999rem",
-           ".tooltip": {
-           "--tooltip-tail": "6px",
-           },
-         },
-       },
-     ],
+    ],
   },
   theme: {
-  	extend: {
-  		boxShadow: {
-  			center: '0 0 12px -2px rgb(0 0 0 / 0.05)'
-  		},
-  		animation: {
-  			'pulse-fast': 'pulse 1s cubic-bezier(0.4, 0, 0.6, 1) infinite'
-  		},
-  		borderRadius: {
-  			lg: 'var(--radius)',
-  			md: 'calc(var(--radius) - 2px)',
-  			sm: 'calc(var(--radius) - 4px)'
-  		},
-  		colors: {
-  			background: 'hsl(var(--background))',
-  			foreground: 'hsl(var(--foreground))',
-  			card: {
-  				DEFAULT: 'hsl(var(--card))',
-  				foreground: 'hsl(var(--card-foreground))'
-  			},
-  			popover: {
-  				DEFAULT: 'hsl(var(--popover))',
-  				foreground: 'hsl(var(--popover-foreground))'
-  			},
-  			primary: {
-  				DEFAULT: 'hsl(var(--primary))',
-  				foreground: 'hsl(var(--primary-foreground))'
-  			},
-  			secondary: {
-  				DEFAULT: 'hsl(var(--secondary))',
-  				foreground: 'hsl(var(--secondary-foreground))'
-  			},
-  			muted: {
-  				DEFAULT: 'hsl(var(--muted))',
-  				foreground: 'hsl(var(--muted-foreground))'
-  			},
-  			accent: {
-  				DEFAULT: 'hsl(var(--accent))',
-  				foreground: 'hsl(var(--accent-foreground))'
-  			},
-  			destructive: {
-  				DEFAULT: 'hsl(var(--destructive))',
-  				foreground: 'hsl(var(--destructive-foreground))'
-  			},
-  			border: 'hsl(var(--border))',
-  			input: 'hsl(var(--input))',
-  			ring: 'hsl(var(--ring))',
-  			chart: {
-  				'1': 'hsl(var(--chart-1))',
-  				'2': 'hsl(var(--chart-2))',
-  				'3': 'hsl(var(--chart-3))',
-  				'4': 'hsl(var(--chart-4))',
-  				'5': 'hsl(var(--chart-5))'
-  			}
-  		}
-  	}
+    extend: {
+      animation: { "pulse-fast": "pulse 1s cubic-bezier(0.4, 0, 0.6, 1) infinite" },
+      },
+    colors: {
+      blue: {
+        400: '#2589FE',
+        500: '#0070F3',
+        600: '#2F6FEB',
+      },
+    },
+    keyframes: {
+      shimmer: {
+        '100%': {
+          transform: 'translateX(100%)',
+        },
+      },
+    },
   },
-};
-
-// /** @type {import('tailwindcss').Config} */
-// module.exports = {
-// //import type { Config } from 'tailwindcss';
-
-
-// //const config: Config = {
-//   content: [
-//     './pages/**/*.{js,ts,jsx,tsx,mdx}',
-//     './components/**/*.{js,ts,jsx,tsx,mdx}',
-//     './app/**/*.{js,ts,jsx,tsx,mdx}',
-//   ],
-//   theme: {
-//     extend: {
-//       gridTemplateColumns: {
-//         '13': 'repeat(13, minmax(0, 1fr))',
-//       },
-//       colors: {
-//         blue: {
-//           400: '#2589FE',
-//           500: '#0070F3',
-//           600: '#2F6FEB',
-//         },
-//       },
-//     },
-//     keyframes: {
-//       shimmer: {
-//         '100%': {
-//           transform: 'translateX(100%)',
-//         },
-//       },
-//     },
-//   },
-//   plugins: [require('tailwindcss/forms')],
-// };
-// // export default config;
+}

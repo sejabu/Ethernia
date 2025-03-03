@@ -15,10 +15,6 @@ export default function DeleteWill () {
 
   return (
     <div className="w-full max-w-6xl mx-auto p-0 space-y-0">
-      <p className="text-center text-bold space-y-0">
-        Testator address: 
-        <Address address={connectedAddress} />  
-      </p>
         <Tabs defaultValue="status" className="w-full">
           <TabsContent value="status">
             <Card>
@@ -27,7 +23,7 @@ export default function DeleteWill () {
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="grid grid-cols-2 gap-4">
-                  <div className="p-4 border rounded">
+                  <div className="p-4 shadow rounded">
                     <div className="flex items-center space-x-2">
                       <Check className="h-5 w-5 text-green-500" />
                       <div>
@@ -37,7 +33,7 @@ export default function DeleteWill () {
                     </div>
                   </div>
 
-                  <div className="p-4 border rounded">
+                  <div className="p-4 shadow rounded">
                     <div className="flex items-center space-x-2">
                       <div>
                         <p className="font-medium">Deactive Will?</p>

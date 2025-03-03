@@ -54,7 +54,7 @@ export default function Security() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5 }}
-            className="text-center mb-12"
+            className=""
           >
           <h2 className="text-3xl md:text-4xl font-bold mb-4">
             {t('security.title')}
@@ -70,22 +70,15 @@ export default function Security() {
             transition={{ duration: 0.5 }}
             >
             <Image
-              src="/security-image2.jpg"
-              width={700}
-              height={500}
-              className="hidden md:block rounded-xl shadow-2xl max-h-64 object-contain"
+              src="/security-image3.png"
+              width={750}
+              height={502}
+              className="rounded-xl shadow-xl"
               alt="Cyber security desktop version icon"
-            />
-            <Image
-              src="/cyber-security-mobile-icon.jpg"
-              width={500}
-              height={500}
-              className="block md:hidden rounded-xl shadow-2xl"
-              alt="Cyber security mobile version icon"
             />
           </motion.div>
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-3 mt-8 gap-8">
           {security.map((security, index) => (
             <motion.div className="flex-1 flex flex-column"
               key={index}

@@ -97,7 +97,7 @@ const handleClaimSubmit = async () => {
               <CardTitle>Claim Will</CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
-              <div className="p-4 border rounded bg-yellow-50">
+              <div className="p-4 shadow rounded bg-yellow-50">
                 <div className="flex items-center space-x-2">
                   <AlertTriangle className="h-5 w-5 text-yellow-600" />
                   <p className="text-yellow-600">Will can be claimed after proof of life expires</p>
@@ -115,7 +115,7 @@ const handleClaimSubmit = async () => {
                     onChange={handleTestatorAddressChange}
                   />
                   <button 
-                    className="bg-blue-500 text-white px-3 rounded hover:bg-blue-600"
+                    className="btn btn-primary"
                     onClick={handleAddressSubmit}
                   >
                     Check
@@ -128,14 +128,14 @@ const handleClaimSubmit = async () => {
               )}
 
               {testatorAddress && userInfo && (
-                <div className="p-4 border rounded bg-gray-50 space-y-2">
+                <div className="p-4 shadow rounded bg-gray-50 space-y-2">
                   <h3 className="font-medium">Testator Information</h3>
                   <div>Last Life Proof: {formattedLastLifeProof || 'None'}</div>
                 </div>
               )}
 
               <button 
-                className="w-full bg-yellow-600 text-white p-3 rounded hover:bg-yellow-700 disabled:bg-gray-400"
+                className="w-full btn btn-warning"
                 onClick={handleClaimSubmit}
                 disabled={isSubmitting || !testatorAddress || !lastLifeProof}
               >

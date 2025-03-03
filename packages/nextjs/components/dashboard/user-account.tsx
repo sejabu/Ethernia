@@ -40,7 +40,7 @@ export default function UserAccount () {
                   <Users className="h-5 w-5 text-gray-500" />
                   <input type="text" placeholder="Input your name" className="w-full p-2 border rounded" />
                 </div>
-                <button className="bg-green-600 text-white px-4 py-2 rounded" onClick={async () => {
+                <button className="btn btn-primary" onClick={async () => {
                   try {
                     await writeEtherniaAsync({
                       functionName: "registerUser",
