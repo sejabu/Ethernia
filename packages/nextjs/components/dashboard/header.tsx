@@ -1,20 +1,15 @@
 "use client";
 
-import React, { useCallback, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
 import { hardhat } from "viem/chains";
-import { Bars3Icon, BugAntIcon } from "@heroicons/react/24/outline";
-import { DocumentCheckIcon } from "@heroicons/react/24/outline";
 import { FaucetButton, RainbowKitCustomConnectButton } from "~~/components/scaffold-eth";
 import { useOutsideClick, useTargetNetwork } from "~~/hooks/scaffold-eth";
 import { SwitchTheme } from "~~/components/SwitchTheme";
-import { useMemo } from "react";
-import { usePrivy, useWallets } from "@privy-io/react-auth";
-import type { NextPage } from "next";
-import { Address } from "~~/components/scaffold-eth";
 import PrivyConnectButton from "~~/components/scaffold-eth/PrivyConnectButton/PrivyConnectButton";
+import { Address } from "~~/components/scaffold-eth";
+import { useAccount } from "wagmi";
+
 
 /**
  * Site header
@@ -22,6 +17,7 @@ import PrivyConnectButton from "~~/components/scaffold-eth/PrivyConnectButton/Pr
 export const Header = () => {
   const { targetNetwork } = useTargetNetwork();
   const isLocalNetwork = targetNetwork.id === hardhat.id;
+  const { address: connectedAddress } = useAccount();
 
   return (
     <div className="sticky lg:static top-0 navbar bg-base-100 min-h-0 flex-shrink-0 justify-between z-20 shadow-md px-0 sm:px-2">
@@ -51,6 +47,7 @@ export const Header = () => {
       </div>
       <div className="navbar-end flex-grow mr-4">
       <span className="mr-2"><SwitchTheme className={`pointer-events-auto ${isLocalNetwork ? "self-end md:self-auto" : ""}`} /></span>
+      <span className="mr-2"><Address address={connectedAddress} /></span>
       <span className="mr-2"><PrivyConnectButton /></span>
       {/* <RainbowKitCustomConnectButton /> */}
       <span>  {isLocalNetwork && <FaucetButton />}</span>
