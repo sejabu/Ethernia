@@ -1,21 +1,21 @@
 import { motion } from "framer-motion";
 
 const team = [
-  {
-    name: "@elgallodev",
-    role: "Full Stack Web3 Developer",
-    image: "/elgallodev.jpg",
-  },
-  {
-    name: "@lulutiETH",
-    role: "Backend Developer & QA Enginieer | Web 3 Smart Contract Developer",
-    image: "/lulutieth.jpg",
-  },
-  {
-    name: "@noe_v452",
-    role: "UI/UX Designer",
-    image: "/noegraf.png",
-  },
+  // {
+  //   name: "@elgallodev",
+  //   role: "Full Stack Web3 Developer",
+  //   image: "/elgallodev.jpg",
+  // },
+  // {
+  //   name: "@lulutiETH",
+  //   role: "Backend Developer & QA Enginieer | Web 3 Smart Contract Developer",
+  //   image: "/lulutieth.jpg",
+  // },
+  // {
+  //   name: "@noe_v452",
+  //   role: "UI/UX Designer",
+  //   image: "/noegraf.png",
+  // },
 ];
 
 export default function AboutUs() {

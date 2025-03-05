@@ -1,3 +1,6 @@
+'use client'
+ 
+import { useState, useEffect } from 'react'
 // import CardWrapper from '~~/app/v2/ui/dashboard/cards';
 // import RevenueChart from '~~/app/v2/ui/dashboard/revenue-chart';
 // import LatestInvoices from '~~/app/v2/ui/dashboard/latest-invoices';
@@ -8,11 +11,13 @@ import { Suspense } from 'react';
 //   LatestInvoicesSkeleton,
 //   CardsSkeleton,
 // } from '~~/app/v2/ui/skeletons';
-import { Metadata } from 'next';
+
+
+// import { Metadata } from 'next';
  
-export const metadata: Metadata = {
-   title: 'Dashboard',
-};
+// export const metadata: Metadata = {
+//    title: 'Dashboard',
+// };
 
  
 // export default async function Page() {
@@ -40,14 +45,14 @@ export const metadata: Metadata = {
 
 import Status from "~~/components/dashboard/status";
 
+
+
 export default function StatusPage() {
     return (
-        
-            <main className="min-h-screen">
-                <Suspense fallback={<div>Loading...</div>}>
-                <Status />
-                </Suspense>
-            </main>
-        
-    );
+        <main className="min-h-screen">
+            <Suspense fallback={<div>Loading...</div>}>
+            <Status />
+            </Suspense>
+        </main>      
+    )
 }

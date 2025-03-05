@@ -15,6 +15,15 @@ export const metadata: Metadata = {
   },
   description: 'Ethernia, Digital Inheritance Made Easy.',
   metadataBase: new URL('https://ethernia-test.vercel.app/'),
+  openGraph: {
+    url: "https://ethernia-test.vercel.app/",
+    title: "ETHERNIA DApp",
+    description: "Ethernia, Digital Inheritance Made Easy.",
+    siteName: "Ethernia DApp",
+    images: [{
+    url: "/opengraph-image.png",
+    }],
+  },
 };
 
 const ScaffoldEthApp = ({ children }: { children: React.ReactNode }) => {
