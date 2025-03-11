@@ -195,4 +195,5 @@ contract Ethernia {
     function listERC20Tokens (address _testatorAddress) external view returns (Erc20Data[] memory){
         return willData[_testatorAddress].erc20Tokens;
     }
+    
 }
