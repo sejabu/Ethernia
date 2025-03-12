@@ -82,7 +82,7 @@ export const NETWORKS_EXTRA_DATA: Record<string, ChainAttributes> = {
     color: "#1969ff",
   },
   [chains.scrollSepolia.id]: {
-    color: "#fcba03",
+    color: "#fbebd4",
   },
   [chains.celo.id]: {
     color: "#FCFF52",

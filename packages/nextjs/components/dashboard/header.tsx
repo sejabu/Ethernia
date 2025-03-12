@@ -6,9 +6,22 @@ import { hardhat } from "viem/chains";
 import { FaucetButton, RainbowKitCustomConnectButton } from "~~/components/scaffold-eth";
 import { useOutsideClick, useTargetNetwork } from "~~/hooks/scaffold-eth";
 import { SwitchTheme } from "~~/components/SwitchTheme";
-import PrivyConnectButton from "~~/components/scaffold-eth/PrivyConnectButton/PrivyConnectButton";
+// import PrivyConnectButton from "~~/components/scaffold-eth/PrivyConnectButton/PrivyConnectButton";
 import { Address } from "~~/components/scaffold-eth";
 import { useAccount } from "wagmi";
+import {usePrivy} from '@privy-io/react-auth';
+
+function LoginButton() {
+  const {ready, authenticated, login} = usePrivy();
+  // Disable login when Privy is not ready or the user is already authenticated
+  const disableLogin = !ready || (ready && authenticated);
+
+  return (
+    <button className="btn btn-sm btn-primary" disabled={disableLogin} onClick={login}>
+      Log in
+    </button>
+  );
+}
 
 
 /**
@@ -29,7 +42,7 @@ export const Header = () => {
           </div>
           <div className="flex flex-col">
             <span className="font-bold leading-tight">ETHERNIA</span>
-            <span className="text-xs">Digital Inheritance</span>
+            <span className="text-xs">Digital Inheritance Made Easy!</span>
           </div>
         </Link>
         <Link href="/" passHref className="md:hidden flex items-center gap-2 ml-2 mr-6 shrink">
@@ -48,7 +61,8 @@ export const Header = () => {
       <div className="navbar-end flex-grow mr-4">
       <span className="mr-2"><SwitchTheme className={`pointer-events-auto ${isLocalNetwork ? "self-end md:self-auto" : ""}`} /></span>
       <span className="mr-2"><Address address={connectedAddress} /></span>
-      <span className="mr-2"><PrivyConnectButton /></span>
+      <span className="mr-2"><LoginButton/></span>
+      {/* <span className="mr-2"><PrivyConnectButton /></span> */}
       {/* <RainbowKitCustomConnectButton /> */}
       <span>  {isLocalNetwork && <FaucetButton />}</span>
       </div>

@@ -1,7 +1,5 @@
 import { motion } from "framer-motion";
-import { Button } from "~~/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "~~/components/ui/card";
-import { ArrowRightIcon, Check } from "lucide-react";
+import { LuArrowRight, LuCheck } from "react-icons/lu";
 import Link from "next/link";
 import { useTranslation } from "~~/lib/i18n/LanguageContext";
 
@@ -65,29 +63,29 @@ export default function Pricing() {
               viewport={{ once: true }}
               transition={{ delay: index * 0.2, duration: 0.5 }}
             >
-              <Card className="relative">
-                <CardHeader>
-                  <CardTitle className="text-2xl">{plan.name}</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="mb-6">
-                    <span className="text-4xl font-bold">${plan.price}</span>
-                    <span className="text-muted-foreground">/month</span>
+              <div className="card w-96 bg-base-100 shadow-sm">
+                <div className="card-body">
+                  <span className="badge badge-xs badge-warning">Most Popular</span>
+                  <div className="flex justify-between">
+                    <h2 className="text-3xl font-bold">{plan.name}/month</h2>
+                    <span className="text-xl">${plan.price}</span>
                   </div>
-                  <ul className="space-y-3 mb-6">
+                  <ul className="mt-6 flex flex-col gap-2 text-xs">
                     {plan.features.map((feature, i) => (
                       <li key={i} className="flex items-center gap-2">
-                        <Check className="w-4 h-4 text-primary" />
+                        <LuCheck className="w-4 h-4 text-primary" />
                         <span className="text-sm">{feature}</span>
                       </li>
                     ))}
                   </ul>
-                  <Link href="dashboard" className="btn btn-primary text-base">
-                    <span>{t('hero.demo')}</span>
-                    <ArrowRightIcon className="w-5 md:w-6" />
+                  <div className="mt-6">
+                    <Link href="dashboard" className="btn btn-primary text-base">
+                      <span>{t('hero.demo')}</span>
+                      <LuArrowRight className="w-5 md:w-6" />
                     </Link>
-                </CardContent>
-              </Card>
+                  </div>
+                </div>
+              </div>
             </motion.div>
           ))}
         </div>

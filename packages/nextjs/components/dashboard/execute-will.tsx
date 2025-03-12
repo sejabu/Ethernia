@@ -1,16 +1,13 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '~~/components/ui/tabs';
-import { Card, CardContent, CardHeader, CardTitle } from '~~/components/ui/card';
-import { Clock, Users, FileText, AlertTriangle, Check, Ban } from 'lucide-react';
+import { LuTriangleAlert, LuCheck, LuBan } from 'react-icons/lu';
 import { Address } from "~~/components/scaffold-eth";
 import { useAccount } from "wagmi";
 import { useScaffoldReadContract, useScaffoldWriteContract } from '~~/hooks/scaffold-eth';
 
 
 export default function Execute () {
-  const [activeTab, setActiveTab] = useState('create');
   const { address: connectedAddress } = useAccount();
   const [testatorAddress, setTestatorAddress] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -129,17 +126,15 @@ const handleExecuteSubmit = async () => {
               Beneficiary address:&nbsp;&nbsp;
               <Address address={connectedAddress} format="long" />  
             </div>
-      <Tabs defaultValue="executeWill" className="w-full">
-        <TabsContent value="executeWill">
-          <Card>
-          <CardContent>
-          <div className="grid grid-cols-2 gap-4">
+      <div defaultValue="executeWill" className="w-full">
+        <div className='card'>
+          <div className="card-body grid grid-cols-2 gap-4">
                 <div className="p-4 shadow rounded">
                   <div className="flex items-center space-x-2">
                     <div>
                       <p className="font-medium">Will Status</p>
                       <div className="flex items-center">
-                      {isActive ? <Check className="h-5 w-5 text-green-500" /> : <Ban className="h-5 w-5 text-red-500"/>}
+                      {isActive ? <LuCheck className="h-5 w-5 text-green-500" /> : <LuBan className="h-5 w-5 text-red-500"/>}
                       {isActive ? <span className="text-sm text-green-600">&nbsp;Active</span>: <span className="text-sm text-red-600">&nbsp;Inactive</span>}
                     </div>
                     </div>
@@ -150,7 +145,7 @@ const handleExecuteSubmit = async () => {
                     <div>
                       <p className="font-medium">Is Claimed?</p>
                       <div className="flex items-center">
-                      {isClaimed ? <AlertTriangle className="h-5 w-5 text-red-500" /> : <Ban className="h-5 w-5 text-green-500"/>}
+                      {isClaimed ? <LuTriangleAlert className="h-5 w-5 text-red-500" /> : <LuBan className="h-5 w-5 text-green-500"/>}
                       {isClaimed ? <span className="text-sm text-red-600">&nbsp;Claimed</span> : <span className="text-sm text-green-600">&nbsp;Not Claimed</span >}
                       {formattedClaimTime ? <span className="text-sm text-red-600">&nbsp;{formattedClaimTime}</span> : <span className="text-sm text-green-600">&nbsp;Not claimed yet.</span>}
 
@@ -159,14 +154,12 @@ const handleExecuteSubmit = async () => {
                   </div>
                 </div>
                 </div>
-                </CardContent>
-            <CardHeader>
-              <CardTitle>Execute Will</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
+            <h2 className='card-title'>Execute Will</h2>
+            
+            <div className="card-body space-y-4">
               <div className="p-4 shadow bg-yellow-50">
                 <div className="flex items-center space-x-2">
-                  <AlertTriangle className="h-5 w-5 text-yellow-600" />
+                  <LuTriangleAlert className="h-5 w-5 text-yellow-600" />
                   <p className="text-yellow-600">Will can be executed after be claimed and expired execution period of time ({formattedExecutionPeriod}).</p>
                 </div>
               </div>
@@ -208,10 +201,9 @@ const handleExecuteSubmit = async () => {
               >
                 {isSubmitting ? 'Processing...' : 'Execute Will'}
               </button>
-            </CardContent>
-          </Card>
-        </TabsContent>
-      </Tabs>
+            </div>
+          </div>
+      </div>
     </div>
   );
 }

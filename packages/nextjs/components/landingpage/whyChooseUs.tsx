@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { Check } from "lucide-react";
+import { LuCheck } from "react-icons/lu";
 
 const reasons = [
   "Transparent smart contracts",
@@ -51,7 +51,7 @@ export default function WhyChooseUs() {
                   transition={{ delay: index * 0.1, duration: 0.3 }}
                   className="flex items-center gap-3"
                 >
-                  <Check className="text-primary w-5 h-5" />
+                  <LuCheck className="text-primary w-5 h-5" />
                   <span>{reason}</span>
                 </motion.li>
               ))}

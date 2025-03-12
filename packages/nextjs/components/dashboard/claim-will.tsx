@@ -1,16 +1,13 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '~~/components/ui/tabs';
-import { Card, CardContent, CardHeader, CardTitle } from '~~/components/ui/card';
-import { Clock, Users, FileText, AlertTriangle, Check } from 'lucide-react';
+import { LuTriangleAlert } from 'react-icons/lu';
 import { Address } from "~~/components/scaffold-eth";
 import { useAccount } from "wagmi";
 import { useScaffoldReadContract, useScaffoldWriteContract } from '~~/hooks/scaffold-eth';
 
 
 export default function Claim () {
-  const [activeTab, setActiveTab] = useState('create');
   const { address: connectedAddress } = useAccount();
   const [testatorAddress, setTestatorAddress] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -90,16 +87,13 @@ const handleClaimSubmit = async () => {
               Beneficiary address:&nbsp;&nbsp;
               <Address address={connectedAddress} format="long" />  
             </div>
-      <Tabs defaultValue="claim" className="w-full">
-        <TabsContent value="claim">
-          <Card>
-            <CardHeader>
-              <CardTitle>Claim Will</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
+      <div defaultValue="claim" className="w-full">
+        <div className='card'>
+          <h2 className='card-title'>Claim Will</h2>
+          <div className="card-body space-y-4">
               <div className="p-4 shadow rounded bg-yellow-50">
                 <div className="flex items-center space-x-2">
-                  <AlertTriangle className="h-5 w-5 text-yellow-600" />
+                  <LuTriangleAlert className="h-5 w-5 text-yellow-600" />
                   <p className="text-yellow-600">Will can be claimed after proof of life expires</p>
                 </div>
               </div>
@@ -130,7 +124,7 @@ const handleClaimSubmit = async () => {
               {testatorAddress && userInfo && (
                 <div className="p-4 shadow rounded bg-gray-50 space-y-2">
                   <h3 className="font-medium">Testator Information</h3>
-                  <div>Last Life Proof: {formattedLastLifeProof || 'None'}</div>
+                  <div>Last Proof of Life: {formattedLastLifeProof || 'None'}</div>
                 </div>
               )}
 
@@ -141,10 +135,9 @@ const handleClaimSubmit = async () => {
               >
                 {isSubmitting ? 'Processing...' : 'Initiate Claim'}
               </button>
-            </CardContent>
-          </Card>
-        </TabsContent>
-      </Tabs>
+            </div>
+          </div>
+      </div>
     </div>
   );
 }
