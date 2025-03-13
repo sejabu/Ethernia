@@ -3,9 +3,13 @@
 import React, { useState, useEffect } from 'react';
 import { LuClock, LuBan, LuTriangleAlert, LuCheck, LuHeartPulse } from 'react-icons/lu';
 import { BsChatSquareHeart } from "react-icons/bs";
+import { PiEmptyThin } from "react-icons/pi";
 import { Address } from "~~/components/scaffold-eth";
 import { useAccount } from "wagmi";
 import { useScaffoldReadContract, useScaffoldWriteContract } from '~~/hooks/scaffold-eth';
+import { BlockieAvatar } from "~~/components/scaffold-eth";
+
+
 
 
 export default function Status () {
@@ -141,7 +145,7 @@ export default function Status () {
                 <div className="stat-title">Will Status</div>
                 <div className="flex flex-grow flex-row stat-value">
                 {isActive ? <LuCheck className="h-10 w-10 text-green-500" /> : <LuBan className="h-10 w-10 text-red-500"/>}
-                {isActive ? <span className="text-2xl text-green-600">Active&nbsp;</span>: <span className="text-2xl text-red-600">Inactive&nbsp;</span>}
+                {isActive ? <span className="text-2xl">Active&nbsp;</span>: <span className="text-2xl text-red-600">Inactive&nbsp;</span>}
                 </div>
               </div>
 
@@ -149,7 +153,7 @@ export default function Status () {
                 <div className="stat-title">Last proof of life</div>
                 <div className="flex flex-grow flex-row stat-value">
                 {formattedRenewDate ? <LuHeartPulse className="h-10 w-10 text-green-500" /> : <LuHeartPulse className="h-10 w-10 text-red-500"/>}
-                {formattedRenewDate ? <span className="text-2xl text-green-500">&nbsp;{formattedLastLifeProof}</span> : <span className="text-2xl text-red-500">&nbsp;Proof of life not found.</span>}
+                {formattedRenewDate ? <span className="text-2xl">&nbsp;{formattedLastLifeProof}</span> : <span className="text-2xl text-red-500">&nbsp;Proof of life not found.</span>}
               </div>
               </div>
 
@@ -157,7 +161,7 @@ export default function Status () {
                 <div className="stat-title">Next renewal</div>
                 <div className="flex flex-grow flex-row stat-value">
                 {formattedRenewDate ? <LuClock className="h-10 w-10 text-green-500" /> : <LuClock className="h-10 w-10 text-red-500"/>}
-                {formattedRenewDate ? <span className="text-2xl text-green-500">&nbsp;{formattedRenewDate}</span> : <span className="text-2xl text-red-500">&nbsp;No renewal date set yet.</span>}
+                {formattedRenewDate ? <span className="text-2xl">&nbsp;{formattedRenewDate}</span> : <span className="text-2xl text-red-500">&nbsp;No renewal date set yet.</span>}
                 </div>
               </div>
     
@@ -182,7 +186,7 @@ export default function Status () {
 
         <div className='card card-bordered bg-base-300 w-auto mb-6'> 
           <div className='card-body'>
-            <h2 className='card-title'>Asset Distribution</h2>         
+            <h2 className='card-title'>Assets List</h2>         
               {/* <div className="grid grid-cols-2 gap-4">
                
                 <div className="p-4 shadow rounded">
@@ -198,48 +202,205 @@ export default function Status () {
                 </div>
                 
               </div> */}
-
-            <div className="space-y-2">
-              {tokensList.length > 0 ? (
-                tokensList.map((token, i) => (
-                  <div key={i} className="p-3 shadow rounded">
-                    <div className="flex justify-between">
-                      <span>Token {i + 1}: {token.tokenAddress}</span>
-                      <span>{token.tokenName}</span>
-                      <span>{token.tokenBalance}</span>
-                    </div>
-                  </div>
-                ))
-              ) : (
-                <div className="p-3 shadow rounded text-center text-gray-500">
-                  No ERC20 tokens added yet
-                </div>
-              )}
-            </div>
+            
+            <div className="overflow-x-auto">
+              <table className="table">
+                {/* head */}
+                <thead>
+                  <tr>
+                    <th>
+                      <label>
+                        <input type="checkbox" className="checkbox hidden" />
+                      </label>
+                    </th>
+                    <th>Name</th>
+                    <th>SC Address</th>
+                    <th>Balance</th>
+                    <th></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {tokensList.length > 0 ? (
+                    tokensList.map((token, i) => (
+                      <tr key={i}>
+                        <th>
+                          <label>
+                            <input type="checkbox" className="checkbox" />
+                          </label>
+                        </th>
+                        <td>
+                          <div className="flex items-center gap-3">
+                            <div className="avatar">
+                              <div className="mask mask-squircle h-12 w-12">
+                                <img
+                                  src="/usdt.jpg"
+                                  alt="Token Logo" />
+                              </div>
+                            </div>
+                            <div>
+                              <div className="font-bold">{token.tokenName}</div>
+                              <div className="text-sm opacity-50">Tether (USDT)</div>
+                            </div>
+                          </div>
+                        </td>
+                        <td>
+                          Token {i + 1}: {token.tokenAddress}
+                          <br />
+                          <span className="badge badge-ghost badge-sm"></span>
+                        </td>
+                        <td>{token.tokenBalance}</td>
+                        <th>
+                          <button className="btn btn-ghost btn-xs">Remove</button>
+                        </th>
+                      </tr>  
+                    ))
+                    ) : (
+                      <tr>
+                        <th>
+                          <label>
+                            <input type="checkbox" className="checkbox" />
+                          </label>
+                        </th>
+                        <td>
+                          <div className="flex items-center gap-3">
+                            <div className="avatar">
+                              <div className="mask mask-squircle h-12 w-12">
+                                <img
+                                  src="/empty.jpg"
+                                  alt="Token Logo" />
+                              </div>
+                            </div>
+                            <div>
+                              <div className="font-bold">Empty</div>
+                              <div className="text-sm opacity-50">Empty</div>
+                            </div>
+                          </div>
+                        </td>
+                        <td>
+                          No ERC20 tokens added yet.
+                        </td>
+                        <td>0.00</td>
+                        <th>
+                          <button className="btn btn-ghost btn-xs">Remove</button>
+                        </th>
+                      </tr>
+                    )
+                  }
+                </tbody>
+                {/* foot */}
+                <tfoot>
+                  <tr>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                  </tr>
+                </tfoot>
+              </table>
+            </div>  
           </div>
         </div>  
-        
+
         <div className='card card-bordered bg-base-300 w-auto mb-6'> 
           <div className='card-body'>
-            <h2>Current Beneficiaries</h2>
-            <div className="space-y-2 bg-base-100 rounded-sm">
-              {beneficiaryList.length > 0 ? (
-                beneficiaryList.map((token, i) => (
-                  <div key={i} className="p-3 shadow rounded">
-                    <div className="flex justify-between">
-                      <span>Beneficiary {i + 1}:&nbsp;{token.beneficiary}</span>
-                      <span>Percentage assigned:&nbsp;{token.percentage.toString()}&nbsp;%</span>
-                    </div>
-                  </div>
-                ))
-              ) : (
-                <div className="p-3 shadow rounded text-center text-gray-500">
-                  No beneficiaries added yet.
-                </div>
-              )}
-            </div>
+            <h2 className='card-title'>Current Beneficiaries</h2>         
+            <div className="overflow-x-auto">
+              <table className="table">
+                {/* head */}
+                <thead>
+                  <tr>
+                    <th>
+                      <label>
+                        <input type="checkbox" className="checkbox hidden" />
+                      </label>
+                    </th>
+                    <th>Name</th>
+                    <th>Wallet Address</th>
+                    <th>Percentage</th>
+                    <th></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {beneficiaryList.length > 0 ? (
+                    beneficiaryList.map((token, i) => (
+                      <tr key={i}>
+                        <th>
+                          <label>
+                            <input type="checkbox" className="checkbox" />
+                          </label>
+                        </th>
+                        <td>
+                          <div className="flex items-center gap-3">
+                            <div className="avatar">
+                              <div className="mask mask-squircle h-12 w-12">
+                              <BlockieAvatar address={token.beneficiary} size={24}/>
+                              </div>
+                            </div>
+                            <div>
+                              <div className="font-bold">N°&nbsp;{i + 1}</div>
+                              <div className="text-sm opacity-50">Name (if asigned)</div>
+                            </div>
+                          </div>
+                        </td>
+                        <td>
+                          <Address address={token.beneficiary} format="long" onlyEnsOrAddress={true} ></Address>
+                        </td>
+                        <td>
+                          <span className='font-bold'>{token.percentage.toString()}%</span>&nbsp;Assigned.
+                        </td>
+                        <th>
+                          <button className="btn btn-ghost btn-xs">Edit</button>
+                        </th>
+                      </tr>  
+                    ))
+                    ) : (
+                      <tr>
+                        <th>
+                          <label>
+                            <input type="checkbox" className="checkbox" />
+                          </label>
+                        </th>
+                        <td>
+                          <div className="flex items-center gap-3">
+                            <div className="avatar">
+                              <div className="mask mask-squircle h-12 w-12">
+                                <img
+                                  src="/emptyperson.jpg"
+                                  alt="Person Avatar" />
+                              </div>
+                            </div>
+                            <div>
+                              <div className="font-bold">Empty</div>
+                              <div className="text-sm opacity-50">Empty</div>
+                            </div>
+                          </div>
+                        </td>
+                        <td>
+                        No beneficiaries added yet.
+                        </td>
+                        <td>0.00</td>
+                        <th>
+                          <button className="btn btn-ghost btn-xs">Edit</button>
+                        </th>
+                      </tr>
+                    )
+                  }
+                </tbody>
+                {/* foot */}
+                <tfoot>
+                  <tr>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                  </tr>
+                </tfoot>
+              </table>
+            </div>  
           </div>
-        </div>
+        </div> 
       </div>
     </div>
   );
