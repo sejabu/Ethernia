@@ -50,11 +50,11 @@ export const Header = () => {
         </Link>
         <Link href="/" passHref className="md:hidden flex items-center gap-2 ml-2 mr-6 shrink">
           <div className="flex relative w-10 h-10">
-            <Image alt="Ethernia logo" className="cursor-pointer" fill src="/logo.svg" />
+            <Image alt="Ethernia logo" className="cursor-pointer" fill src="/favicon.png" />
           </div>
           <div className="hidden md:flex flex-col">
-            <span className="font-bold leading-tight"></span>
-            <span className="text-xs"></span>
+            <span className="font-bold leading-tight">ETHERNIA</span>
+            <span className="text-xs">Digital Inheritance Made Easy!</span>
           </div>
         </Link>
         <ul className="hidden lg:flex lg:flex-nowrap menu menu-horizontal px-1 gap-2">

@@ -132,70 +132,57 @@ export default function Status () {
 
   return (
     <div className='flex flex-col justify-center space-x-4'>
-      <div className="w-full max-w-6xl mx-auto p-0 space-y-0"> 
-        <div className='card card-border'>
+      <div className="w-full max-w-6xl mx-auto"> 
+        <div className='card card-bordered bg-base-300 w-auto mb-6'>
           <div className='card-body'>
-            <h3 className='card-title'>Will Status</h3>
+            <h2 className='card-title'>Will Status</h2>
+            <div className="stats stats-vertical lg:stats-horizontal shadow">
+              <div className="stat">
+                <div className="stat-title">Will Status</div>
+                <div className="flex flex-grow flex-row stat-value">
+                {isActive ? <LuCheck className="h-10 w-10 text-green-500" /> : <LuBan className="h-10 w-10 text-red-500"/>}
+                {isActive ? <span className="text-2xl text-green-600">Active&nbsp;</span>: <span className="text-2xl text-red-600">Inactive&nbsp;</span>}
+                </div>
+              </div>
+
+              <div className="stat">
+                <div className="stat-title">Last proof of life</div>
+                <div className="flex flex-grow flex-row stat-value">
+                {formattedRenewDate ? <LuHeartPulse className="h-10 w-10 text-green-500" /> : <LuHeartPulse className="h-10 w-10 text-red-500"/>}
+                {formattedRenewDate ? <span className="text-2xl text-green-500">&nbsp;{formattedLastLifeProof}</span> : <span className="text-2xl text-red-500">&nbsp;Proof of life not found.</span>}
+              </div>
+              </div>
+
+              <div className="stat">
+                <div className="stat-title">Next renewal</div>
+                <div className="flex flex-grow flex-row stat-value">
+                {formattedRenewDate ? <LuClock className="h-10 w-10 text-green-500" /> : <LuClock className="h-10 w-10 text-red-500"/>}
+                {formattedRenewDate ? <span className="text-2xl text-green-500">&nbsp;{formattedRenewDate}</span> : <span className="text-2xl text-red-500">&nbsp;No renewal date set yet.</span>}
+                </div>
+              </div>
+    
+              <div className="stat">
+                <div className="stat-title"></div>  
+                <div className='btn p-2'>
+                  <BsChatSquareHeart className="h-10 w-10" onClick={async () => {
+                    try {
+                    await writeEtherniaAsync({
+                    functionName: "renewLifeProof",
+                    });
+                    } catch (error) {
+                    console.error("Error renewing life proof:", error);
+                    }
+                  }}
+                  />
+                </div>
+              </div>
+            </div>
           </div>
+        </div>
 
-    <div className="stats shadow">
-      <div className="stat">
-        <div className="stat-figure text-secondary">
-        </div>
-        <div className="stat-title">Will Status</div>
-        <div className="flex flex-grow flex-row stat-value">
-        {isActive ? <span className="text-2xl text-green-600">Active&nbsp;</span>: <span className="text-2xl text-red-600">Inactive&nbsp;</span>}
-        {isActive ? <LuCheck className="h-10 w-10 text-green-500" /> : <LuBan className="h-10 w-10 text-red-500"/>}
-        </div>
-        <div className="stat-desc">
-        </div>
-      </div>
-
-      <div className="stat">
-        <div className="stat-figure text-secondary">
-        </div>
-        <div className="stat-title">Last proof of life</div>
-        <div className="flex flex-grow flex-row stat-value">
-        {formattedRenewDate ? <LuHeartPulse className="h-10 w-10 text-green-500" /> : <LuHeartPulse className="h-10 w-10 text-red-500"/>}
-        {formattedRenewDate ? <span className="text-2xl text-green-500">&nbsp;{formattedLastLifeProof}</span> : <span className="text-2xl text-red-500">&nbsp;Proof of life not found.</span>}
-        </div>
-        <div className="stat-desc">
-        </div>
-      </div>
-
-      <div className="stat">
-        <div className="stat-figure text-secondary">
-        </div>
-        <div className="stat-title">Next renewal</div>
-        <div className="flex flex-grow flex-row stat-value">
-        {formattedRenewDate ? <LuClock className="h-10 w-10 text-green-500" /> : <LuClock className="h-10 w-10 text-red-500"/>}
-        {formattedRenewDate ? <span className="text-2xl text-green-500">&nbsp;{formattedRenewDate}</span> : <span className="text-2xl text-red-500">&nbsp;No renewal date set yet.</span>}
-        </div>
-        <div className="stat-desc">
-        </div>
-      </div>
-    
-      <div className="stat">
-        <div className="stat-figure text-secondary">
-        </div>
-        <div className="stat-title"></div>  
-        <div className='btn p-2'>
-          <BsChatSquareHeart className="h-10 w-10" onClick={async () => {
-            try {
-              await writeEtherniaAsync({
-              functionName: "renewLifeProof",
-              });
-              } catch (error) {
-              console.error("Error renewing life proof:", error);
-              }
-            }}
-          />
-        </div>
-      </div>
-    </div>
-    
-
-            <div className="space-y-4">
+        <div className='card card-bordered bg-base-300 w-auto mb-6'> 
+          <div className='card-body'>
+            <h2 className='card-title'>Asset Distribution</h2>         
               {/* <div className="grid grid-cols-2 gap-4">
                
                 <div className="p-4 shadow rounded">
@@ -212,49 +199,48 @@ export default function Status () {
                 
               </div> */}
 
-              <div className="space-y-2">
-                <h3 className="font-medium">Asset Distribution</h3>
-                <div className="space-y-2">
-                {tokensList.length > 0 ? (
-                    tokensList.map((token, i) => (
-                      <div key={i} className="p-3 shadow rounded">
-                        <div className="flex justify-between">
-                          <span>Token {i + 1}: {token.tokenAddress}</span>
-                          <span>{token.tokenName}</span>
-                          <span>{token.tokenBalance}</span>
-                        </div>
-                      </div>
-                    ))
-                  ) : (
-                    <div className="p-3 shadow rounded text-center text-gray-500">
-                      No ERC20 tokens added yet
+            <div className="space-y-2">
+              {tokensList.length > 0 ? (
+                tokensList.map((token, i) => (
+                  <div key={i} className="p-3 shadow rounded">
+                    <div className="flex justify-between">
+                      <span>Token {i + 1}: {token.tokenAddress}</span>
+                      <span>{token.tokenName}</span>
+                      <span>{token.tokenBalance}</span>
                     </div>
-                  )}
+                  </div>
+                ))
+              ) : (
+                <div className="p-3 shadow rounded text-center text-gray-500">
+                  No ERC20 tokens added yet
                 </div>
-              </div>
-              <div className="space-y-2">
-                <h3 className="font-medium">Current Beneficiaries</h3>
-                <div className="space-y-2">
-                {beneficiaryList.length > 0 ? (
-                    beneficiaryList.map((token, i) => (
-                      <div key={i} className="p-3 shadow rounded">
-                        <div className="flex justify-between">
-                          <span>Beneficiary {i + 1}:&nbsp;{token.beneficiary}</span>
-                          <span>Percentage assigned:&nbsp;{token.percentage.toString()}&nbsp;%</span>
-                        </div>
-                      </div>
-                    ))
-                  ) : (
-                    <div className="p-3 shadow rounded text-center text-gray-500">
-                      No beneficiaries added yet.
-                    </div>
-                  )}
-                </div>
-              </div>
+              )}
             </div>
           </div>
+        </div>  
+        
+        <div className='card card-bordered bg-base-300 w-auto mb-6'> 
+          <div className='card-body'>
+            <h2>Current Beneficiaries</h2>
+            <div className="space-y-2 bg-base-100 rounded-sm">
+              {beneficiaryList.length > 0 ? (
+                beneficiaryList.map((token, i) => (
+                  <div key={i} className="p-3 shadow rounded">
+                    <div className="flex justify-between">
+                      <span>Beneficiary {i + 1}:&nbsp;{token.beneficiary}</span>
+                      <span>Percentage assigned:&nbsp;{token.percentage.toString()}&nbsp;%</span>
+                    </div>
+                  </div>
+                ))
+              ) : (
+                <div className="p-3 shadow rounded text-center text-gray-500">
+                  No beneficiaries added yet.
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
       </div>
-   
     </div>
   );
 }
