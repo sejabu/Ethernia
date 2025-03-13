@@ -9,6 +9,8 @@ import { SwitchTheme } from "~~/components/SwitchTheme";
 import PrivyConnectButton from "~~/components/scaffold-eth/PrivyConnectButton/PrivyConnectButton";
 import { Address } from "~~/components/scaffold-eth";
 import { useAccount } from "wagmi";
+import NavLinks from './nav-links';
+
 // import {usePrivy} from '@privy-io/react-auth';
 
 // function LoginButton() {
@@ -33,7 +35,8 @@ export const Header = () => {
   const { address: connectedAddress } = useAccount();
 
   return (
-    <div className="sticky lg:static top-0 navbar bg-base-100 min-h-0 flex-shrink-0 justify-between z-20 shadow-md px-0 sm:px-2">
+    <div className="fixed top-0 left-0 right-0 z-50 border-b bg-background/80 backdrop-blur supports-[backdrop-filter]:bg-background/60" >
+    <div className="navbar bg-base-100 min-h-0 flex-shrink-0 justify-between px-0 sm:px-2 border-b bg-background/80 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="navbar-start w-auto lg:w-1/2">
         
         <Link href="/" passHref className="hidden lg:flex items-center gap-2 ml-4 mr-6 shrink-0">
@@ -66,6 +69,14 @@ export const Header = () => {
       {/* <RainbowKitCustomConnectButton /> */}
       <span>  {isLocalNetwork && <FaucetButton />}</span>
       </div>
+      
+    </div>
+    {/* <div className="flex grow flex-row justify-between space-x-2 w-full h-full p-2">
+              <NavLinks />
+            </div> */}
+    <div role="tablist" className="tabs tabs-bordered">
+              <NavLinks />
+            </div>        
     </div>
   );
 };

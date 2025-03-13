@@ -84,6 +84,17 @@ export default function CreateWill() {
           </div>
           </div>
       </div>
+      <div className="join grid grid-cols-2">
+        <button className="join-item btn btn-outline">Previous page</button>
+        <button className="join-item btn btn-outline">Next</button>
+      </div>
+      <ul className="steps steps-horizontal">
+        <li className="step step-primary">Register</li>
+        <li className="step step-primary">Choose plan</li>
+        <li className="step">Purchase</li>
+        <li className="step">Receive Product</li>
+      </ul>
+   
     </div>
   );
 }

@@ -65,18 +65,19 @@ export default function NavLinks() {
       {links.map((link) => {
         const LinkIcon = link.icon;
         return (
-          <Link
+          <Link role="tab"
             key={link.name}
             href={link.href}
             className={clsx(
-              'btn flex h-[48px] grow items-center justify-center gap-2 rounded-md p-3 text-sm font-medium md:flex-none md:justify-start md:p-2 md:px-3',
+              'tab',
+              // 'btn flex h-[48px] grow items-center justify-center gap-2 rounded-md p-3 text-sm font-medium md:flex-none md:justify-start md:p-2 md:px-3',
               {
-                '': pathname === link.href,
+                'tab tab-active': pathname === link.href,
               },
             )}
           >
             <LinkIcon className="w-6" />
-            <p className="hidden md:block">{link.name}</p>
+            <span className="hidden md:block">{link.name}</span>
           </Link>
         );
       })}

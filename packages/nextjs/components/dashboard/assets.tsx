@@ -104,7 +104,7 @@ const approveToken = async (tokenAddress: string) => {
       <div defaultValue="create" className="w-full">
       <div className='card'>
       <div className="flex space-y-4 justify-between">
-        <p>For this demo purpose, you will need first mint some fake tokens:&nbsp;</p>
+        <p>For this demo purpose, you will need first mint some fantasy tokens:&nbsp;</p>
         <span className="btn btn-primary btn-xs" onClick={async () => {
           try {
             const amount = BigInt(1000);

@@ -1,16 +1,22 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { LuClock, LuBan, LuTriangleAlert, LuCheck } from 'react-icons/lu';
+import { LuClock, LuBan, LuTriangleAlert, LuCheck, LuHeartPulse } from 'react-icons/lu';
+import { BsChatSquareHeart } from "react-icons/bs";
 import { Address } from "~~/components/scaffold-eth";
 import { useAccount } from "wagmi";
-import { useScaffoldReadContract } from '~~/hooks/scaffold-eth';
+import { useScaffoldReadContract, useScaffoldWriteContract } from '~~/hooks/scaffold-eth';
+
 
 export default function Status () {
 
   const { address: connectedAddress } = useAccount();
   const [beneficiaryList, setBeneficiaryList] = useState<BeneficiaryData[]>([]);
   const [tokensList, setTokensList] = useState<TokenData[]>([]);
+
+  const { writeContractAsync: writeEtherniaAsync } = useScaffoldWriteContract({
+    contractName: "Ethernia",
+  });
 
   interface BeneficiaryData {
     beneficiary: string;
@@ -49,9 +55,9 @@ export default function Status () {
     year: "numeric",
     month: "long",
     day: "numeric",
-    hour: "2-digit",
-    minute: "2-digit",
-    second: "2-digit"
+    // hour: "2-digit",
+    // minute: "2-digit",
+    // second: "2-digit"
   }) : null;
 
   const renewPeriod = willData ? willData[2] : null; // Assuming the 6th element is the isActive boolean
@@ -60,9 +66,9 @@ export default function Status () {
     year: "numeric",
     month: "long",
     day: "numeric",
-    hour: "2-digit",
-    minute: "2-digit",
-    second: "2-digit"
+    // hour: "2-digit",
+    // minute: "2-digit",
+    // second: "2-digit"
   }) : null;
 
 
@@ -125,92 +131,73 @@ export default function Status () {
 
 
   return (
-    <div>
-    {/* Contenido demo para modificar: */}
-    {/* <div className="stats shadow">
+    <div className='flex flex-col justify-center space-x-4'>
+      <div className="w-full max-w-6xl mx-auto p-0 space-y-0"> 
+        <div className='card card-border'>
+          <div className='card-body'>
+            <h3 className='card-title'>Will Status</h3>
+          </div>
+
+    <div className="stats shadow">
       <div className="stat">
         <div className="stat-figure text-secondary">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            className="inline-block h-8 w-8 stroke-current">
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth="2"
-              d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z">
-            </path>
-          </svg>
         </div>
-        <div className="stat-title">Downloads</div>
-        <div className="stat-value">31K</div>
-        <div className="stat-desc">Jan 1st - Feb 1st</div>
+        <div className="stat-title">Will Status</div>
+        <div className="flex flex-grow flex-row stat-value">
+        {isActive ? <span className="text-2xl text-green-600">Active&nbsp;</span>: <span className="text-2xl text-red-600">Inactive&nbsp;</span>}
+        {isActive ? <LuCheck className="h-10 w-10 text-green-500" /> : <LuBan className="h-10 w-10 text-red-500"/>}
+        </div>
+        <div className="stat-desc">
+        </div>
       </div>
 
       <div className="stat">
         <div className="stat-figure text-secondary">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            className="inline-block h-8 w-8 stroke-current">
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth="2"
-              d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4">  
-            </path>
-          </svg>
         </div>
-        <div className="stat-title">New Users</div>
-        <div className="stat-value">4,200</div>
-        <div className="stat-desc">↗︎ 400 (22%)</div>
+        <div className="stat-title">Last proof of life</div>
+        <div className="flex flex-grow flex-row stat-value">
+        {formattedRenewDate ? <LuHeartPulse className="h-10 w-10 text-green-500" /> : <LuHeartPulse className="h-10 w-10 text-red-500"/>}
+        {formattedRenewDate ? <span className="text-2xl text-green-500">&nbsp;{formattedLastLifeProof}</span> : <span className="text-2xl text-red-500">&nbsp;Proof of life not found.</span>}
+        </div>
+        <div className="stat-desc">
+        </div>
+      </div>
+
+      <div className="stat">
+        <div className="stat-figure text-secondary">
+        </div>
+        <div className="stat-title">Next renewal</div>
+        <div className="flex flex-grow flex-row stat-value">
+        {formattedRenewDate ? <LuClock className="h-10 w-10 text-green-500" /> : <LuClock className="h-10 w-10 text-red-500"/>}
+        {formattedRenewDate ? <span className="text-2xl text-green-500">&nbsp;{formattedRenewDate}</span> : <span className="text-2xl text-red-500">&nbsp;No renewal date set yet.</span>}
+        </div>
+        <div className="stat-desc">
+        </div>
       </div>
     
       <div className="stat">
         <div className="stat-figure text-secondary">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            className="inline-block h-8 w-8 stroke-current">
-            <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth="2"
-            d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4">
-            </path>
-          </svg>
+        </div>
+        <div className="stat-title"></div>  
+        <div className='btn p-2'>
+          <BsChatSquareHeart className="h-10 w-10" onClick={async () => {
+            try {
+              await writeEtherniaAsync({
+              functionName: "renewLifeProof",
+              });
+              } catch (error) {
+              console.error("Error renewing life proof:", error);
+              }
+            }}
+          />
         </div>
       </div>
-    </div> */}
-    {/* Fin Contenido demo */}
-      <div className="w-full max-w-6xl mx-auto p-0 space-y-0">
-        <div className="text-bold space-y-0 flex">
-          Testator address:&nbsp;&nbsp;
-          <Address address={connectedAddress} format="long" />  
-        </div>
-      
+    </div>
+    
 
-        <div defaultValue="status" className="w-full">
-          <div className='card card-border'>
-            <div className='card-body'>
-              <h2 className='card-title'>Will Status</h2>
-            </div>
             <div className="space-y-4">
-              <div className="grid grid-cols-2 gap-4">
-                <div className="p-4 shadow rounded">
-                  <div className="flex items-center space-x-2">
-                    <div>
-                      <p className="font-medium">Will Status</p>
-                      <div className="flex items-center">
-                      {isActive ? <LuCheck className="h-5 w-5 text-green-500" /> : <LuBan className="h-5 w-5 text-red-500"/>}
-                      {isActive ? <span className="text-sm text-green-600">&nbsp;Active</span>: <span className="text-sm text-red-600">&nbsp;Inactive</span>}
-                    </div>
-                    </div>
-                  </div>
-                </div>
+              {/* <div className="grid grid-cols-2 gap-4">
+               
                 <div className="p-4 shadow rounded">
                   <div className="flex items-center space-x-2">
                     <div>
@@ -222,29 +209,8 @@ export default function Status () {
                     </div>
                   </div>
                 </div>
-                <div className="p-4 shadow rounded">
-                  <div className="flex items-center space-x-2">
-                    <div>
-                      <p className="font-medium">Last life proof</p>
-                      <div className="flex items-center">
-                      {formattedLastLifeProof ? <LuCheck className="h-5 w-5 text-green-500" /> : <LuBan className="h-5 w-5 text-red-500"/>}
-                      {formattedLastLifeProof ? <span className="text-sm text-green-600">&nbsp;{formattedLastLifeProof}</span> : <span className="text-sm text-red-600">&nbsp;No life proof</span>}
-                    </div>
-                    </div>
-                  </div>
-                </div>
-                <div className="p-4 shadow rounded">
-                  <div className="flex items-center space-x-2">
-                    <div>
-                      <p className="font-medium">Next Renewal</p>
-                      <div className="flex items-center">
-                      {formattedRenewDate ? <LuClock className="h-5 w-5 text-green-500" /> : <LuClock className="h-5 w-5 text-red-500"/>}
-                      {formattedRenewDate ? <span className="text-sm text-blue-600">&nbsp;{formattedRenewDate}</span> : <span className="text-sm text-red-600">&nbsp;No renewal date set yet.</span>}
-                    </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
+                
+              </div> */}
 
               <div className="space-y-2">
                 <h3 className="font-medium">Asset Distribution</h3>
@@ -288,7 +254,7 @@ export default function Status () {
             </div>
           </div>
       </div>
-    </div>
+   
     </div>
   );
 }
