@@ -198,8 +198,8 @@ export default function Header() {
               }} />
             </nav> */}
         <SwitchTheme className={`pointer-events-auto ${isLocalNetwork ? "self-end md:self-auto" : ""}`} />
-        <RainbowKitCustomConnectButton />
-          {isLocalNetwork && <FaucetButton />}  
+        {/* <RainbowKitCustomConnectButton />
+          {isLocalNetwork && <FaucetButton />}   */}
           
         </div>
          
