@@ -27,7 +27,7 @@ export default function CreateWill() {
                 <label className="block font-medium">Will Name</label>
                 <div className="flex items-center space-x-2">
                   <LuScrollText className="h-5 w-5 text-gray-500" />
-                  <input id="willName" type="text" placeholder="Put your will a name" className="w-full p-2 border rounded" />
+                  <input id="willName" type="text" placeholder="Put a name to your will (can be anything)" className="w-full p-2 border rounded" />
                   
                 </div>
               </div>
@@ -89,10 +89,10 @@ export default function CreateWill() {
         <button className="join-item btn btn-outline">Next</button>
       </div>
       <ul className="steps steps-horizontal">
-        <li className="step step-primary">Register</li>
-        <li className="step step-primary">Choose plan</li>
-        <li className="step">Purchase</li>
-        <li className="step">Receive Product</li>
+        <li className="step step-primary">Registert</li>
+        <li className="step step-primary">Create Will</li>
+        <li className="step">Add Assets</li>
+        <li className="step">Add beneficiaries</li>
       </ul>
    
     </div>

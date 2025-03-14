@@ -3,7 +3,6 @@
 import React, { useState, useEffect } from 'react';
 import { LuClock, LuBan, LuTriangleAlert, LuCheck, LuHeartPulse } from 'react-icons/lu';
 import { BsChatSquareHeart } from "react-icons/bs";
-import { PiEmptyThin } from "react-icons/pi";
 import { Address } from "~~/components/scaffold-eth";
 import { useAccount } from "wagmi";
 import { useScaffoldReadContract, useScaffoldWriteContract } from '~~/hooks/scaffold-eth';

@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import { LuClock } from 'react-icons/lu';
+import { BsChatSquareHeart } from "react-icons/bs";
 import { useAccount } from "wagmi";
 import { useScaffoldReadContract, useScaffoldWriteContract } from '~~/hooks/scaffold-eth';
 
@@ -32,36 +33,35 @@ export default function LifeProof() {
 
 
   return (
-    <div className="w-full max-w-6xl mx-auto p-6 space-y-6">
-      <div defaultValue="manage" className="w-full">
-        <div className='card card-border'>
-            
-            <div className='card-title'>Manage Your Will</div>
-            
-            <div className='car-body'>
-              <div className="flex items-center justify-between p-4 shadow rounded">
-                <div className="flex items-center space-x-2">
-                  <LuClock className="h-5 w-5 text-green-500" />
+    <div className="w-auto max-w-6xl mx-auto p-6 space-y-6">
+        <div className='card card-bordered bg-base-300 w-auto mb-6'>
+          <div className='card-body'>
+            <h2 className='card-title'>Check and Set your Proof of Life</h2>
+              <div className="flex items-center justify-between p-4 shadow border rounded-md bg-base-100">
+                <div className="flex items-center space-x-2 rounded-md">
+                  <LuClock className="h-10 w-10 text-green-500" />
                   <div>
                     <p className="font-medium">Last Proof of Life</p>
                     <p className="text-sm text-gray-600">{formattedLastLifeProof ? formattedLastLifeProof : "No life proof"}</p>
                   </div>
                 </div>
-                <div className="btn btn-primary btn-md"  onClick={async () => {
-                  try {
-                    await writeEtherniaAsync({
-                      functionName: "renewLifeProof",
-                    });
-                  } catch (error) {
-                    console.error("Error renewing life proof:", error);
-                  }
-                }}>
-                  Renew Proof of Life
+
+                <div className='flex text-center btn p-2'>
+                  <span>Renew Proof of Life</span>
+                  <BsChatSquareHeart className="h-10 w-10" onClick={async () => {
+                    try {
+                      await writeEtherniaAsync({
+                        functionName: "renewLifeProof",
+                      });
+                    } catch (error) {
+                      console.error("Error renewing life proof:", error);
+                    }
+                  }}
+                  />
                 </div>
               </div>
-            </div>
           </div>
-      </div>
+        </div>
     </div>
   );
 }
