@@ -1,6 +1,7 @@
 import "@rainbow-me/rainbowkit/styles.css";
 import { ScaffoldEthAppWithProviders } from "~~/components/ScaffoldEthAppWithProviders";
 import { Providers } from "~~/components/privyProvider";
+import { PrivyProvider } from '@privy-io/react-auth';
 import { ThemeProvider } from "~~/components/ThemeProvider";
 import "~~/styles/globals.css";
 import { getMetadata } from "~~/utils/scaffold-eth/getMetadata";
@@ -31,7 +32,7 @@ const ScaffoldEthApp = ({ children }: { children: React.ReactNode }) => {
     <html suppressHydrationWarning>
       <body>
         <ThemeProvider defaultTheme="light" enableSystem={false}>
-          <ScaffoldEthAppWithProviders><Providers>{children}</Providers></ScaffoldEthAppWithProviders>
+          <ScaffoldEthAppWithProviders><PrivyProvider appId={process.env.NEXT_PUBLIC_PRIVY_APP_ID!}>{children}</PrivyProvider></ScaffoldEthAppWithProviders>
         </ThemeProvider>
       </body>
     </html>

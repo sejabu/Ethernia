@@ -15,7 +15,6 @@ export default function CreateWill() {
 
   return (
     <div className="w-full max-w-6xl mx-auto p-6 space-y-6 ">
-      <div defaultValue="create" className="w-full">
       <div className='card'>
             <div className="card-title sticky lg:static top-0 navbar bg-base-100 min-h-0 flex-shrink-0 z-20 justify-around shadow-sm px-0 sm:px-2">
               <p>Create Digital Will - Testator address:</p>
@@ -83,7 +82,7 @@ export default function CreateWill() {
             </button>
           </div>
           </div>
-      </div>
+      
       <div className="join grid grid-cols-2">
         <button className="join-item btn btn-outline">Previous page</button>
         <button className="join-item btn btn-outline">Next</button>
