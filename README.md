@@ -41,19 +41,19 @@ yarn test
 ## Authors
 
 👤 **Sergio Bugallo** 
-* Twitter: [@elgallodev](https://twitter.com/elgallodev)
+* Twitter: [@elgallodev](https://x.com/elgallodev)
 * Github: [@sejabu](https://github.com/sejabu)
 * LinkedIn: [@www.linkedin.com\/in\/sergio-bugallo](https://linkedin.com/in/www.linkedin.com\/in\/sergio-bugallo)
 
 👤 **Lujan Tissera** 
-* Twitter: [@lulutiETH](https://twitter.com/elgallodev)
+* Twitter: [@lulutiETH](https://x.com/lulutiETH)
 * Github: [@lujantissera](https://github.com/lujantissera)
 * LinkedIn: [@www.linkedin.com\/in\/lujan-tissera](https://linkedin.com/in/www.linkedin.com\/in\/lujan-tissera)
 
 👤 **Noelia Valle** 
-* Twitter: [@](https://twitter.com/)
+* Twitter: [@](https://x.com/)
 * Github: [@Noegraf](https://github.com/Noegraf)
-* LinkedIn: [@www.linkedin.com\/in\/lujan-tissera](https://www.linkedin.com/in/noelia-valle/)
+* LinkedIn: [@www.linkedin.com\/in\/noelia-valle](https://www.linkedin.com/in/noelia-valle/)
 
 ## Show your support
 
