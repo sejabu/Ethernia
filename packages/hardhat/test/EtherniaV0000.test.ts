@@ -125,4 +125,65 @@ describe("EtherniaV0000", function(){
             expect(afterRenew.lastLifeProof).to.be.gt(beforeRenew.lastLifeProof);
         });
 });  
-});
+    describe("Claiming Will", function () {
+        beforeEach(async function() {
+            await ethernia.connect(addr1).registerUser();
+            await ethernia.connect(addr1).createWill("Test Will", 1);
+            await ethernia.connect(addr1).addBeneficiary(addr2.address, 100);
+            
+        });
+        it  ("Should allow a beneficiary to claim a will", async function () {
+            await ethernia.connect(addr2).claimWill(addr1.address);
+            const will = await ethernia.willData(addr1.address);
+            expect(will.isActive).to.be.false;
+
+        });
+        it("Should prevent a non-beneficiary from claiming a will", async function () {
+            await expect(ethernia.connect(owner).claimWill(addr1.address))
+                .to.be.revertedWith("Not beneficiary");
+        });
+        it("Should prevent a beneficiary from claiming a will twice", async function () {
+            await ethernia.connect(addr2).claimWill(addr1.address);
+            await expect(ethernia.connect(addr2).claimWill(addr1.address))
+                .to.be.revertedWith("Will already claimed");
+        });
+
+       /* Esto probarlo después de implementar la función deactivateWill
+        it("Should fail to claim a will if it is not active", async function () {
+            // Desactivar el testamento primero
+            await ethernia.connect(addr1).deactivateWill(); // Asumiendo que existe esta función
+            await expect(ethernia.connect(addr2).claimWill(addr1.address))
+                .to.be.revertedWith("Will not active");
+        });*/
+
+        it("Should allow a beneficiary to claim a will and receive the funds", async function () {
+            const beforeClaim = await ethers.provider.getBalance(addr2.address);
+            await ethernia.connect(addr2).claimWill(addr1.address);
+            const afterClaim = await ethers.provider.getBalance(addr2.address);
+            expect(afterClaim).to.be.gt(beforeClaim);
+        });
+
+        it("Should fail to claim a will if the lock period is still active", async function () {
+            // Resetear el tiempo para que el período de bloqueo siga activo
+            await expect(ethernia.connect(addr2).claimWill(addr1.address)) 
+                .to.be.revertedWith("Lock period still active");
+        });
+
+        it("Should allow a beneficiary to claim a will after the lock period", async function () {
+            await ethers.provider.send("evm_increaseTime", [60]); // Asumiendo que esta función existe
+            await ethernia.connect(addr2).claimWill(addr1.address);
+            const will = await ethernia.willData(addr1.address);
+            expect(will.isActive).to.be.false;
+        });
+        it("Should allow a beneficiary to claim a will after the lock period and receive the funds", async function () {
+            const beforeClaim = await ethers.provider.getBalance(addr2.address);
+            await ethers.provider.send("evm_increaseTime", [60]); // Asumiendo que esta función existe
+            await ethernia.connect(addr2).claimWill(addr1.address);
+            const afterClaim = await ethers.provider.getBalance(addr2.address);
+            expect(afterClaim).to.be.gt(beforeClaim);
+        }
+
+    );
+    
+}
+);});
