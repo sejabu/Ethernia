@@ -1,18 +1,19 @@
 
+import {useRouter} from 'next/navigation';
 import { PiNumberCircleOne } from "react-icons/pi";
-
+  
 export default function SignUp() {
 
     return (
         <div className='flex flex-col justify-center space-x-4 mt-24 w-1/2 mx-auto'>
-                <div className='bg-base-300 mb-6'>
-                    <div className='flex flex-col bg-base-100 m-12 p-6 justify-center w-auto lg:w-96 shadow-sm '>
-                        <img src="/ethernia-logo-94x94.png" alt="Ethernia Logo" className="" />
-                        <h3 className="card-title">Welcome to Ethernia</h3>
-                        <p className="card-body">This is the first step to Secure Your Crypto Legacy </p>
-                        <p className="card-body">We will be guiding you to easily register and set up your digital inheritance plan.</p>
-                    </div>    
+            <div className='bg-base-300 mb-6'>
+                <div className='flex flex-col bg-base-100 m-12 p-6 justify-center w-auto lg:w-96 shadow-sm '>
+                    <img src="/ethernia-logo-94x94.png" height={94} width={94} alt="Ethernia Logo" className="" />
+                    <h3 className="card-title">Welcome to Ethernia</h3>
+                    <p className="card-body">This is the first step to Secure Your Crypto Legacy </p>
+                    <p className="card-body">We will be guiding you to easily register and set up your digital inheritance plan.</p>
                 </div>    
+            </div>    
 
                 <div className='card card-bordered bg-base-300 mb-6'>
                     <div className='card-body'>

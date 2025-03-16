@@ -1,10 +1,12 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import Link from 'next/link';
 import { LuMail, LuUsers } from 'react-icons/lu';
 import { useAccount } from "wagmi";
 import { useScaffoldWriteContract } from '~~/hooks/scaffold-eth';
 import { subscribeUser, unsubscribeUser, sendNotification } from '~~/app/actions'
+import { PiNumberCircleSix } from 'react-icons/pi';
 
 function urlBase64ToUint8Array(base64String: string) {
   const padding = '='.repeat((4 - (base64String.length % 4)) % 4)
@@ -88,7 +90,7 @@ function PushNotificationManager() {
           </>
         ) : (
           <>
-            <p className="text-warning">You are not subscribed to push notifications.</p>
+            <p>You are not subscribed to push notifications.</p>
             <button className="btn btn-primary" onClick={subscribeToPush}>Subscribe</button>
           </>
         )}
@@ -136,7 +138,7 @@ function PushNotificationManager() {
 
 
 
-export default function UserAccount () {
+export default function Notifications () {
   const [activeTab, setActiveTab] = useState('create');
   const { address: connectedAddress } = useAccount();
 
@@ -145,44 +147,56 @@ export default function UserAccount () {
   });
 
   return (
-    <div className="w-full max-w-6xl mx-auto p-6 space-y-6">
-      <div defaultValue="manage" className="w-full">
-        <div className='card'>
-          <h2 className='card-title'>Notification Suscription</h2>
-          <div className="card-body flex mx-auto flex-row">
-            <span className="mr-14"><PushNotificationManager  /></span>
-            <span><InstallPrompt /></span>
-          </div>
-          <h2 className='card-title'>Account Info</h2>
-          <div className="card-bordereddy space-y-4">
-              <div className="space-y-2">
-                <label className="block font-medium">Add/Change Email</label>
-                <div className="flex items-center space-x-2">
-                  <LuMail className="h-5 w-5 text-gray-500" />
-                  <input type="text" placeholder="example@mail.com" className="w-full p-2 border rounded" />
-                </div>
+    <div className='flex flex-col justify-center space-x-4 mt-2 w-1/2 mx-auto'>
+          <div className='card card-bordered bg-base-300 mb-6'>
+            <div className='card-body'>
+              <h3 className='card-title justify-center'><PiNumberCircleSix />&nbsp;Config Notifications</h3>
+
+              <div role="alert" className="alert alert-vertical sm:alert-horizontal">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" className="stroke-info h-6 w-6 shrink-0">
+                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+              <span><PushNotificationManager  /></span>
+              <div>
+                <InstallPrompt />
               </div>
-              <div className="space-y-2">
-                <label className="block font-medium">Add/Change Name</label>
-                <div className="flex items-center space-x-2">
-                  <LuUsers className="h-5 w-5 text-gray-500" />
-                  <input type="text" placeholder="Input your name" className="w-full p-2 border rounded" />
-                </div>
-                <button className="btn btn-primary" onClick={async () => {
-                  try {
-                    await writeEtherniaAsync({
-                      functionName: "registerUser",
-                    });
-                  } catch (error) {
-                    console.error("Error renewing life proof:", error);
-                  }
-                }}>
-                  Register User
+            </div>
+
+            
+          </div>
+            <div className="className='card-body'">
+              <div className="flex justify-center">
+                <button className="btn btn-primary mb-2" onClick={()=>(
+                  document.getElementById('my_modal_5') as HTMLDialogElement).showModal()}>
+                  Finish
                 </button>
+                <dialog id="my_modal_5" className="modal modal-bottom sm:modal-middle">
+                  <div className="modal-box">
+                    <h3 className="font-bold text-lg">Congratulations! Your digital Will was created.</h3>
+                    <p className="py-4 jus">Now you will be redirected to the dashboard page, so you can check all it's ok.</p>
+                    <p className="py-4 jus">Remember periodically login and set your proof of life.</p>
+                    <div className="modal-action justify-center">
+                      <form method="dialog">
+                        {/* if there is a button in form, it will close the modal */}
+                        <Link href="/dashboard">
+                        <button className="btn">Go to Dashboard</button>
+                        </Link>
+                      </form>
+                    </div>
+                  </div>
+                </dialog>
               </div>
             </div>
           </div>
-      </div>
+      
+      <ul className="steps steps-horizontal">
+        <li className="step step-primary">Connect</li>
+        <li className="step step-primary">Register</li>
+        <li className="step step-primary">Create Will</li>
+        <li className="step step-primary">Add Assets</li>
+        <li className="step step-primary">Add beneficiaries</li>
+        <li className="step step-primary">Finish</li>
+      </ul>
     </div>
   );
 }

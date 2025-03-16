@@ -23,36 +23,36 @@ const links = [
     href: '/dashboard',
     icon: WindowIcon,
   },
-  { name: 'I´m Alive!',
-    href: '/dashboard/lifeproof',
-    icon: HandRaisedIcon,
-  },
+  // { name: 'I´m Alive!',
+  //   href: '/dashboard/lifeproof',
+  //   icon: HandRaisedIcon,
+  // },
   {
     name: 'Create Will',
     href: '/dashboard/createwill',
     icon: DocumentTextIcon,
   },
-  { name: 'Succesors',
+  { name: 'Modify Will',
     href: '/dashboard/successors',
     icon: UserGroupIcon
   },
-  { name: 'Assets',
-    href: '/dashboard/tokenassets',
-    icon: CurrencyDollarIcon
-  },
-  { name: 'Delete Will',
-    href: '/dashboard/deletewill',
-    icon: TrashIcon
-  },
-  { name: 'Claim Will',
+  // { name: 'Assets',
+  //   href: '/dashboard/tokenassets',
+  //   icon: CurrencyDollarIcon
+  // },
+  // { name: 'Delete Will',
+  //   href: '/dashboard/deletewill',
+  //   icon: TrashIcon
+  // },
+  { name: 'Claim/Execute Will',
     href: '/dashboard/claimwill',
     icon: ArrowDownOnSquareIcon
   },
-  { name: 'Execute Will',
-    href: '/dashboard/executewill',
-    icon: CheckBadgeIcon
-  },
-  { name: 'User Profile',
+  // { name: 'Execute Will',
+  //   href: '/dashboard/executewill',
+  //   icon: CheckBadgeIcon
+  // },
+  { name: 'User Info',
     href: '/dashboard/useraccount',
     icon: UserCircleIcon
   },

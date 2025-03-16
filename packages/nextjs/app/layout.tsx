@@ -1,7 +1,8 @@
 import "@rainbow-me/rainbowkit/styles.css";
 import { ScaffoldEthAppWithProviders } from "~~/components/ScaffoldEthAppWithProviders";
-import { Providers } from "~~/components/privyProvider";
-import { PrivyProvider } from '@privy-io/react-auth';
+// import Providers from "~~/components/providers/Provider";
+// import { NextAuthProvider } from "~~/components/providers/NextAuthProvider";
+
 import { ThemeProvider } from "~~/components/ThemeProvider";
 import "~~/styles/globals.css";
 import { getMetadata } from "~~/utils/scaffold-eth/getMetadata";
@@ -27,19 +28,22 @@ export const metadata: Metadata = {
   },
 };
 
-const ScaffoldEthApp = ({ children }: { children: React.ReactNode }) => {
+export default function RootLayout ({ children }: { children: React.ReactNode }) {
   return (
     <html suppressHydrationWarning>
       <body>
         <ThemeProvider defaultTheme="light" enableSystem={false}>
-          <ScaffoldEthAppWithProviders><PrivyProvider appId={process.env.NEXT_PUBLIC_PRIVY_APP_ID!}>{children}</PrivyProvider></ScaffoldEthAppWithProviders>
+          <ScaffoldEthAppWithProviders>
+            {/* <Providers> */}
+              {children}
+            {/* </Providers> */}
+          </ScaffoldEthAppWithProviders>
         </ThemeProvider>
       </body>
     </html>
   );
 };
 
-export default ScaffoldEthApp;
 
 // import '~~/app/v2/ui/global.css';
 // import { inter } from '~~/app/v2/ui/fonts';
