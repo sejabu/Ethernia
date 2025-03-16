@@ -99,17 +99,24 @@ contract Ethernia {
 
     // CORREGIR ACUMULACION CUANDO CARGO EL MISMO USUARIO CON UN DIFERENTE PORCENTAJE, NO CAMBIA, ACUMULA
         uint256 totalPercentage = 0;
+        bool beneficiaryExists = false;
         for (uint256 i = 0; i < willData[msg.sender].beneficiaryList.length; i++) {
+            if(willData[msg.sender].beneficiaryList[i].beneficiary == _beneficiary){
+                willData[msg.sender].beneficiaryList[i].percentage += _percentage;
+                beneficiaryExists = true;
+            }
             totalPercentage += willData[msg.sender].beneficiaryList[i].percentage;
         }
-        require(totalPercentage + _percentage <= 100, "Total percentage exceeds 100");
+        
+        require(totalPercentage  <= 100, "Total percentage exceeds 100");
 
+        if (!beneficiaryExists) {
         Beneficiaries memory beneficiary;
         beneficiary.beneficiary = _beneficiary;
-        beneficiary.percentage = _percentage; 
+        beneficiary.percentage = _percentage;
         willData[msg.sender].beneficiaryList.push(beneficiary);
     }
-
+    }
     function addERC20Assets (address _tokenAddress, string memory _tokenName) external onlyTestator {
         require(willData[msg.sender].erc20Tokens.length < 20, "Max tokens reached");
 

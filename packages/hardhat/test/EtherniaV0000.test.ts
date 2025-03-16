@@ -44,7 +44,7 @@ describe("EtherniaV0000", function(){
         });
     }
    
-);
+    );
 
 /*Test Create Will function:
      function createWill(string memory _name, uint256 _renewPeriod) external onlyUser {
@@ -87,9 +87,36 @@ describe("EtherniaV0000", function(){
             expect(beneficiaries[0].beneficiary).to.equal(addr2.address);
             expect(beneficiaries[0].percentage).to.equal(100);
 });        
+        it ("Should prevent a non-testator from adding a beneficiary", async function () {
+            await expect(ethernia.connect(addr2).addBeneficiary(addr1.address, 100))
+                .to.be.revertedWith("Not testator");
+        }); 
+        it("Should prevent a testator from adding a beneficiary with a percentage greater than 100", async function () {    
+            await expect(ethernia.connect(addr1).addBeneficiary(addr2.address, 101))
+                .to.be.revertedWith("Percentage should be a value between 0-100");
+    });
+        it("Should prevent a testator from adding a beneficiary with a percentage of 0", async function () {
+            await expect(ethernia.connect(addr1).addBeneficiary(addr2.address, 0))
+                .to.be.revertedWith("Percentage should be a value between 0-100");  
+    }
+    );
+        it("Should allow a testador to add multiple beneficiaries", async function () {
+            await ethernia.connect(addr1).addBeneficiary(addr2.address, 50);
+            await ethernia.connect(addr1).addBeneficiary(owner.address, 50);
+            const beneficiaries = await ethernia.listBeneficiaries(addr1.address);
+            expect(beneficiaries.length).to.equal(2);
+            expect(beneficiaries[0].beneficiary).to.equal(addr2.address);
+            expect(beneficiaries[0].percentage).to.equal(50);
+            expect(beneficiaries[1].beneficiary).to.equal(owner.address);
+            expect(beneficiaries[1].percentage).to.equal(50);       
+            });
+        it("Should allow a testador to add more procentage to a beneficiario already resgitred", async function () {
+            await ethernia.connect(addr1).addBeneficiary(addr2.address, 50);
+            await ethernia.connect(addr1).addBeneficiary(addr2.address, 30);
+            const beneficiaries = await ethernia.listBeneficiaries(addr1.address);
+            expect(beneficiaries.length).to.equal(1);
+            expect(beneficiaries[0].beneficiary).to.equal(addr2.address);
+            expect(beneficiaries[0].percentage).to.equal(80);
+        });
 
-
-
-});
-
-});
+}); });
