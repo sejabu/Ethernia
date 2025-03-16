@@ -99,29 +99,38 @@ contract Ethernia {
 
     // CORREGIR ACUMULACION CUANDO CARGO EL MISMO USUARIO CON UN DIFERENTE PORCENTAJE, NO CAMBIA, ACUMULA
         uint256 totalPercentage = 0;
-        for (uint256 i = 0; i < willData[msg.sender].beneficiaryList.length; i++) {
-            totalPercentage += willData[msg.sender].beneficiaryList[i].percentage;
-        }
-        require(totalPercentage + _percentage <= 100, "Total percentage exceeds 100");
+    bool beneficiaryExists = false;
 
-        Beneficiaries memory beneficiary;
-        beneficiary.beneficiary = _beneficiary;
-        beneficiary.percentage = _percentage; 
-        willData[msg.sender].beneficiaryList.push(beneficiary);
+    for (uint256 i = 0; i < willData[msg.sender].beneficiaryList.length; i++) {
+        if (willData[msg.sender].beneficiaryList[i].beneficiary == _beneficiary) {
+            willData[msg.sender].beneficiaryList[i].percentage += _percentage;
+            beneficiaryExists = true;
+        }
+        totalPercentage += willData[msg.sender].beneficiaryList[i].percentage;
     }
 
-    function addERC20Assets (address _tokenAddress, string memory _tokenName) external onlyTestator {
-        require(willData[msg.sender].erc20Tokens.length < 20, "Max tokens reached");
+    require(totalPercentage <= 100, "Total percentage exceeds 100");
 
+    if (!beneficiaryExists) {
+        Beneficiaries memory beneficiary;
+        beneficiary.beneficiary = _beneficiary;
+        beneficiary.percentage = _percentage;
+        willData[msg.sender].beneficiaryList.push(beneficiary);
+    }
+}
+    function addERC20Assets (address _tokenAddress, string memory _tokenName) external onlyTestator {
+        WillData storage will = willData[msg.sender]; //guardo en memoria la will del testador
         // allowance must be doit in dapp token.approve(address(this), type(uint256).max)
+        require(will.erc20Tokens.length < 20, "Max tokens reached");
         require(IERC20(_tokenAddress).allowance(msg.sender, address(this)) == type(uint256).max, 'Must setup allowance first');
-        
+               
         Erc20Data memory erc20Data;
         erc20Data.tokenAddress = _tokenAddress;
         erc20Data.tokenName = _tokenName;
         erc20Data.tokenBalance = IERC20(_tokenAddress).balanceOf(msg.sender);
-        willData[msg.sender].erc20Tokens.push(erc20Data);
+        will.erc20Tokens.push(erc20Data);
     }
+    
 
     function renewLifeProof () public onlyTestator {
         userInfo[msg.sender].lastLifeProof = block.timestamp;
@@ -195,5 +204,4 @@ contract Ethernia {
     function listERC20Tokens (address _testatorAddress) external view returns (Erc20Data[] memory){
         return willData[_testatorAddress].erc20Tokens;
     }
-    
 }
