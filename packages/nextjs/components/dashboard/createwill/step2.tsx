@@ -89,15 +89,15 @@ export default function Register() {
 
 
     return (
-        <div className='flex flex-col justify-center space-x-4 mt-2 w-1/2 mx-auto'>
+        <div className='flex flex-col justify-center space-x-4 mt-2 w-3/4 mx-auto'>
             <div className='card card-bordered bg-base-300 mb-6'>
                 <div className='card-body'>
                     <h3 className='card-title justify-center'><PiNumberCircleTwo />&nbsp;Register your Email</h3>
-                    <div className='flex flex-col space-x-0 space-y-4 justify-center lg:flex-row lg:space-x-4 lg:space-y-0 lg:align-items: stretch'>
-                        <div className="card bg-base-100 w-auto lg:w-96 shadow-sm flex: 1">
+                    <div className='flex flex-col space-x-0 space-y-4 justify-center lg:flex-row lg:space-x-4 lg:space-y-0'>
+                        <div className="card bg-base-100 w-auto lg:w-3/4 shadow-sm flex: 1">
                             <div className="flex flex-col items-center justify-center p-4">
                                 {!isEmailSent ? (
-                                    <form onSubmit={handleSendVerificationCode} className="space-y-4">
+                                    <form onSubmit={handleSendVerificationCode} className="space-y-4 w-full">
                                         <div>
                                             <label htmlFor="email" className="block mb-1 text-sm font-medium">
                                             Email Address
@@ -119,7 +119,7 @@ export default function Register() {
                                         <button
                                         type="submit"
                                         disabled={loading}
-                                        className="flex items-center justify-center w-full py-2 space-x-2 text-white bg-blue-600 rounded-md hover:bg-blue-700 disabled:bg-blue-400"
+                                        className="btn btn-primary flex items-center justify-center py-2 space-x-2 w-full"
                                         >
                                         {loading ? (
                                         <>
