@@ -43,12 +43,12 @@ yarn test
 👤 **Sergio Bugallo** 
 * Twitter: [@elgallodev](https://x.com/elgallodev)
 * Github: [@sejabu](https://github.com/sejabu)
-* LinkedIn: [@www.linkedin.com\/in\/sergio-bugallo](https://linkedin.com/in/www.linkedin.com\/in\/sergio-bugallo)
+* LinkedIn: [@www.linkedin.com\/in\/sergio-bugallo](https://linkedin.com/in/sergio-bugallo)
 
 👤 **Lujan Tissera** 
 * Twitter: [@lulutiETH](https://x.com/lulutiETH)
 * Github: [@lujantissera](https://github.com/lujantissera)
-* LinkedIn: [@www.linkedin.com\/in\/lujan-tissera](https://linkedin.com/in/www.linkedin.com\/in\/lujan-tissera)
+* LinkedIn: [@www.linkedin.com\/in\/lujan-tissera](https://linkedin.com/in/lujan-tissera)
 
 👤 **Noelia Valle** 
 * Twitter: [@](https://x.com/)
