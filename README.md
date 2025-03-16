@@ -10,6 +10,9 @@
   </a>
 </p>
 
+![HACKScroll_-_WIREFRAMES_-_Figma_2025-02-28_02-10-411-ezgif com-video-to-gif-converter](https://github.com/user-attachments/assets/349f9424-f5e5-4595-95e6-1ece5819f4aa)
+
+
 > Digital Inheritance Made Easy! The ETHERNIA dApp enables users to create and manage digital wills for cryptocurrency assets. It allows testators to specify beneficiaries, distribute assets, and requires periodic proof-of-life confirmations.
 
 ### ✨ [Demo](https://ethernia.online/)
