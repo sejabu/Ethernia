@@ -80,13 +80,6 @@ function PushNotificationManager() {
           <>
             <p className="text-primary">You are subscribed to push notifications.</p>
             <button className="btn btn-secondary" onClick={unsubscribeFromPush}>Unsubscribe</button>
-            <input
-              type="text"
-              placeholder="Enter notification message"
-              value={message}
-              onChange={(e) => setMessage(e.target.value)}
-            />
-            <button onClick={sendTestNotification}>Send Test</button>
           </>
         ) : (
           <>

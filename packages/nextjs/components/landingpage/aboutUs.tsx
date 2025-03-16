@@ -3,7 +3,7 @@ import { motion } from "framer-motion";
 const team = [
   {
     name: "@elgallodev",
-    role: "Full Stack Web3 Developer",
+    role: "Full Stack Web3 Developer | Smart Contract Developer",
     image: "/elgallodev.jpg",
   },
   {
