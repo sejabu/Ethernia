@@ -1,20 +1,25 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '~~/components/ui/tabs';
-import { Card, CardContent, CardHeader, CardTitle } from '~~/components/ui/card';
-import { Clock, Ban, FileText, AlertTriangle, Check } from 'lucide-react';
+import { LuClock, LuBan, LuTriangleAlert, LuCheck, LuHeartPulse } from 'react-icons/lu';
+import { BsChatSquareHeart } from "react-icons/bs";
 import { Address } from "~~/components/scaffold-eth";
 import { useAccount } from "wagmi";
-import { useScaffoldReadContract } from '~~/hooks/scaffold-eth';
+import { useScaffoldReadContract, useScaffoldWriteContract } from '~~/hooks/scaffold-eth';
+import { BlockieAvatar } from "~~/components/scaffold-eth";
+
+
 
 
 export default function Status () {
-  
-  const [activeTab, setActiveTab] = useState('create');
+
   const { address: connectedAddress } = useAccount();
   const [beneficiaryList, setBeneficiaryList] = useState<BeneficiaryData[]>([]);
   const [tokensList, setTokensList] = useState<TokenData[]>([]);
+
+  const { writeContractAsync: writeEtherniaAsync } = useScaffoldWriteContract({
+    contractName: "Ethernia",
+  });
 
   interface BeneficiaryData {
     beneficiary: string;
@@ -53,9 +58,9 @@ export default function Status () {
     year: "numeric",
     month: "long",
     day: "numeric",
-    hour: "2-digit",
-    minute: "2-digit",
-    second: "2-digit"
+    // hour: "2-digit",
+    // minute: "2-digit",
+    // second: "2-digit"
   }) : null;
 
   const renewPeriod = willData ? willData[2] : null; // Assuming the 6th element is the isActive boolean
@@ -64,9 +69,9 @@ export default function Status () {
     year: "numeric",
     month: "long",
     day: "numeric",
-    hour: "2-digit",
-    minute: "2-digit",
-    second: "2-digit"
+    // hour: "2-digit",
+    // minute: "2-digit",
+    // second: "2-digit"
   }) : null;
 
 
@@ -129,110 +134,273 @@ export default function Status () {
 
 
   return (
-    <div className="w-full max-w-6xl mx-auto p-0 space-y-0">
-      <div className="text-bold space-y-0 flex">
-        Testator address:&nbsp;&nbsp;
-        <Address address={connectedAddress} format="long" />  
-      </div>
-      
-
-      <Tabs defaultValue="status" className="w-full">
-        <TabsContent value="status">
-          <Card>
-            <CardHeader>
-              <CardTitle>Will Status</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="grid grid-cols-2 gap-4">
-                <div className="p-4 shadow rounded">
-                  <div className="flex items-center space-x-2">
-                    <div>
-                      <p className="font-medium">Will Status</p>
-                      <div className="flex items-center">
-                      {isActive ? <Check className="h-5 w-5 text-green-500" /> : <Ban className="h-5 w-5 text-red-500"/>}
-                      {isActive ? <span className="text-sm text-green-600">&nbsp;Active</span>: <span className="text-sm text-red-600">&nbsp;Inactive</span>}
-                    </div>
-                    </div>
-                  </div>
+    <div className='flex flex-col justify-center space-x-4'>
+      <div className="w-full max-w-6xl mx-auto"> 
+        <div className='card card-bordered bg-base-300 w-auto mb-6'>
+          <div className='card-body'>
+            <h2 className='card-title'>Will Status</h2>
+            <div className="stats stats-vertical lg:stats-horizontal shadow">
+              <div className="stat">
+                <div className="stat-title">Will Status</div>
+                <div className="flex flex-grow flex-row stat-value">
+                {isActive ? <LuCheck className="h-10 w-10 text-green-500" /> : <LuBan className="h-10 w-10 text-red-500"/>}
+                {isActive ? <span className="text-2xl">Active&nbsp;</span>: <span className="text-2xl text-red-600">Inactive&nbsp;</span>}
                 </div>
+              </div>
+
+              <div className="stat">
+                <div className="stat-title">Last proof of life</div>
+                <div className="flex flex-grow flex-row stat-value">
+                {formattedRenewDate ? <LuHeartPulse className="h-10 w-10 text-green-500" /> : <LuHeartPulse className="h-10 w-10 text-red-500"/>}
+                {formattedRenewDate ? <span className="text-2xl">&nbsp;{formattedLastLifeProof}</span> : <span className="text-2xl text-red-500">&nbsp;Proof of life not found.</span>}
+              </div>
+              </div>
+
+              <div className="stat">
+                <div className="stat-title">Next renewal</div>
+                <div className="flex flex-grow flex-row stat-value">
+                {formattedRenewDate ? <LuClock className="h-10 w-10 text-green-500" /> : <LuClock className="h-10 w-10 text-red-500"/>}
+                {formattedRenewDate ? <span className="text-2xl">&nbsp;{formattedRenewDate}</span> : <span className="text-2xl text-red-500">&nbsp;No renewal date set yet.</span>}
+                </div>
+              </div>
+    
+              <div className="stat">
+                <div className="stat-title"></div>  
+                <div className='btn p-2'>
+                  <BsChatSquareHeart className="h-10 w-10" onClick={async () => {
+                    try {
+                    await writeEtherniaAsync({
+                    functionName: "renewLifeProof",
+                    });
+                    } catch (error) {
+                    console.error("Error renewing life proof:", error);
+                    }
+                  }}
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className='card card-bordered bg-base-300 w-auto mb-6'> 
+          <div className='card-body'>
+            <h2 className='card-title'>Assets List</h2>         
+              {/* <div className="grid grid-cols-2 gap-4">
+               
                 <div className="p-4 shadow rounded">
                   <div className="flex items-center space-x-2">
                     <div>
                       <p className="font-medium">Is Claimed?</p>
                       <div className="flex items-center">
-                      {isClaimed ? <AlertTriangle className="h-5 w-5 text-red-500" /> : <Ban className="h-5 w-5 text-green-500"/>}
+                      {isClaimed ? <LuTriangleAlert className="h-5 w-5 text-red-500" /> : <LuBan className="h-5 w-5 text-green-500"/>}
                       {isClaimed ? <span className="text-sm text-red-600">&nbsp;Claimed</span> : <span className="text-sm text-green-600">&nbsp;Not Claimed</span >}
                       </div>
                     </div>
                   </div>
                 </div>
-                <div className="p-4 shadow rounded">
-                  <div className="flex items-center space-x-2">
-                    <div>
-                      <p className="font-medium">Last life proof</p>
-                      <div className="flex items-center">
-                      {formattedLastLifeProof ? <Check className="h-5 w-5 text-green-500" /> : <Ban className="h-5 w-5 text-red-500"/>}
-                      {formattedLastLifeProof ? <span className="text-sm text-green-600">&nbsp;{formattedLastLifeProof}</span> : <span className="text-sm text-red-600">&nbsp;No life proof</span>}
-                    </div>
-                    </div>
-                  </div>
-                </div>
-                <div className="p-4 shadow rounded">
-                  <div className="flex items-center space-x-2">
-                    <div>
-                      <p className="font-medium">Next Renewal</p>
-                      <div className="flex items-center">
-                      {formattedRenewDate ? <Clock className="h-5 w-5 text-green-500" /> : <Clock className="h-5 w-5 text-red-500"/>}
-                      {formattedRenewDate ? <span className="text-sm text-blue-600">&nbsp;{formattedRenewDate}</span> : <span className="text-sm text-red-600">&nbsp;No renewal date set yet.</span>}
-                    </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <div className="space-y-2">
-                <h3 className="font-medium">Asset Distribution</h3>
-                <div className="space-y-2">
-                {tokensList.length > 0 ? (
+                
+              </div> */}
+            
+            <div className="overflow-x-auto">
+              <table className="table">
+                {/* head */}
+                <thead>
+                  <tr>
+                    <th>
+                      <label>
+                        <input type="checkbox" className="checkbox hidden" />
+                      </label>
+                    </th>
+                    <th>Name</th>
+                    <th>SC Address</th>
+                    <th>Balance</th>
+                    <th></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {tokensList.length > 0 ? (
                     tokensList.map((token, i) => (
-                      <div key={i} className="p-3 shadow rounded">
-                        <div className="flex justify-between">
-                          <span>Token {i + 1}: {token.tokenAddress}</span>
-                          <span>{token.tokenName}</span>
-                          <span>{token.tokenBalance}</span>
-                        </div>
-                      </div>
+                      <tr key={i}>
+                        <th>
+                          <label>
+                            <input type="checkbox" className="checkbox" />
+                          </label>
+                        </th>
+                        <td>
+                          <div className="flex items-center gap-3">
+                            <div className="avatar">
+                              <div className="mask mask-squircle h-12 w-12">
+                                <img
+                                  src="/usdt.jpg"
+                                  alt="Token Logo" />
+                              </div>
+                            </div>
+                            <div>
+                              <div className="font-bold">{token.tokenName}</div>
+                              <div className="text-sm opacity-50">Tether (USDT)</div>
+                            </div>
+                          </div>
+                        </td>
+                        <td>
+                          Token {i + 1}: {token.tokenAddress}
+                          <br />
+                          <span className="badge badge-ghost badge-sm"></span>
+                        </td>
+                        <td>{token.tokenBalance}</td>
+                        <th>
+                          <button className="btn btn-ghost btn-xs">Remove</button>
+                        </th>
+                      </tr>  
                     ))
-                  ) : (
-                    <div className="p-3 shadow rounded text-center text-gray-500">
-                      No ERC20 tokens added yet
-                    </div>
-                  )}
-                </div>
-              </div>
-              <div className="space-y-2">
-                <h3 className="font-medium">Current Beneficiaries</h3>
-                <div className="space-y-2">
-                {beneficiaryList.length > 0 ? (
+                    ) : (
+                      <tr>
+                        <th>
+                          <label>
+                            <input type="checkbox" className="checkbox" />
+                          </label>
+                        </th>
+                        <td>
+                          <div className="flex items-center gap-3">
+                            <div className="avatar">
+                              <div className="mask mask-squircle h-12 w-12">
+                                <img
+                                  src="/empty.jpg"
+                                  alt="Token Logo" />
+                              </div>
+                            </div>
+                            <div>
+                              <div className="font-bold">Empty</div>
+                              <div className="text-sm opacity-50">Empty</div>
+                            </div>
+                          </div>
+                        </td>
+                        <td>
+                          No ERC20 tokens added yet.
+                        </td>
+                        <td>0.00</td>
+                        <th>
+                          <button className="btn btn-ghost btn-xs">Remove</button>
+                        </th>
+                      </tr>
+                    )
+                  }
+                </tbody>
+                {/* foot */}
+                <tfoot>
+                  <tr>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                  </tr>
+                </tfoot>
+              </table>
+            </div>  
+          </div>
+        </div>  
+
+        <div className='card card-bordered bg-base-300 w-auto mb-6'> 
+          <div className='card-body'>
+            <h2 className='card-title'>Current Beneficiaries</h2>         
+            <div className="overflow-x-auto">
+              <table className="table">
+                {/* head */}
+                <thead>
+                  <tr>
+                    <th>
+                      <label>
+                        <input type="checkbox" className="checkbox hidden" />
+                      </label>
+                    </th>
+                    <th>Name</th>
+                    <th>Wallet Address</th>
+                    <th>Percentage</th>
+                    <th></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {beneficiaryList.length > 0 ? (
                     beneficiaryList.map((token, i) => (
-                      <div key={i} className="p-3 shadow rounded">
-                        <div className="flex justify-between">
-                          <span>Beneficiary {i + 1}:&nbsp;{token.beneficiary}</span>
-                          <span>Percentage assigned:&nbsp;{token.percentage.toString()}&nbsp;%</span>
-                        </div>
-                      </div>
+                      <tr key={i}>
+                        <th>
+                          <label>
+                            <input type="checkbox" className="checkbox" />
+                          </label>
+                        </th>
+                        <td>
+                          <div className="flex items-center gap-3">
+                            <div className="avatar">
+                              <div className="mask mask-squircle h-12 w-12">
+                              <BlockieAvatar address={token.beneficiary} size={24}/>
+                              </div>
+                            </div>
+                            <div>
+                              <div className="font-bold">N°&nbsp;{i + 1}</div>
+                              <div className="text-sm opacity-50">Name (if asigned)</div>
+                            </div>
+                          </div>
+                        </td>
+                        <td>
+                          <Address address={token.beneficiary} format="long" onlyEnsOrAddress={true} ></Address>
+                        </td>
+                        <td>
+                          <span className='font-bold'>{token.percentage.toString()}%</span>&nbsp;Assigned.
+                        </td>
+                        <th>
+                          <button className="btn btn-ghost btn-xs">Edit</button>
+                        </th>
+                      </tr>  
                     ))
-                  ) : (
-                    <div className="p-3 shadow rounded text-center text-gray-500">
-                      No beneficiaries added yet.
-                    </div>
-                  )}
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        </TabsContent>
-      </Tabs>
+                    ) : (
+                      <tr>
+                        <th>
+                          <label>
+                            <input type="checkbox" className="checkbox" />
+                          </label>
+                        </th>
+                        <td>
+                          <div className="flex items-center gap-3">
+                            <div className="avatar">
+                              <div className="mask mask-squircle h-12 w-12">
+                                <img
+                                  src="/emptyperson.jpg"
+                                  alt="Person Avatar" />
+                              </div>
+                            </div>
+                            <div>
+                              <div className="font-bold">Empty</div>
+                              <div className="text-sm opacity-50">Empty</div>
+                            </div>
+                          </div>
+                        </td>
+                        <td>
+                        No beneficiaries added yet.
+                        </td>
+                        <td>0.00</td>
+                        <th>
+                          <button className="btn btn-ghost btn-xs">Edit</button>
+                        </th>
+                      </tr>
+                    )
+                  }
+                </tbody>
+                {/* foot */}
+                <tfoot>
+                  <tr>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                  </tr>
+                </tfoot>
+              </table>
+            </div>  
+          </div>
+        </div> 
+      </div>
     </div>
   );
 }

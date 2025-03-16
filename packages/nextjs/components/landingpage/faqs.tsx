@@ -1,7 +1,6 @@
 import Link from "next/link";
 import { useTranslation } from "~~/lib/i18n/LanguageContext";
 import { motion } from "framer-motion";
-import { Button } from "../ui/button";
 
 const faqs = [
   {

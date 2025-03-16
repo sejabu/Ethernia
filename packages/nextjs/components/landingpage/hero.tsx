@@ -1,8 +1,6 @@
 import Link from "next/link";
 import Image from 'next/image';
-import { lusitana } from '~~/components/fonts';
-import { ArrowRightIcon, BugAntIcon, MagnifyingGlassIcon } from "@heroicons/react/24/outline";
-import { Button } from "../ui/button";
+import { LuArrowRight } from "react-icons/lu";
 import { motion } from "framer-motion";
 import { useTranslation } from "~~/lib/i18n/LanguageContext";
 
@@ -50,7 +48,7 @@ export default function Hero() {
                            
             <Link href="dashboard" className="btn btn-primary text-base">
             <span>{t('hero.demo')}</span>
-            <ArrowRightIcon className="w-5 md:w-6" />
+            <LuArrowRight className="w-5 md:w-6" />
             </Link>
           </div>
           <div className="rounded-xl overflow-hidden flex justify-center">

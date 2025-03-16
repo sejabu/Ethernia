@@ -3,17 +3,11 @@
 import React, { useCallback, useRef, useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
 import { hardhat } from "viem/chains";
-import { Bars3Icon, BugAntIcon } from "@heroicons/react/24/outline";
-import { DocumentCheckIcon } from "@heroicons/react/24/outline";
 import { FaucetButton, RainbowKitCustomConnectButton } from "~~/components/scaffold-eth";
 import { useOutsideClick, useTargetNetwork } from "~~/hooks/scaffold-eth";
 import { SwitchTheme } from "~~/components/SwitchTheme";
-
-import { Button } from "~~/components/ui/button";
-
-import { Menu, Moon, Sun, Globe } from "lucide-react";
+import { LuGlobe } from "react-icons/lu";
 import { useTranslation } from "~~/lib/i18n/LanguageContext";
 
 export default function Header() {
@@ -160,7 +154,7 @@ export default function Header() {
           </div>
           <div className="hidden md:flex flex-col">
             <span className="font-bold leading-tight">ETHERNIA</span>
-            <span className="text-xs">Digital Inheritance</span>
+            <span className="text-xs">Digital Inheritance Made Easy!</span>
           </div>
         </Link>
         <Link href="/" passHref className="md:hidden flex items-center gap-2 ml-2 mr-6 shrink">
@@ -178,7 +172,7 @@ export default function Header() {
           </nav>
           <div className="dropdown">
             <div tabIndex={0} role="button">
-              <Globe className="h-5 w-5" />
+              <LuGlobe className="h-5 w-5" />
             </div>
             
             <ul tabIndex={0} className="dropdown-content menu bg-base-100 rounded-box z-1 w-26 p-2 shadow-sm">
@@ -204,8 +198,8 @@ export default function Header() {
               }} />
             </nav> */}
         <SwitchTheme className={`pointer-events-auto ${isLocalNetwork ? "self-end md:self-auto" : ""}`} />
-        <RainbowKitCustomConnectButton />
-          {isLocalNetwork && <FaucetButton />}  
+        {/* <RainbowKitCustomConnectButton />
+          {isLocalNetwork && <FaucetButton />}   */}
           
         </div>
          

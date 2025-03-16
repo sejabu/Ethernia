@@ -2,7 +2,11 @@
 import { expect } from "chai";
 import { ethers } from "hardhat";
 import { Ethernia } from "../typechain-types/contracts/EtherniaV0000.sol";
+<<<<<<< HEAD
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
+=======
+import { SignerWithAddress } from "@nomicfoundation/hardhat-ethers/signers";
+>>>>>>> 1c2f488a062c599884e0e11c9bf33977c230c681
 
 describe("EtherniaV0000", function(){
     let ethernia: Ethernia;

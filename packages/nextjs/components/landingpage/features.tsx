@@ -1,7 +1,5 @@
 import { motion } from "framer-motion";
-import { Shield, Key, Clock, Wallet, ScrollText, Hand, Check, HeartPulse } from "lucide-react";
-// replace all cards with daisyui class card
-import { Card, CardContent } from "~~/components/ui/card";
+import { LuWallet, LuScrollText, LuCheck, LuHeartPulse } from "react-icons/lu";
 import { useTranslation } from "~~/lib/i18n/LanguageContext";
 
 export default function Features() {
@@ -9,22 +7,22 @@ export default function Features() {
 
   const features = [
     {
-      icon: Wallet,
+      icon: LuWallet,
       titleKey: 'features.cards.connect.title',
       descriptionKey: 'features.cards.connect.description',
     },
     {
-      icon: ScrollText,
+      icon: LuScrollText,
       titleKey: 'features.cards.will.title',
       descriptionKey: 'features.cards.will.description',
     },
     {
-      icon: HeartPulse,
+      icon: LuHeartPulse,
       titleKey: 'features.cards.lifeproof.title',
       descriptionKey: 'features.cards.lifeproof.description',
     },
     {
-      icon: Check,
+      icon: LuCheck,
       titleKey: 'features.cards.finish.title',
       descriptionKey: 'features.cards.finish.description',
     },
@@ -57,15 +55,15 @@ export default function Features() {
               viewport={{ once: true }}
               transition={{ delay: index * 0.2, duration: 0.5 }}
             >
-              <Card>
-                <CardContent className="pt-6">
+              <div className="card w-96 bg-base-100 card-xl shadow-sm">
+                <div className="card-body">
                   
                   <feature.icon className="w-12 h-12 text-primary mb-4" />
                   <h3 className="text-xl font-semibold mb-2">{t(feature.titleKey)}</h3>
                   <p className="text-muted-foreground">{t(feature.descriptionKey)}</p>
                   
-                </CardContent>
-              </Card>
+                </div>
+              </div>
             </motion.div>
           ))}
         </div>

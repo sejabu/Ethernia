@@ -1,12 +1,9 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '~~/components/ui/tabs';
-import { Card, CardContent, CardHeader, CardTitle } from '~~/components/ui/card';
-import { Mail, Users, FileText, AlertTriangle, Check } from 'lucide-react';
-import { Address } from "~~/components/scaffold-eth";
+import { LuMail, LuUsers } from 'react-icons/lu';
 import { useAccount } from "wagmi";
-import { useScaffoldReadContract, useScaffoldWriteContract } from '~~/hooks/scaffold-eth';
+import { useScaffoldWriteContract } from '~~/hooks/scaffold-eth';
 import { subscribeUser, unsubscribeUser, sendNotification } from '~~/app/actions'
 
 function urlBase64ToUint8Array(base64String: string) {
@@ -149,31 +146,26 @@ export default function UserAccount () {
 
   return (
     <div className="w-full max-w-6xl mx-auto p-6 space-y-6">
-      <Tabs defaultValue="manage" className="w-full">
-        <TabsContent value="manage">
-          <Card>
-          <CardHeader>
-              <CardTitle>Notification Suscription</CardTitle>
-            </CardHeader>
-            <CardContent className="flex mx-auto flex-row">
+      <div defaultValue="manage" className="w-full">
+        <div className='card'>
+          <h2 className='card-title'>Notification Suscription</h2>
+          <div className="card-body flex mx-auto flex-row">
             <span className="mr-14"><PushNotificationManager  /></span>
             <span><InstallPrompt /></span>
-            </CardContent>
-            <CardHeader>
-              <CardTitle>Account Info</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
+          </div>
+          <h2 className='card-title'>Account Info</h2>
+          <div className="card-bordereddy space-y-4">
               <div className="space-y-2">
                 <label className="block font-medium">Add/Change Email</label>
                 <div className="flex items-center space-x-2">
-                  <Mail className="h-5 w-5 text-gray-500" />
+                  <LuMail className="h-5 w-5 text-gray-500" />
                   <input type="text" placeholder="example@mail.com" className="w-full p-2 border rounded" />
                 </div>
               </div>
               <div className="space-y-2">
                 <label className="block font-medium">Add/Change Name</label>
                 <div className="flex items-center space-x-2">
-                  <Users className="h-5 w-5 text-gray-500" />
+                  <LuUsers className="h-5 w-5 text-gray-500" />
                   <input type="text" placeholder="Input your name" className="w-full p-2 border rounded" />
                 </div>
                 <button className="btn btn-primary" onClick={async () => {
@@ -188,10 +180,9 @@ export default function UserAccount () {
                   Register User
                 </button>
               </div>
-            </CardContent>
-          </Card>
-        </TabsContent>
-      </Tabs>
+            </div>
+          </div>
+      </div>
     </div>
   );
 }

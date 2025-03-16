@@ -33,6 +33,7 @@
     "hardhat:test": "yarn workspace @se-2/hardhat test",
     "hardhat:verify": "yarn workspace @se-2/hardhat verify",
     "postinstall": "husky install",
+    "ipfs": "yarn workspace @se-2/nextjs ipfs",
     "lint": "yarn next:lint && yarn hardhat:lint",
     "next:build": "yarn workspace @se-2/nextjs build",
     "next:check-types": "yarn workspace @se-2/nextjs check-types",
@@ -48,12 +49,11 @@
     "verify": "yarn hardhat:verify"
   },
   "devDependencies": {
-    "cross-env": "^7.0.3",
-    "husky": "~8.0.3",
+    "husky": "~9.1.6",
     "lint-staged": "~13.2.2"
   },
   "packageManager": "yarn@3.2.3",
   "engines": {
-    "node": ">=18.18.0"
+    "node": ">=20.18.3"
   }
 }

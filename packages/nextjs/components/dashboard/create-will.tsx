@@ -1,42 +1,32 @@
 'use client';
 
-import React, { useState } from 'react';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '~~/components/ui/tabs';
-import { Card, CardContent, CardHeader, CardTitle } from '~~/components/ui/card';
-import { Clock, Users, FileText, AlertTriangle, Check, ScrollText } from 'lucide-react';
+import { LuClock, LuScrollText } from 'react-icons/lu';
 import { Address } from "~~/components/scaffold-eth";
 import { useAccount } from "wagmi";
-import { useScaffoldReadContract, useScaffoldWriteContract } from '~~/hooks/scaffold-eth';
+import { useScaffoldWriteContract } from '~~/hooks/scaffold-eth';
 
 
 export default function CreateWill() {
-  const [activeTab, setActiveTab] = useState('create');
-  const { address: connectedAddress } = useAccount();
 
+  const { address: connectedAddress } = useAccount();
   const { writeContractAsync: writeEtherniaAsync } = useScaffoldWriteContract({
     contractName: "Ethernia",
-   });
+  });
 
   return (
     <div className="w-full max-w-6xl mx-auto p-6 space-y-6 ">
-      <Tabs defaultValue="create" className="w-full">
-      <TabsContent value="create">
-      <Card>
-        <CardHeader >
-          <CardTitle>
-            <div className="sticky lg:static top-0 navbar bg-base-100 min-h-0 flex-shrink-0 z-20 justify-around shadow-sm px-0 sm:px-2">
+      <div className='card'>
+            <div className="card-title sticky lg:static top-0 navbar bg-base-100 min-h-0 flex-shrink-0 z-20 justify-around shadow-sm px-0 sm:px-2">
               <p>Create Digital Will - Testator address:</p>
               <Address address={connectedAddress} format="long" />
             </div>
-          </CardTitle>  
-          </CardHeader>
-          <CardContent className="space-y-4">
+          <div className="card-body space-y-4">
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
                 <label className="block font-medium">Will Name</label>
                 <div className="flex items-center space-x-2">
-                  <ScrollText className="h-5 w-5 text-gray-500" />
-                  <input id="willName" type="text" placeholder="Put your will a name" className="w-full p-2 border rounded" />
+                  <LuScrollText className="h-5 w-5 text-gray-500" />
+                  <input id="willName" type="text" placeholder="Put a name to your will (can be anything)" className="w-full p-2 border rounded" />
                   
                 </div>
               </div>
@@ -44,7 +34,7 @@ export default function CreateWill() {
               <div className="space-y-2">
                 <label className="block font-medium">Renewal Period</label>
                 <div className="flex items-center space-x-2">
-                  <Clock className="h-5 w-5 text-gray-500" />
+                  <LuClock className="h-5 w-5 text-gray-500" />
                   <input id="renewalPeriod" type="number" placeholder="Time in days (minutes for test)" className="w-full p-2 border rounded" />
                 </div>
               </div>
@@ -90,10 +80,20 @@ export default function CreateWill() {
               }}>
               Create Will
             </button>
-          </CardContent>
-          </Card>
-        </TabsContent>
-      </Tabs>
+          </div>
+          </div>
+      
+      <div className="join grid grid-cols-2">
+        <button className="join-item btn btn-outline">Previous page</button>
+        <button className="join-item btn btn-outline">Next</button>
+      </div>
+      <ul className="steps steps-horizontal">
+        <li className="step step-primary">Registert</li>
+        <li className="step step-primary">Create Will</li>
+        <li className="step">Add Assets</li>
+        <li className="step">Add beneficiaries</li>
+      </ul>
+   
     </div>
   );
 }
