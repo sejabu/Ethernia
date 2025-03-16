@@ -102,7 +102,7 @@ contract Ethernia {
         bool beneficiaryExists = false;
         for (uint256 i = 0; i < willData[msg.sender].beneficiaryList.length; i++) {
             if(willData[msg.sender].beneficiaryList[i].beneficiary == _beneficiary){
-                willData[msg.sender].beneficiaryList[i].percentage += _percentage;
+                willData[msg.sender].beneficiaryList[i].percentage = _percentage;
                 beneficiaryExists = true;
             }
             totalPercentage += willData[msg.sender].beneficiaryList[i].percentage;
@@ -118,17 +118,18 @@ contract Ethernia {
     }
     }
     function addERC20Assets (address _tokenAddress, string memory _tokenName) external onlyTestator {
-        require(willData[msg.sender].erc20Tokens.length < 20, "Max tokens reached");
-
+        WillData storage will = willData[msg.sender]; //guardo en memoria la will del testador
         // allowance must be doit in dapp token.approve(address(this), type(uint256).max)
+        require(will.erc20Tokens.length < 20, "Max tokens reached");
         require(IERC20(_tokenAddress).allowance(msg.sender, address(this)) == type(uint256).max, 'Must setup allowance first');
-        
+               
         Erc20Data memory erc20Data;
         erc20Data.tokenAddress = _tokenAddress;
         erc20Data.tokenName = _tokenName;
         erc20Data.tokenBalance = IERC20(_tokenAddress).balanceOf(msg.sender);
-        willData[msg.sender].erc20Tokens.push(erc20Data);
+        will.erc20Tokens.push(erc20Data);
     }
+    
 
     function renewLifeProof () public onlyTestator {
         userInfo[msg.sender].lastLifeProof = block.timestamp;

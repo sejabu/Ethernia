@@ -112,11 +112,13 @@ describe("EtherniaV0000", function(){
             });
         it("Should allow a testador to add more procentage to a beneficiario already resgitred", async function () {
             await ethernia.connect(addr1).addBeneficiary(addr2.address, 50);
-            await ethernia.connect(addr1).addBeneficiary(addr2.address, 30);
+            await ethernia.connect(addr1).addBeneficiary(addr2.address, 40);
             const beneficiaries = await ethernia.listBeneficiaries(addr1.address);
             expect(beneficiaries.length).to.equal(1);
             expect(beneficiaries[0].beneficiary).to.equal(addr2.address);
-            expect(beneficiaries[0].percentage).to.equal(80);
+            expect(beneficiaries[0].percentage).to.equal(90);
         });
+        it 
 
-}); });
+}); 
+});
