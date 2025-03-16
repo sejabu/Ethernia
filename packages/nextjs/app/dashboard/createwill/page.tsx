@@ -27,6 +27,11 @@ export default function CreateWillPage() {
             setCurrentStep(currentStep + 1); // Move to the next step
           }
         };
+        const handleBack = () => {
+            if (currentStep > 0 && currentStep !== 0) {
+              setCurrentStep(currentStep - 1); // Move to the back step
+            }
+          };
         
     return (
         <Suspense fallback={
@@ -40,9 +45,16 @@ export default function CreateWillPage() {
             }>
             <div className="min-h-screen">
                 {steps[currentStep]} {/* Render the current step */}
-                {currentStep < steps.length - 1 && (
-                <span className='flex justify-center'><button className="btn btn-primary" onClick={handleNext}>Next</button></span>
-                )}
+                
+                <div className="join grid grid-cols-2 justify-center space-x-4 mt-2 w-1/2 mx-auto">
+                    {currentStep > 0 && (
+                        <button className="join-item btn btn-secondary" onClick={handleBack}>Previous page</button>
+                    )}
+                    {currentStep < steps.length - 1 && (
+                        <button className="join-item btn btn-primary" onClick={handleNext}>Next</button>
+                    )}    
+                </div>
+                
             </div>
         </Suspense>
     );
