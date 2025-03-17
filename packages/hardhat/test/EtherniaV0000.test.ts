@@ -178,9 +178,47 @@ describe("EtherniaV0000", function(){
                 .to.be.revertedWith("Lock period still active.");
         });
 
-   
-
 
     
-}
-);});
+}    
+    );
+    describe("Delete Will", function () {
+        beforeEach(async function () {
+            await ethernia.connect(addr1).registerUser();
+            await ethernia.connect(addr2).registerUser();
+            await ethernia.connect(addr1).createWill("My Will", 1);
+        });
+
+        it("Should delete the will and reset the testator status", async function () {
+            await expect(ethernia.connect(addr1).deleteWill())
+                .to.emit(ethernia, "WillDeleted")
+                .withArgs(addr1.address);
+
+            const will = await ethernia.willData(addr1.address);
+            const user = await ethernia.userInfo(addr1.address);
+
+            expect(will.name).to.equal("");
+            expect(user.isTestator).to.be.false;
+        });
+
+        it("Should prevent non-testators from deleting a will", async function () {
+            await expect(ethernia.connect(addr2).deleteWill()).to.be.revertedWith("Not testator");
+        });
+
+    
+        it("Should prevent deleting a will that is already claimed", async function () {
+            await ethernia.connect(addr1).addBeneficiary(addr2.address, 50);
+            await network.provider.send("evm_increaseTime", [3600]); // Aumentar el tiempo en 1 hora
+            await network.provider.send("evm_mine"); // Minar un nuevo bloque para que el cambio de tiempo tenga efecto
+            await ethernia.connect(addr2).claimWill(addr1.address);
+            await expect(ethernia.connect(addr1).deleteWill()).to.be.revertedWith("Will already claimed");
+        });
+    });
+    });
+
+
+
+
+});
+
+});
