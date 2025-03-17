@@ -173,7 +173,7 @@ contract Ethernia {
         require(isBeneficiary==true, 'You are not a beneficiary');
 
         erc20Transfer(_testatorAddress);
-        transferFunds(_testatorAddress);
+     
 
         willData[_testatorAddress].executionTime = block.timestamp;
         willData[_testatorAddress].isExecuted = true;
@@ -205,10 +205,5 @@ contract Ethernia {
         return willData[_testatorAddress].erc20Tokens;
     }
 
-    function transferFunds(address _testatorAddress) private {
-    uint256 totalAmount = address(this).balance; // Suponiendo que se manejará Ether
-    for (uint256 i = 0; i < willData[_testatorAddress].beneficiaryList.length; i++) {
-        uint256 amountToTransfer = totalAmount * willData[_testatorAddress].beneficiaryList[i].percentage / 100;
-        payable(willData[_testatorAddress].beneficiaryList[i].beneficiary).transfer(amountToTransfer);
-    }}
+  
 }
