@@ -12,6 +12,7 @@
 
 - Push notifications.
 - Chain abstraction to achieve unified balances.
+- Multi-Wills for improved asset assignments.
 - Beneficiaries social login option.
 - Commercial strategies.
 - SEO improvement.
