@@ -46,7 +46,8 @@ export default function Create() {
                 </div>
                 <button
                   className="w-full btn btn-primary"
-                  onClick={async () => {
+                  onClick={async (event) => {
+                    event.preventDefault(); // Stop default form submission
                   try {
                     const renewalPeriodInput = document.getElementById('renewalPeriod') as HTMLInputElement;
                     const renewalPeriod = BigInt(renewalPeriodInput.value);
