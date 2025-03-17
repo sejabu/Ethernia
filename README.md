@@ -5,12 +5,15 @@
   <a href="#" target="_blank">
     <img alt="License: MIT" src="https://img.shields.io/badge/License-MIT-yellow.svg" />
   </a>
+  <a href="https://x.com/EtherniaApp" target="_blank">
+    <img alt="Twitter: etherniaApp" src="https://img.shields.io/twitter/follow/etherniaApp.svg?style=social" />
+  </a>
   <a href="https://twitter.com/elgallodev" target="_blank">
     <img alt="Twitter: elgallodev" src="https://img.shields.io/twitter/follow/elgallodev.svg?style=social" />
   </a>
 </p>
 
-<p> Digital Inheritance Made Easy! The ETHERNIA dApp enables users to create and manage digital wills for cryptocurrency assets. It allows testators to specify beneficiaries, distribute assets, and requires periodic proof-of-life confirmations.
+<p> Digital Inheritance Made Easy! The ETHERNIA DApp enables users to create and manage digital wills for cryptocurrency assets. It allows testators to specify beneficiaries, distribute assets, and requires periodic proof-of-life confirmations.
 </p>
 
 ![HACKScroll_-_WIREFRAMES_-_Figma_2025-02-28_02-10-411-ezgif com-video-to-gif-converter](https://github.com/user-attachments/assets/349f9424-f5e5-4595-95e6-1ece5819f4aa)
