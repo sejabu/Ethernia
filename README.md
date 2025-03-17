@@ -17,6 +17,13 @@
 
 ### ✨ [Demo](https://ethernia.online/)
 
+## Docs
+
+- [Terms and Conditions](./docs/TERMS_AND_CONDITIONS.md)
+- [Privacy Policy](./docs/PRIVACY_POLICY.md)
+- [Disclaimer](./docs/DISCLAIMER.md)
+
+
 ## Prerequisites
 
 - node >=18.18.0
