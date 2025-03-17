@@ -4,8 +4,7 @@ import React, { useCallback, useRef, useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { hardhat } from "viem/chains";
-import { FaucetButton, RainbowKitCustomConnectButton } from "~~/components/scaffold-eth";
-import { useOutsideClick, useTargetNetwork } from "~~/hooks/scaffold-eth";
+import { useTargetNetwork } from "~~/hooks/scaffold-eth";
 import { SwitchTheme } from "~~/components/SwitchTheme";
 import { LuGlobe } from "react-icons/lu";
 import { useTranslation } from "~~/lib/i18n/LanguageContext";
@@ -187,71 +186,10 @@ export default function Header() {
                 </a>  
               </li>
             </ul>
-          </div>  
-            {/* <Button variant="ghost" size="icon">
-              <Menu className="h-5 w-5" />
-            </Button> */}
-            {/* <nav className="flex flex-col gap-4 mt-8">
-              <NavLinks onClick={() => {
-                const closeButton = document.querySelector('[data-state="open"] button[data-radix-collection-item]') as HTMLButtonElement;
-                closeButton?.click();
-              }} />
-            </nav> */}
-        <SwitchTheme className={`pointer-events-auto ${isLocalNetwork ? "self-end md:self-auto" : ""}`} />
-        {/* <RainbowKitCustomConnectButton />
-          {isLocalNetwork && <FaucetButton />}   */}
-          
-        </div>
-         
-        
+          </div>      
+          <SwitchTheme className={`pointer-events-auto ${isLocalNetwork ? "self-end md:self-auto" : ""}`} />
+        </div>  
       </div>      
     </header>
   );
-}  
-
-
-    // <div className="sticky lg:static top-0 navbar bg-base-100 min-h-0 flex-shrink-0 justify-between z-20 shadow-md shadow-secondary px-0 sm:px-2">
-    //   <div className="navbar-start w-auto lg:w-1/2">
-        {/* <div className="lg:hidden dropdown" ref={burgerMenuRef}>
-          <label
-            tabIndex={0}
-            className={`ml-1 btn btn-ghost ${isDrawerOpen ? "hover:bg-secondary" : "hover:bg-transparent"}`}
-            onClick={() => {
-              setIsDrawerOpen(prevIsOpenState => !prevIsOpenState);
-            }}
-          >
-            <Bars3Icon className="h-1/2" />
-          </label>
-          {isDrawerOpen && (
-            <ul
-              tabIndex={0}
-              className="menu menu-compact dropdown-content mt-3 p-2 shadow bg-base-100 rounded-box w-52"
-              onClick={() => {
-                setIsDrawerOpen(false);
-              }}
-            >
-              <HeaderMenuLinks />
-            </ul>
-          )}
-        </div> */}
-  //       <Link href="/" passHref className="hidden lg:flex items-center gap-2 ml-4 mr-6 shrink-0">
-  //         <div className="flex relative w-10 h-10">
-  //           <Image alt="Ethernia logo" className="cursor-pointer" fill src="/logo.svg" />
-  //         </div>
-  //         <div className="flex flex-col">
-  //           <span className="font-bold leading-tight">ETHERNIA</span>
-  //           <span className="text-xs">Digital Inheritance</span>
-  //         </div>
-  //       </Link>
-  //       <ul className="hidden lg:flex lg:flex-nowrap menu menu-horizontal px-1 gap-2">
-  //         {/* <HeaderMenuLinks /> */}
-  //       </ul>
-  //     </div>
-  //     <div className="navbar-end flex-grow mr-4">
-  //     <SwitchTheme className={`pointer-events-auto ${isLocalNetwork ? "self-end md:self-auto" : ""}`} />
-  //       <RainbowKitCustomConnectButton />
-  //       {isLocalNetwork && <FaucetButton />}
-  //     </div>
-  //   </div>
-  // );
-  // };
+}

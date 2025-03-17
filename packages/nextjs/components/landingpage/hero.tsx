@@ -1,6 +1,5 @@
 import Link from "next/link";
 import Image from 'next/image';
-import { LuArrowRight } from "react-icons/lu";
 import { motion } from "framer-motion";
 import { useTranslation } from "~~/lib/i18n/LanguageContext";
 
