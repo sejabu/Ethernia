@@ -99,38 +99,29 @@ contract Ethernia {
 
     // CORREGIR ACUMULACION CUANDO CARGO EL MISMO USUARIO CON UN DIFERENTE PORCENTAJE, NO CAMBIA, ACUMULA
         uint256 totalPercentage = 0;
-    bool beneficiaryExists = false;
-
-    for (uint256 i = 0; i < willData[msg.sender].beneficiaryList.length; i++) {
-        if (willData[msg.sender].beneficiaryList[i].beneficiary == _beneficiary) {
-            willData[msg.sender].beneficiaryList[i].percentage += _percentage;
-            beneficiaryExists = true;
+        for (uint256 i = 0; i < willData[msg.sender].beneficiaryList.length; i++) {
+            totalPercentage += willData[msg.sender].beneficiaryList[i].percentage;
         }
-        totalPercentage += willData[msg.sender].beneficiaryList[i].percentage;
-    }
+        require(totalPercentage + _percentage <= 100, "Total percentage exceeds 100");
 
-    require(totalPercentage <= 100, "Total percentage exceeds 100");
-
-    if (!beneficiaryExists) {
         Beneficiaries memory beneficiary;
         beneficiary.beneficiary = _beneficiary;
-        beneficiary.percentage = _percentage;
+        beneficiary.percentage = _percentage; 
         willData[msg.sender].beneficiaryList.push(beneficiary);
     }
-}
+
     function addERC20Assets (address _tokenAddress, string memory _tokenName) external onlyTestator {
-        WillData storage will = willData[msg.sender]; //guardo en memoria la will del testador
+        require(willData[msg.sender].erc20Tokens.length < 20, "Max tokens reached");
+
         // allowance must be doit in dapp token.approve(address(this), type(uint256).max)
-        require(will.erc20Tokens.length < 20, "Max tokens reached");
         require(IERC20(_tokenAddress).allowance(msg.sender, address(this)) == type(uint256).max, 'Must setup allowance first');
-               
+        
         Erc20Data memory erc20Data;
         erc20Data.tokenAddress = _tokenAddress;
         erc20Data.tokenName = _tokenName;
         erc20Data.tokenBalance = IERC20(_tokenAddress).balanceOf(msg.sender);
-        will.erc20Tokens.push(erc20Data);
+        willData[msg.sender].erc20Tokens.push(erc20Data);
     }
-    
 
     function renewLifeProof () public onlyTestator {
         userInfo[msg.sender].lastLifeProof = block.timestamp;
@@ -139,8 +130,9 @@ contract Ethernia {
     function claimWill (address _testatorAddress) public onlyUser {
         require(willData[_testatorAddress].isActive == true, 'Will not active');
         require(willData[_testatorAddress].isClaimed == false, 'Will already claimed');
-        uint256 lockPeriod = willData[_testatorAddress].renewPeriod + userInfo[_testatorAddress].lastLifeProof;
-
+        
+        uint256 lockPeriod;
+        lockPeriod = willData[_testatorAddress].renewPeriod + userInfo[_testatorAddress].lastLifeProof;
         require(block.timestamp > lockPeriod, 'Lock period still active.');
         
         bool isBeneficiary = false;
@@ -161,7 +153,8 @@ contract Ethernia {
         require(willData[_testatorAddress].isClaimed == true, 'Will not claimed');
         require(willData[_testatorAddress].isExecuted == false, 'Will already executed');
         
-        uint256 lockPeriod = willData[_testatorAddress].claimTime + claimPeriod;
+        uint256 lockPeriod;
+        lockPeriod = willData[_testatorAddress].claimTime + claimPeriod;
         require(block.timestamp > lockPeriod, 'Lock period still active.');
 
         bool isBeneficiary = false;
@@ -173,14 +166,12 @@ contract Ethernia {
         require(isBeneficiary==true, 'You are not a beneficiary');
 
         erc20Transfer(_testatorAddress);
-     
 
         willData[_testatorAddress].executionTime = block.timestamp;
         willData[_testatorAddress].isExecuted = true;
         willData[_testatorAddress].executor = msg.sender;
 
     }
-    
 
     function erc20Transfer (address _testatorAddress) private {
         WillData memory testament = willData[_testatorAddress];
@@ -204,6 +195,4 @@ contract Ethernia {
     function listERC20Tokens (address _testatorAddress) external view returns (Erc20Data[] memory){
         return willData[_testatorAddress].erc20Tokens;
     }
-
-  
 }
