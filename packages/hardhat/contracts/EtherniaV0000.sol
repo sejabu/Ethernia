@@ -57,7 +57,7 @@ contract Ethernia {
     uint256 public claimPeriod = 3 minutes; // Set to minutes for testing, days for production
     uint256 public executionFee = 2;
     address public owner;
-    
+    event WillDeleted(address indexed testatorAddress);
     modifier onlyUser() {
         require(userInfo[msg.sender].wallet != address(0), "Not registered");
         _;
@@ -203,6 +203,15 @@ contract Ethernia {
 
     function listERC20Tokens (address _testatorAddress) external view returns (Erc20Data[] memory){
         return willData[_testatorAddress].erc20Tokens;
+    }
+    
+    function deleteWill () external onlyTestator {
+        require(willData[msg.sender].isActive == true, 'Will not active');
+        require(willData[msg.sender].isClaimed == false, 'Will already claimed'); 
+        delete willData[msg.sender];
+        userInfo[msg.sender].isTestator = false;
+        emit WillDeleted(msg.sender);
+
     }
 
   
