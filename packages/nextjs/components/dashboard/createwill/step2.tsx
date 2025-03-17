@@ -6,6 +6,8 @@ import { useRouter } from "next/navigation";
 import { LuMail, LuCheck, LuLoader } from "react-icons/lu";
 import { FormEvent } from "react";
 import { useAccount } from "wagmi";
+import { useScaffoldWriteContract } from '~~/hooks/scaffold-eth';
+
 
 
 
@@ -18,6 +20,10 @@ export default function Register() {
     const [isVerifying, setIsVerifying] = useState(false);
     const [error, setError] = useState("");
     const [loading, setLoading] = useState(false);
+
+    const { writeContractAsync: writeEtherniaAsync } = useScaffoldWriteContract({
+        contractName: "Ethernia",
+      });
 
     const handleSendVerificationCode = async (e: FormEvent) => {
         e.preventDefault();
@@ -32,7 +38,7 @@ export default function Register() {
             },
             body: JSON.stringify({ 
               email,
-              walletAddress: {connectedAddress},
+              walletAddress: connectedAddress,
             }),
           });
     
@@ -64,7 +70,7 @@ export default function Register() {
             body: JSON.stringify({
               email,
               code: verificationCode,
-              walletAddress: {connectedAddress},
+              walletAddress: connectedAddress,
               embeddedWallet: false,
             }),
           });
@@ -74,6 +80,10 @@ export default function Register() {
           if (!response.ok) {
             throw new Error(data.message || "Verification failed");
           }
+
+          await writeEtherniaAsync({
+            functionName: "registerUser",
+          });
     
           // Get JWT token from Privy
           //const token = await getAccessToken();
@@ -81,7 +91,8 @@ export default function Register() {
           // Redirect to login page to authenticate with Next-Auth
           // router.push(`/api/auth/callback/privy?token=${token}`);
             } catch (err: unknown) {
-            setError(err instanceof Error ? err.message : "Something went wrong");
+                console.error("Verification or registration error:", err);
+                setError(err instanceof Error ? err.message : "Something went wrong");
             } finally {
                setIsVerifying(false);
             }
@@ -169,13 +180,13 @@ export default function Register() {
                                         </>
                                         )}
                                         </button> 
-                                        <button
+                                        {/* <button
                                             type="button"
                                             onClick={() => setIsEmailSent(false)}
                                             className="w-full py-2 text-sm text-blue-600 underline"
                                         >
                                             Change email address
-                                        </button>
+                                        </button> */}
                                     </form>
                                 )}
                             </div>

@@ -33,7 +33,7 @@ const links = [
     icon: DocumentTextIcon,
   },
   { name: 'Modify Will',
-    href: '/dashboard/successors',
+    href: '/dashboard/modify',
     icon: UserGroupIcon
   },
   // { name: 'Assets',
@@ -52,7 +52,7 @@ const links = [
   //   href: '/dashboard/executewill',
   //   icon: CheckBadgeIcon
   // },
-  { name: 'User Info',
+  { name: 'Register/Update User Info',
     href: '/dashboard/useraccount',
     icon: UserCircleIcon
   },

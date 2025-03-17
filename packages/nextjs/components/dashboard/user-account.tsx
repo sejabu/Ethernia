@@ -1,7 +1,9 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { LuMail, LuUsers } from 'react-icons/lu';
+import { useRouter } from "next/navigation";
+import { FormEvent } from "react";
+import { LuCheck, LuLoader, LuMail, LuUsers } from 'react-icons/lu';
 import { useAccount } from "wagmi";
 import { useScaffoldWriteContract } from '~~/hooks/scaffold-eth';
 import { subscribeUser, unsubscribeUser, sendNotification } from '~~/app/actions'
@@ -72,6 +74,7 @@ function PushNotificationManager() {
     return <p>Push notifications are not supported in this browser.</p>
   }
 
+  
   return (
       <div>
         {subscription ? (
@@ -144,45 +147,186 @@ export default function UserAccount () {
     contractName: "Ethernia",
   });
 
+  const router = useRouter();
+  const [email, setEmail] = useState("");
+  const [verificationCode, setVerificationCode] = useState("");
+  const [isEmailSent, setIsEmailSent] = useState(false);
+  const [isVerifying, setIsVerifying] = useState(false);
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+  
+  const handleSendVerificationCode = async (e: FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+    setError("");
+      
+    try {
+      const response = await fetch("/api/auth/send-verification", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ 
+          email,
+          walletAddress: connectedAddress,
+        }),
+      });
+      
+      const data = await response.json();
+        if (!response.ok) {
+          throw new Error(data.message || "Failed to send verification code");
+        }
+      
+        setIsEmailSent(true);
+    } catch (err: unknown) {
+        setError(err instanceof Error ? err.message : "Something went wrong");
+      } finally {
+        setLoading(false);
+      }
+  };
+      
+  const handleVerifyCode = async (e: FormEvent) => {
+    e.preventDefault();
+    setIsVerifying(true);
+    setError("");
+      
+    try {
+      const response = await fetch("/api/auth/verify-code", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email,
+          code: verificationCode,
+          walletAddress: connectedAddress,
+          embeddedWallet: false,
+        }),
+      });
+      
+      const data = await response.json();
+      
+      if (!response.ok) {
+        throw new Error(data.message || "Verification failed");
+      }
+  
+      await writeEtherniaAsync({
+        functionName: "registerUser",
+      });
+      
+    } catch (err: unknown) {
+      console.error("Verification or registration error:", err);
+      setError(err instanceof Error ? err.message : "Something went wrong");
+      } finally {
+        setIsVerifying(false);
+      }
+  };
+
+
   return (
-    <div className="w-full max-w-6xl mx-auto p-6 space-y-6">
-      <div defaultValue="manage" className="w-full">
-        <div className='card'>
-          <h2 className='card-title'>Notification Suscription</h2>
-          <div className="card-body flex mx-auto flex-row">
-            <span className="mr-14"><PushNotificationManager  /></span>
-            <span><InstallPrompt /></span>
-          </div>
-          <h2 className='card-title'>Account Info</h2>
-          <div className="card-bordereddy space-y-4">
-              <div className="space-y-2">
-                <label className="block font-medium">Add/Change Email</label>
-                <div className="flex items-center space-x-2">
-                  <LuMail className="h-5 w-5 text-gray-500" />
-                  <input type="text" placeholder="example@mail.com" className="w-full p-2 border rounded" />
+    <div className='flex flex-col justify-center space-x-4 mt-2 w-3/4 mx-auto'>  
+      <div className="card card-bordered bg-base-300 mb-6">
+        <div className="card-body">
+          <h2 className='card-title justify-center'>Account Info</h2>       
+          {!isEmailSent ? (
+            <form onSubmit={handleSendVerificationCode} className="space-y-4 w-full">
+              <div>
+                <label htmlFor="email" className="block mb-1 text-sm font-medium">
+                  Register Email (*)
+                </label>
+                <div className="relative">
+                  <input
+                    id="email"
+                    type="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    className="w-full px-10 py-2 border rounded-md"
+                    placeholder="example@email.com (required)"
+                    required
+                  />
+                  <LuMail className="absolute top-2.5 left-3 text-gray-400" size={18} />
                 </div>
               </div>
-              <div className="space-y-2">
-                <label className="block font-medium">Add/Change Name</label>
-                <div className="flex items-center space-x-2">
-                  <LuUsers className="h-5 w-5 text-gray-500" />
-                  <input type="text" placeholder="Input your name" className="w-full p-2 border rounded" />
-                </div>
-                <button className="btn btn-primary" onClick={async () => {
-                  try {
-                    await writeEtherniaAsync({
-                      functionName: "registerUser",
-                    });
-                  } catch (error) {
-                    console.error("Error renewing life proof:", error);
-                  }
-                }}>
-                  Register User
-                </button>
+              {error && <p className="text-sm text-red-600">{error}</p>}
+              <button
+                type="submit"
+                disabled={loading}
+                className="btn btn-primary flex items-center justify-center py-2 space-x-2 w-full"
+              >
+                {loading ? (
+                  <>
+                    <LuLoader size={18} className="animate-spin" />
+                    <span>Sending...</span>
+                  </>
+                ) : (
+                  <span>Send Verification Code</span>
+                )}
+              </button>
+            </form>
+          ) : (
+            <form onSubmit={handleVerifyCode} className="space-y-4">
+              <p className="text-sm text-green-600">
+                A verification code has been sent to {email}
+              </p>
+              <div>
+                <label htmlFor="code" className="block mb-1 text-sm font-medium">
+                  Verification Code
+                </label>
+                <input
+                  id="code"
+                  type="text"
+                  value={verificationCode}
+                  onChange={(e) => setVerificationCode(e.target.value)}
+                  className="w-full px-3 py-2 border rounded-md"
+                  placeholder="Enter 6-digit code"
+                  maxLength={6}
+                  required
+                />
               </div>
-            </div>
-          </div>
+              {error && <p className="text-sm text-red-600">{error}</p>}
+              <button
+                  type="submit"
+                  disabled={isVerifying}
+                  className="flex items-center justify-center w-full py-2 space-x-2 text-white bg-blue-600 rounded-md hover:bg-blue-700 disabled:bg-blue-400"
+                >
+                {isVerifying ? (
+                  <>
+                    <LuLoader size={18} className="animate-spin" />
+                    <span>Verifying...</span>
+                  </>
+                ) : (
+                  <>
+                    <LuCheck size={18}/>
+                    <span>Verify Code</span>
+                  </>
+                )}
+              </button> 
+              {/* <button
+                    type="button"
+                    onClick={() => setIsEmailSent(false)}
+                    className="w-full py-2 text-sm text-blue-600 underline"
+                  >
+                  Change email address
+                  </button> */}
+            </form>
+          )} 
+        </div>
       </div>
-    </div>
+      
+      <div className='card card-bordered bg-base-300 mb-6'>
+        <div className='card-body'>
+          <h3 className='card-title justify-center'>Config Notifications</h3>
+          <div role="alert" className="alert alert-vertical sm:alert-horizontal">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" className="stroke-info h-6 w-6 shrink-0">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            </svg>
+            <span><PushNotificationManager  /></span>
+            <div>
+              <InstallPrompt />
+            </div>
+          </div>    
+        </div>       
+      </div>
+    </div>  
   );
 }

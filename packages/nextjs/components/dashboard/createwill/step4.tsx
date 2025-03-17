@@ -8,6 +8,8 @@ import { useScaffoldReadContract, useScaffoldWriteContract } from '~~/hooks/scaf
 import { useWriteContract, useTransaction } from 'wagmi';
 import { parseAbi } from 'viem';
 import { PiNumberCircleFour } from 'react-icons/pi';
+import { usePublicClient } from 'wagmi';
+
 
 // Add this ERC20 ABI using parseAbi from viem
 const erc20Abi = parseAbi([
@@ -17,6 +19,7 @@ const erc20Abi = parseAbi([
 
 
 export default function Assets () {
+
   const [activeTab, setActiveTab] = useState('create');
   const { address: connectedAddress } = useAccount();
   const [address, setAddress] = useState("");
@@ -43,7 +46,7 @@ export default function Assets () {
 }
 
 // Add the correct hardcoded contract address
-const ETHERNIA_CONTRACT_ADDRESS = '0x73f1c0D8533a554DEBBe39540645F12ec1F90465';
+const ETHERNIA_CONTRACT_ADDRESS = process.env.NEXT_PUBLIC_ETHERNIA_CONTRACT_ADDRESS;
 
   // Update tokens list when data changes
 
@@ -61,8 +64,12 @@ const ETHERNIA_CONTRACT_ADDRESS = '0x73f1c0D8533a554DEBBe39540645F12ec1F90465';
   }, [listERC20Tokens]);
 
   // Inside your Assets component, add these new states and hooks
-const [isApproving, setIsApproving] = useState(false);
-const [approvalError, setApprovalError] = useState<string | null>(null);
+const [isApproving, setIsApproving] = useState(false); // Control approve button
+const [approvalError, setApprovalError] = useState<string | null>(null); // To show errors
+
+const [isApproved, setIsApproved] = useState(false); // Flag to enable "Add Asset" button
+const [isAddingAsset, setIsAddingAsset] = useState(false); // Control add asset button
+const [addAssetError, setAddAssetError] = useState<string | null>(null); // Error in add asset
 
 // Add these Wagmi hooks
 const { writeContract, data: approveHash } = useWriteContract();
@@ -73,9 +80,13 @@ const { isLoading: isApprovalLoading, isSuccess: isApprovalSuccess } =
     hash: approveHash,
   });
 
+const publicClient = usePublicClient();
+
+
 // Add this approval function
 const approveToken = async (tokenAddress: string) => {
   try {
+    if (!publicClient) throw new Error("Public client not available");
     setIsApproving(true);
     setApprovalError(null);
 
@@ -89,16 +100,41 @@ const approveToken = async (tokenAddress: string) => {
       ],
     });
 
+    // Enable "Add Asset" button
+    setIsApproved(true);
+
     return true;
   } catch (error) {
     console.error("Error approving token:", error);
     setApprovalError("Failed to approve token");
+    setIsApproved(false);
     return false;
     } finally {
     setIsApproving(false);
+    
     }
   };
 
+  const addAssetToWill = async (tokenAddress: string, tokenName: string) => {
+    try {
+      setIsAddingAsset(true);
+      setAddAssetError(null);
+  
+      await writeEtherniaAsync({
+        functionName: "addERC20Assets",
+        args: [tokenAddress, tokenName],
+      });
+  
+      // Optional: Reset states
+      setIsApproved(false); // If you want to require re-approval for next asset
+      console.log("Asset added to will!");
+    } catch (error) {
+      console.error("Error adding asset:", error);
+      setAddAssetError(error instanceof Error ? error.message : "Failed to add asset");
+    } finally {
+      setIsAddingAsset(false);
+    }
+  };
 
   return (
     <div className='flex flex-col justify-center space-x-4 mt-2 w-3/4 mx-auto'>
@@ -153,42 +189,51 @@ const approveToken = async (tokenAddress: string) => {
                 </div>
               </div>
             </div>
+            {/* APPROVE BUTTON */}
             <button
-              className={`w-full btn btn-primary ${isApproving || isApprovalLoading ? 'loading' : ''}`}
-              disabled={isApproving || isApprovalLoading}
+              className={`w-full btn btn-primary ${isApproving ? 'loading' : ''}`}
+              disabled={isApproving || isApproved } // Disable if already approved
               onClick={async () => {
-                try {
-                  const tokenAddressInput = document.getElementById('tokenAddress') as HTMLInputElement;
-                  const tokenAddress = String(tokenAddressInput.value);
-                  const tokenNameInput = document.getElementById('tokenName') as HTMLInputElement;
-                  const tokenName = String(tokenNameInput.value);
-            
-                  // First approve the token
-                  const isApproved = await approveToken(tokenAddress);
-                  
-                  if (isApproved && isApprovalSuccess) {
-                    // Then add the asset to the will
-                    await writeEtherniaAsync({
-                      functionName: "addERC20Assets",
-                      args: [tokenAddress, tokenName],
-                    });
-                    
-                    // Clear inputs after successful addition
-                    tokenAddressInput.value = '';
-                    tokenNameInput.value = '';
-                  }
-                } catch (e) {
-                  console.error("Error adding asset to will:", e);
-                }
-              }}>
-              {isApproving || isApprovalLoading ? 'Approving...' : 'Add asset to will'}
+                const tokenAddressInput = document.getElementById('tokenAddress') as HTMLInputElement;
+                const tokenAddress = String(tokenAddressInput.value);
+                await approveToken(tokenAddress);
+                }}
+                >
+                {isApproving ? 'Approving...' : (isApproved ? 'Approved!' : 'Approve token')}
             </button>
-            {/* Add error message display */}
+
+            {/* SHOW ERROR IF ANY */}
             {approvalError && (
-            <div className="text-red-500 text-sm mt-2">
-            {approvalError}
-            </div>
-            )}            
+              <div className="text-red-500 text-sm mt-2">
+                {approvalError}
+              </div>
+            )}
+            {/* ADD ASSET BUTTON */}
+            <button
+              className={`w-full btn btn-secondary ${isAddingAsset ? 'loading' : ''}`}
+              disabled={!isApproved || isAddingAsset} // Only active if approved and not adding
+              onClick={async () => {
+                const tokenAddressInput = document.getElementById('tokenAddress') as HTMLInputElement;
+                const tokenNameInput = document.getElementById('tokenName') as HTMLInputElement;
+                const tokenAddress = String(tokenAddressInput.value);
+                const tokenName = String(tokenNameInput.value);
+            
+                await addAssetToWill(tokenAddress, tokenName);
+
+                  // Optional: Clear input fields after success
+                  tokenAddressInput.value = '';
+                  tokenNameInput.value = '';
+                }}
+              >
+                {isAddingAsset ? 'Adding...' : 'Add asset to will'}
+              </button>
+              
+              {/* SHOW ERROR IF ANY */}
+              {addAssetError && (
+                <div className="text-red-500 text-sm mt-2">
+                  {addAssetError}
+                </div>
+              )}
             </div>
             <div className="space-y-2">
               <h3 className="font-medium">Asset Distribution</h3>

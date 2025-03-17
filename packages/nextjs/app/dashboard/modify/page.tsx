@@ -1,7 +1,7 @@
 import { Suspense } from 'react';
-import Successors from "~~/components/dashboard/successors";
+import ModifyWill from "~~/components/dashboard/modifyWill";
 
-export default function SuccessorsPage() {
+export default function ModifyPage() {
     return (
         <Suspense fallback={
                     <div className='flex justify-center h-screen space-x-4'>
@@ -13,7 +13,7 @@ export default function SuccessorsPage() {
                     </div>
                 }>
             <div className="min-h-screen">
-                <Successors />
+                <ModifyWill />
             </div>
         </Suspense>
     );
