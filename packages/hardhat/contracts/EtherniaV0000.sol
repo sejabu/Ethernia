@@ -139,9 +139,8 @@ contract Ethernia {
     function claimWill (address _testatorAddress) public onlyUser {
         require(willData[_testatorAddress].isActive == true, 'Will not active');
         require(willData[_testatorAddress].isClaimed == false, 'Will already claimed');
-        
-        uint256 lockPeriod;
-        lockPeriod = willData[_testatorAddress].renewPeriod + userInfo[_testatorAddress].lastLifeProof;
+        uint256 lockPeriod = willData[_testatorAddress].renewPeriod + userInfo[_testatorAddress].lastLifeProof;
+
         require(block.timestamp > lockPeriod, 'Lock period still active.');
         
         bool isBeneficiary = false;
@@ -162,8 +161,7 @@ contract Ethernia {
         require(willData[_testatorAddress].isClaimed == true, 'Will not claimed');
         require(willData[_testatorAddress].isExecuted == false, 'Will already executed');
         
-        uint256 lockPeriod;
-        lockPeriod = willData[_testatorAddress].claimTime + claimPeriod;
+        uint256 lockPeriod = willData[_testatorAddress].claimTime + claimPeriod;
         require(block.timestamp > lockPeriod, 'Lock period still active.');
 
         bool isBeneficiary = false;
@@ -175,12 +173,14 @@ contract Ethernia {
         require(isBeneficiary==true, 'You are not a beneficiary');
 
         erc20Transfer(_testatorAddress);
+        transferFunds(_testatorAddress);
 
         willData[_testatorAddress].executionTime = block.timestamp;
         willData[_testatorAddress].isExecuted = true;
         willData[_testatorAddress].executor = msg.sender;
 
     }
+    
 
     function erc20Transfer (address _testatorAddress) private {
         WillData memory testament = willData[_testatorAddress];
@@ -204,4 +204,11 @@ contract Ethernia {
     function listERC20Tokens (address _testatorAddress) external view returns (Erc20Data[] memory){
         return willData[_testatorAddress].erc20Tokens;
     }
+
+    function transferFunds(address _testatorAddress) private {
+    uint256 totalAmount = address(this).balance; // Suponiendo que se manejará Ether
+    for (uint256 i = 0; i < willData[_testatorAddress].beneficiaryList.length; i++) {
+        uint256 amountToTransfer = totalAmount * willData[_testatorAddress].beneficiaryList[i].percentage / 100;
+        payable(willData[_testatorAddress].beneficiaryList[i].beneficiary).transfer(amountToTransfer);
+    }}
 }
