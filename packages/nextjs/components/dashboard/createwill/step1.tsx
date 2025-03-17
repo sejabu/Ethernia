@@ -23,7 +23,7 @@ export default function Connect() {
                             <div className="card-body items-center text-center">
                                 <h2 className="card-title">This is the first step to Secure Your Crypto Legacy</h2>
                                 <p>We will be guiding you to easily register and set up your digital inheritance plan.</p>
-                                <h2 className="card-title"><PiNumberCircleOne />&nbsp;Connect your Wallet:</h2>
+                                <h2 className="card-title pt-2 pb-2"><PiNumberCircleOne />&nbsp;Connect your Wallet:</h2>
                                 <div className="card-actions">
                                     <ConnectButton />
                                 </div>

@@ -161,7 +161,19 @@ const approveToken = async (tokenAddress: string) => {
               Mint FakeUSDT-A
             </span>
             <span>&nbsp;</span>
-            <span className="btn btn-primary btn-sm">Mint FakeUSDT-B</span>
+            <span className="btn btn-primary btn-sm" onClick={async () => {
+              try {
+              const amount = BigInt(1000);
+              await writeFakeTetherBAsync({
+                functionName: "mint",
+                args: [amount],
+              });
+              } catch (error) {
+                console.error("Minting failed:", error);
+              } 
+              }}>
+              Mint FakeUSDT-B
+            </span>
             </div>
           </div>
         </div>

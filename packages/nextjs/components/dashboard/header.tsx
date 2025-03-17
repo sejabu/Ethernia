@@ -4,26 +4,10 @@ import Image from "next/image";
 import Link from "next/link";
 import { hardhat } from "viem/chains";
 import { FaucetButton, RainbowKitCustomConnectButton } from "~~/components/scaffold-eth";
-import { useOutsideClick, useTargetNetwork } from "~~/hooks/scaffold-eth";
+import { useTargetNetwork } from "~~/hooks/scaffold-eth";
 import { SwitchTheme } from "~~/components/SwitchTheme";
-// import PrivyConnectButton from "~~/components/scaffold-eth/PrivyConnectButton/PrivyConnectButton";
-import { Address } from "~~/components/scaffold-eth";
 import { useAccount } from "wagmi";
 import NavLinks from './nav-links';
-
-// import {usePrivy} from '@privy-io/react-auth';
-
-// function LoginButton() {
-//   const {ready, authenticated, login} = usePrivy();
-//   // Disable login when Privy is not ready or the user is already authenticated
-//   const disableLogin = !ready || (ready && authenticated);
-
-//   return (
-//     <button className="btn btn-sm btn-primary" disabled={disableLogin} onClick={login}>
-//       Log in
-//     </button>
-//   );
-// }
 
 
 /**
@@ -63,17 +47,10 @@ export const Header = () => {
       </div>
       <div className="navbar-end flex-grow mr-4">
       <span className="mr-2"><SwitchTheme className={`pointer-events-auto ${isLocalNetwork ? "self-end md:self-auto" : ""}`} /></span>
-      {/* <span className="mr-2"><Address address={connectedAddress} /></span> */}
-      {/* <span className="mr-2"><LoginButton/></span> */}
-      {/* <span className="mr-2"><PrivyConnectButton /></span> */}
       <RainbowKitCustomConnectButton />
       <span>  {isLocalNetwork && <FaucetButton />}</span>
       </div>
-      
     </div>
-    {/* <div className="flex grow flex-row justify-between space-x-2 w-full h-full p-2">
-              <NavLinks />
-            </div> */}
     <div role="tablist" className="tabs tabs-bordered tabs-xl lg:mx-28">
               <NavLinks />
             </div>        
