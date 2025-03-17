@@ -8,9 +8,6 @@ import { useAccount } from "wagmi";
 import { useScaffoldReadContract, useScaffoldWriteContract } from '~~/hooks/scaffold-eth';
 import { BlockieAvatar } from "~~/components/scaffold-eth";
 
-
-
-
 export default function Status () {
 
   const { address: connectedAddress } = useAccount();
@@ -186,22 +183,6 @@ export default function Status () {
         <div className='card card-bordered bg-base-300 w-auto mb-6'> 
           <div className='card-body'>
             <h2 className='card-title'>Assets List</h2>         
-              {/* <div className="grid grid-cols-2 gap-4">
-               
-                <div className="p-4 shadow rounded">
-                  <div className="flex items-center space-x-2">
-                    <div>
-                      <p className="font-medium">Is Claimed?</p>
-                      <div className="flex items-center">
-                      {isClaimed ? <LuTriangleAlert className="h-5 w-5 text-red-500" /> : <LuBan className="h-5 w-5 text-green-500"/>}
-                      {isClaimed ? <span className="text-sm text-red-600">&nbsp;Claimed</span> : <span className="text-sm text-green-600">&nbsp;Not Claimed</span >}
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                
-              </div> */}
-            
             <div className="overflow-x-auto">
               <table className="table">
                 {/* head */}

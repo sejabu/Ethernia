@@ -2,9 +2,6 @@
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { LuMail, LuUsers } from 'react-icons/lu';
-import { useAccount } from "wagmi";
-import { useScaffoldWriteContract } from '~~/hooks/scaffold-eth';
 import { subscribeUser, unsubscribeUser, sendNotification } from '~~/app/actions'
 import { PiNumberCircleSix } from 'react-icons/pi';
 
@@ -80,13 +77,6 @@ function PushNotificationManager() {
           <>
             <p className="text-primary">You are subscribed to push notifications.</p>
             <button className="btn btn-secondary" onClick={unsubscribeFromPush}>Unsubscribe</button>
-            <input
-              type="text"
-              placeholder="Enter notification message"
-              value={message}
-              onChange={(e) => setMessage(e.target.value)}
-            />
-            <button onClick={sendTestNotification}>Send Test</button>
           </>
         ) : (
           <>
@@ -139,15 +129,9 @@ function PushNotificationManager() {
 
 
 export default function Notifications () {
-  const [activeTab, setActiveTab] = useState('create');
-  const { address: connectedAddress } = useAccount();
-
-  const { writeContractAsync: writeEtherniaAsync } = useScaffoldWriteContract({
-    contractName: "Ethernia",
-  });
 
   return (
-    <div className='flex flex-col justify-center space-x-4 mt-2 w-1/2 mx-auto'>
+    <div className='flex flex-col justify-center space-x-4 mt-2 w-3/4 mx-auto'>
           <div className='card card-bordered bg-base-300 mb-6'>
             <div className='card-body'>
               <h3 className='card-title justify-center'><PiNumberCircleSix />&nbsp;Config Notifications</h3>

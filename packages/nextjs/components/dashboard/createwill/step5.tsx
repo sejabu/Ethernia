@@ -44,7 +44,7 @@ export default function Beneficiaries () {
 
 
   return (
-    <div className='flex flex-col justify-center space-x-4 mt-2 w-1/2 mx-auto'>
+    <div className='flex flex-col justify-center space-x-4 mt-2 w-3/4 mx-auto'>
           <div className='card card-bordered bg-base-300 mb-6'>
             <div className='card-body'>
               <h3 className='card-title justify-center'><PiNumberCircleFive />&nbsp;Add the Beneficiaries</h3>

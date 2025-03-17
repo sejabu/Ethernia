@@ -11,8 +11,8 @@ export const translations = {
       title: "Secure Your Crypto Legacy",
       subtitle0: "Make inheritance easy for you and your family.",
       subtitle1: "ETHERNIA provides a seamless and secure way to ensure your digital assets reach your loved ones.",
-      demo: "Launch Demo",
-      learnmore: "Learn More",
+      demo: "Login",
+      learnmore: "Sign Up",
       imagecontext: "Leave your family the gift of a lifetime, set your family up for life with a secure inheritance plan for your digital assets."
     },
     features: {
@@ -187,8 +187,8 @@ export const translations = {
       title: "Asegure su Legado Cripto",
       subtitle0: "Haz que la herencia sea fácil para ti y tu familia.",
       subtitle1: "ETHERNIA proporciona una forma segura y sencilla de garantizar que sus activos digitales lleguen a sus seres queridos.",
-      demo: "Iniciar Demo",
-      learnMore: "Más Información",
+      demo: "Ingresa",
+      learnMore: "Registrate",
       imagecontext: "Protege a tus seres queridos, garantiza su bienestar con un plan de herencia seguro para tus activos digitales."
     },
     features: {

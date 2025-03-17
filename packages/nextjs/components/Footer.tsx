@@ -39,13 +39,13 @@ export const Footer = () => {
           <div className="justify-between items-center">
             <h4 className="font-semibold mb-4">Connect</h4>
             <div className="flex space-x-4">
-              <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" className="hover:text-primary">
+              <a href="https://x.com/EtherniaApp" target="_blank" rel="noopener noreferrer" className="hover:text-primary">
                 <FaTwitter size={20} />
               </a>
-              <a href="https://discord.com" target="_blank" rel="noopener noreferrer" className="hover:text-primary">
+              <a href="https://discord.gg/4tt9aQg" target="_blank" rel="noopener noreferrer" className="hover:text-primary">
                 <FaDiscord size={20} />
               </a>
-              <a href="https://github.com" target="_blank" rel="noopener noreferrer" className="hover:text-primary">
+              <a href="https://github.com/sejabu/Ethernia" target="_blank" rel="noopener noreferrer" className="hover:text-primary">
                 <FaGithub size={20} />
               </a>
             </div>

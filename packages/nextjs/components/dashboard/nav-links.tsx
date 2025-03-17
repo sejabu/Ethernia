@@ -23,36 +23,20 @@ const links = [
     href: '/dashboard',
     icon: WindowIcon,
   },
-  // { name: 'I´m Alive!',
-  //   href: '/dashboard/lifeproof',
-  //   icon: HandRaisedIcon,
-  // },
   {
     name: 'Create Will',
     href: '/dashboard/createwill',
     icon: DocumentTextIcon,
   },
   { name: 'Modify Will',
-    href: '/dashboard/successors',
+    href: '/dashboard/modify',
     icon: UserGroupIcon
   },
-  // { name: 'Assets',
-  //   href: '/dashboard/tokenassets',
-  //   icon: CurrencyDollarIcon
-  // },
-  // { name: 'Delete Will',
-  //   href: '/dashboard/deletewill',
-  //   icon: TrashIcon
-  // },
   { name: 'Claim/Execute Will',
     href: '/dashboard/claimwill',
     icon: ArrowDownOnSquareIcon
   },
-  // { name: 'Execute Will',
-  //   href: '/dashboard/executewill',
-  //   icon: CheckBadgeIcon
-  // },
-  { name: 'User Info',
+  { name: 'Register/Update User Info',
     href: '/dashboard/useraccount',
     icon: UserCircleIcon
   },
@@ -70,7 +54,6 @@ export default function NavLinks() {
             href={link.href}
             className={clsx(
               'tab',
-              // 'btn flex h-[48px] grow items-center justify-center gap-2 rounded-md p-3 text-sm font-medium md:flex-none md:justify-start md:p-2 md:px-3',
               {
                 'tab tab-active': pathname === link.href,
               },
