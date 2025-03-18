@@ -176,6 +176,12 @@ const approveToken = async (tokenAddress: string) => {
             </span>
             </div>
           </div>
+          <span className="text-center">
+            You can access the token address through the debug page:{" "}
+            <code className="italic bg-base-300 text-base font-bold max-w-full break-words break-all inline-block">
+              <a href="/debug">ehernia.online/debug</a>
+            </code>
+          </span>
         </div>
 
         
