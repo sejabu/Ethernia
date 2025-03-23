@@ -21,3 +21,11 @@ node_modules
 
 # cli
 dist
+
+# Local Files
+todo-list.md
+media-texts.md
+links.md
+competitors.md
+local-instructions.md
+feedback.md

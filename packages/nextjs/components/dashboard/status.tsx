@@ -1,12 +1,12 @@
 'use client';
 
+import Link from "next/link";
 import React, { useState, useEffect } from 'react';
-import { LuClock, LuBan, LuTriangleAlert, LuCheck, LuHeartPulse } from 'react-icons/lu';
+import { LuClock, LuBan, LuCheck, LuHeartPulse } from 'react-icons/lu';
 import { BsChatSquareHeart } from "react-icons/bs";
-import { Address } from "~~/components/scaffold-eth";
 import { useAccount } from "wagmi";
 import { useScaffoldReadContract, useScaffoldWriteContract } from '~~/hooks/scaffold-eth';
-import { BlockieAvatar } from "~~/components/scaffold-eth";
+import { BlockieAvatar, Address } from "~~/components/scaffold-eth";
 
 export default function Status () {
 
@@ -164,7 +164,7 @@ export default function Status () {
               <div className="stat">
                 <div className="stat-title"></div>  
                 <div className='btn p-2'>
-                  <BsChatSquareHeart className="h-10 w-10" onClick={async () => {
+                  <BsChatSquareHeart className="h-10 w-10  text-red-500" onClick={async () => {
                     try {
                     await writeEtherniaAsync({
                     functionName: "renewLifeProof",
@@ -188,11 +188,11 @@ export default function Status () {
                 {/* head */}
                 <thead>
                   <tr>
-                    <th>
+                    {/* <th>
                       <label>
                         <input type="checkbox" className="checkbox hidden" />
                       </label>
-                    </th>
+                    </th> */}
                     <th>Name</th>
                     <th>SC Address</th>
                     <th>Balance</th>
@@ -203,11 +203,11 @@ export default function Status () {
                   {tokensList.length > 0 ? (
                     tokensList.map((token, i) => (
                       <tr key={i}>
-                        <th>
+                        {/* <th>
                           <label>
                             <input type="checkbox" className="checkbox" />
                           </label>
-                        </th>
+                        </th> */}
                         <td>
                           <div className="flex items-center gap-3">
                             <div className="avatar">
@@ -226,11 +226,13 @@ export default function Status () {
                         <td>
                           Token {i + 1}: {token.tokenAddress}
                           <br />
-                          <span className="badge badge-ghost badge-sm"></span>
+                          {/* <span className="badge badge-ghost badge-sm"></span> */}
                         </td>
                         <td>{token.tokenBalance}</td>
                         <th>
-                          <button className="btn btn-ghost btn-xs">Remove</button>
+                          <Link href="/dashboard/modify" >
+                          <button className="btn btn-ghost btn-xs">Edit</button>
+                          </Link>
                         </th>
                       </tr>  
                     ))
@@ -290,11 +292,11 @@ export default function Status () {
                 {/* head */}
                 <thead>
                   <tr>
-                    <th>
+                    {/* <th>
                       <label>
                         <input type="checkbox" className="checkbox hidden" />
                       </label>
-                    </th>
+                    </th> */}
                     <th>Name</th>
                     <th>Wallet Address</th>
                     <th>Percentage</th>
@@ -305,11 +307,11 @@ export default function Status () {
                   {beneficiaryList.length > 0 ? (
                     beneficiaryList.map((token, i) => (
                       <tr key={i}>
-                        <th>
+                        {/* <th>
                           <label>
                             <input type="checkbox" className="checkbox" />
                           </label>
-                        </th>
+                        </th> */}
                         <td>
                           <div className="flex items-center gap-3">
                             <div className="avatar">
@@ -330,7 +332,9 @@ export default function Status () {
                           <span className='font-bold'>{token.percentage.toString()}%</span>&nbsp;Assigned.
                         </td>
                         <th>
+                          <Link href="/dashboard/modify">
                           <button className="btn btn-ghost btn-xs">Edit</button>
+                          </Link>
                         </th>
                       </tr>  
                     ))
@@ -361,7 +365,9 @@ export default function Status () {
                         </td>
                         <td>0.00</td>
                         <th>
-                          <button className="btn btn-ghost btn-xs">Edit</button>
+                          <Link href="/dashboard/modify">
+                           <button className="btn btn-ghost btn-xs">Edit</button>
+                          </Link>
                         </th>
                       </tr>
                     )

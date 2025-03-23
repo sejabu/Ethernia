@@ -1,8 +1,7 @@
 "use client";
 
-import { PiNumberCircleOne, PiNumberCircleTwo } from "react-icons/pi";
+import { PiNumberCircleTwo } from "react-icons/pi";
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 import { LuMail, LuCheck, LuLoader } from "react-icons/lu";
 import { FormEvent } from "react";
 import { useAccount } from "wagmi";
@@ -11,7 +10,6 @@ import { useScaffoldWriteContract } from '~~/hooks/scaffold-eth';
 export default function Register() {
 
   const { address: connectedAddress } = useAccount();
-  const router = useRouter();
   const [email, setEmail] = useState("");
   const [verificationCode, setVerificationCode] = useState("");
   const [isEmailSent, setIsEmailSent] = useState(false);
@@ -95,6 +93,7 @@ export default function Register() {
       <div className='card card-bordered bg-base-300 mb-6'>
         <div className='card-body'>
           <h3 className='card-title justify-center'><PiNumberCircleTwo />&nbsp;Register your Email</h3>
+          <div className="flex text-sm opacity-50 justify-center">If you are already registered, you can omit this step by clicking "Next" button.</div>
           <div className='flex flex-col space-x-0 space-y-4 justify-center lg:flex-row lg:space-x-4 lg:space-y-0'>
             <div className="card bg-base-100 w-auto lg:w-3/4 shadow-sm flex: 1">
               <div className="flex flex-col items-center justify-center p-4">
